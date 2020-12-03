@@ -1,0 +1,259 @@
+@charset "utf-8";
+
+html,body
+ul, ol, li,
+h1, h2, h3, h4, h5, h6, div {
+  margin: 0;
+  padding: 0;
+}
+
+body{
+    font-family:'Javanese Text','Mongolian Baiti','Palatino Linotype';
+    min-height: 100vh;
+}
+
+li{
+    list-style: none;
+}
+
+
+
+
+
+.wrapper{
+    background-color:white;
+    color:#626063;
+
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    margin-top: 2rem;
+    background-color: white;
+}
+
+/*left*/
+.left{
+    background-color: #f8f4e6;
+    border-radius: 15px;
+    padding: 2rem;
+    min-height:90vh;
+    width: 800px;
+    max-width: 800px;
+    margin: 0 1rem 0 0;
+    position: relative;
+}
+
+.title{
+    margin-top: 1rem;
+}
+
+.flex p{
+    padding-right: 1rem;
+}
+
+.newest{
+    background-color: white;
+    min-height: 30vh;
+    padding: 1rem;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.detail_a{
+    position: absolute;
+    bottom: 1rem;
+    right: 1.5rem;
+}
+
+.blogs{
+    background-color: white;
+    margin: 2rem 0;
+    min-height: 30vh;
+    padding: 1rem;
+}
+
+.blog_box{
+    border-bottom: solid #f8f4e6; 5px;
+    padding: 5px;
+    margin: 3px 0;
+}
+
+.flex{
+    display: flex;
+    flex-direction: row;
+}
+
+.blogs dd{
+    font-size: small;
+}
+
+span{
+    font-size: 15px;
+    }
+
+.link_aa{
+    text-decoration: none;
+    display:inlin-block;
+    color:#626063;
+    
+}
+
+.link_aa:hover{
+    color: #f2a88a;
+}
+
+.fixed_btn {
+    text-decoration: none;
+    background: rgba(255,233,169,0.4);
+    padding: 0.5rem;
+    border-radius: 15px;
+    color:#626063;
+    position: fixed;
+    bottom: 1rem;
+    right: 1.5rem;
+}
+
+.fixed_btn :hover{
+	font-weight: bold;
+}
+
+
+
+
+
+/*----------------------------*/
+/*right*/
+.right{
+    background-color: #f8f4e6;
+    width: 20%;
+    min-width: 200px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+}
+
+.profile{
+    background-color: white;
+    margin-top: 0;
+    
+    min-height: 300px;
+    padding: 16px;
+
+}
+
+.prof_title{
+    margin: 0px;
+    font-size: small;
+    font-weight: bold;
+    
+}
+
+.nickname{
+    text-align: center;
+    border-bottom: solid #f8f4e6; 5px;
+}
+
+.text{
+    margin: 0;
+}
+
+.menu{
+    text-align: center;
+}
+
+.menu ul li{
+padding: 0.5rem 1rem;
+}
+
+.list{
+    position: relative;
+}
+
+.list ul{
+    position: absolute;
+    display: none;
+    box-shadow: 0 0 8px gray;
+    border-radius: 15px;
+}
+
+.list:hover ul{
+    background-color: #f8f4e6;
+	display:block;
+}
+
+
+
+/*検索窓*/
+.sample2Text {
+
+	width            : 150px;            /* inputの幅           */
+	background-image : url(./img/mg.png);
+    font-weight: 900;/* 背景画像：虫眼鏡(*1)*/
+	background-repeat  : no-repeat;        /* 背景は繰り返さない  */
+	background-position: 8px center;       /* 背景の位置          */
+	background-size    : auto 60%;         /* 背景のサイズ        */
+	background-color   : #fff;             /* 背景色              */
+	margin             : 0 auto;           /* サンプルは中央寄せ  */
+	padding-left       : 30px;             /* 虫眼鏡分の左余白    */
+	border             : 2px solid #666;   /* 枠線　幅,実践,色    */
+	border-radius      : 50px;              /* 角丸                */
+	color              : #555;             /* 文字色              */
+	font-size          : 14px;             /* フォントサイズ      */
+	letter-spacing     : 0.1em;            /* 文字間隔            */
+	font-weight        : normal;             /* 太字                */
+	outline            : 0;                 /* 入力薄枠を非表示    */
+	padding:6px 35px;
+
+}
+
+   /* === テキスト入力欄にフォーカスか来たとき  ================== */
+  .sample2Text:focus {
+	background-color     : white;        /* フォーカス時背景色  */
+	border-color: #f2a88a;
+  }
+
+   /* === IEの入力エリア右側×消し ============================== */
+  .sample2Text::-ms-clear {
+	display        : none;                 /* ×を消す            */
+  }
+
+
+  .blogs{
+    background-color: white;
+    margin: 0;
+    min-height: 30vh;
+    padding: 1rem;
+}
+
+  .blog_box{
+    border-bottom: solid #f8f4e6; 5px;
+    padding: 5px;
+    margin: 3px 0;
+}
+
+.small{
+    font-size: xx-small;
+}
+
+.ranking_title{
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+.fa-heart{
+    font-size: 12px;
+}
+
+/*---------------------------------*/
+/*footer*/
+  .side_footer{
+      background-color: white;
+    margin-top: auto;
+    padding-top: 100px;
+}
+/*上でフッターが下に引っ張られる。*/

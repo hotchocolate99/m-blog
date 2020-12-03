@@ -1,0 +1,568 @@
+<?php
+require_once 'database.php';
+
+//---------------ユーザー登録、ログイン-----------------
+/** ユーザー登録
+     * ＠param array $userData
+     * return bool $result
+    */
+    if(!function_exists('createUser')) {
+    function createUser($userData){
+
+        $result = false;
+          $sql = "INSERT INTO users (user_name, email, password) VALUE(:user_name, :email, :password)";
+
+          $dbh = dbConnect();
+        //sign_upファイルの方でこのcreateUserメソッドの呼び出し時に引数にPOSTを入れた。そのため、POSTがこの＄userDataに
+        //入り、＄userData[name]とすることで、＄＿POST[name]の値が取得できる。
+        //パスワードはここでハッシュ化すること！！　DBに入れる時！「password_hash(パスワード,PASSWORD_DEFAULT);」 とする。
+        //第二引数は決まり文句。意味：デフォルトでハッシュ化する。
+        try{
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':user_name', $userData['user_name'],PDO::PARAM_STR);
+            $stmt->bindValue(':email', $userData['email'],PDO::PARAM_STR);
+            $stmt->bindValue(':password', password_hash($userData['password'],PASSWORD_DEFAULT),PDO::PARAM_STR);
+            
+            $result = $stmt->execute();
+
+             return $result;
+
+          }catch(PDOException $e){
+            
+            exit($e);
+        }
+      }
+    }
+           //↑プレースホルダーの値が文字列のものだけ、または、数字でも文字列として扱ってもOKな場合は、＄arrのように配列にして、
+           //$execute()の引数に入れることが出来る。bindValue使わなくても大丈夫。
+  
+  
+    /**
+     * email,DBでユーザーを取得
+     * ＠param string $dbh 
+     * ＠param string $email 
+     * return array   (ログインフォームに入力されたアドレスでDBに入っているデータを検索し、照会できたらそのユーザーの登録情報全てを配列で取得)
+     */
+
+    if(!function_exists('findUserByEmail')) {
+      function findUserByEmail($dbh, $email){
+  
+        try{
+          $sql = "SELECT * FROM users WHERE email = :email";
+
+          $dbh = dbConnect();
+          $stmt = $dbh->prepare($sql);
+          $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+          $stmt->execute();
+          $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+           return $user;
+        }catch(PDOException $e){
+           
+            exit($e);
+        }
+        
+      }
+   }
+
+
+//----------------------投稿--------------------------------------
+
+//ブログ新規投稿(画像あり)
+if(!function_exists('blogCreateWithFile')) {
+    function blogCreateWithFile($blogs, $filename, $save_path, $caption){
+
+        $sql = "INSERT INTO posts(title, content, category, publish_status, likes)
+                VALUES(:title, :content, :category, :publish_status, 0)";
+
+        $dbh = dbConnect();
+        $dbh->beginTransaction();
+
+        try{
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':title', $blogs['title'],PDO::PARAM_STR);
+            $stmt->bindValue(':content', $blogs['content'],PDO::PARAM_STR);
+            $stmt->bindValue(':category', $blogs['category'],PDO::PARAM_INT);
+            $stmt->bindValue(':publish_status', $blogs['publish_status'],PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            $posts_id = $dbh->lastInsertId();
+
+
+            $sql = "INSERT INTO files(file_name, file_path, caption, posts_id)VALUES(:file_name, :file_path, :caption, :post_id)";
+
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':file_name',$filename,PDO::PARAM_STR);
+            $stmt->bindValue(':file_path',$save_path,PDO::PARAM_STR);
+            $stmt->bindValue(':caption',$caption,PDO::PARAM_STR);
+            $stmt->bindValue(':post_id',$posts_id,PDO::PARAM_INT);
+
+            $stmt->execute();
+            $dbh->commit();
+
+        }catch(PDOException $e){
+            $dbh->rollBack();
+            exit($e);
+        }
+    }
+
+}
+
+ //ブログ新規投稿(画像なし)
+ if(!function_exists('blogCreateWithoutFile')) {
+    function blogCreateWithoutFile($blogs){
+
+        $sql = "INSERT INTO posts(title, content, category, publish_status, likes)
+                VALUES(:title, :content, :category, :publish_status, 0)";
+
+        $dbh = dbConnect();
+        $dbh->beginTransaction();
+
+        try{
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':title', $blogs['title'],PDO::PARAM_STR);
+            $stmt->bindValue(':content', $blogs['content'],PDO::PARAM_STR);
+            $stmt->bindValue(':category', $blogs['category'],PDO::PARAM_INT);
+            $stmt->bindValue(':publish_status', $blogs['publish_status'],PDO::PARAM_INT);
+
+            $stmt->execute();
+            $dbh->commit();
+
+        }catch(PDOException $e){
+            $dbh->rollBack();
+            exit($e);
+        }
+    }
+}
+
+
+
+//プロフィールの入力（ニックネームと自己紹介文）
+if(!function_exists('CreateProfile')) {
+    function CreateProfile($user_id,$nickname,$intro_text){
+
+        
+            $sql = "UPDATE users SET
+                    nickname = :nickname, intro_text = :intro_text
+
+                    WHERE id = :id;";
+
+                    $dbh = dbConnect();
+                    $dbh->beginTransaction();
+         try{
+                    $stmt = $dbh->prepare($sql);
+                    $stmt->bindValue(':nickname', $nickname,PDO::PARAM_STR);
+                    $stmt->bindValue(':intro_text', $intro_text,PDO::PARAM_STR);
+                    $stmt->bindValue(':id', $user_id, PDO::PARAM_INT);
+
+                    $stmt->execute();
+                    $dbh->commit();
+
+         }catch(PDOException $e){
+            $dbh->rollBack();
+            exit($e);
+         }
+    }
+}
+    
+
+//コメントを投稿
+if(!function_exists('commentCreate')) {
+    function commentCreate($comment){
+
+        $sql = "INSERT INTO comments(name, c_content, posts_id)
+                VALUES(:name, :c_content, :posts_id)";
+
+
+        $dbh = dbConnect();
+        $dbh->beginTransaction();
+
+
+        try{
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':name', $comment['name'],PDO::PARAM_STR);
+            $stmt->bindValue(':c_content', $comment['c_content'],PDO::PARAM_STR);
+            $stmt->bindValue(':posts_id', $comment['posts_id'],PDO::PARAM_INT);
+
+            $stmt->execute();
+            $dbh->commit();
+            //echo 'コメントを投稿しました。';
+
+        }catch(PDOException $e){
+            $dbh->rollBack();
+            //exit($e);
+        }
+    }
+}
+
+
+//-----------------更新--------------------------------------------------------
+
+//ブログの更新
+if(!function_exists('blogUpdate')) {
+    function blogUpdate($blogs){
+
+        $sql = "UPDATE posts SET
+                    title = :title, content = :content, category = :category, publish_status = :publish_status
+
+                WHERE id = :id;";
+
+        //insertの時もprepareいるの？？これってDBからデータを取得するのに使うんじゃないの？？ちなみに　「$sql = 'SELECT * FROM blog';」
+        //だからデータをDBから取り出してるよね？？
+
+        $dbh = dbConnect();
+        $dbh->beginTransaction();
+
+        try{
+            $stmt = $dbh->prepare($sql);
+
+            $stmt->bindValue(':title', $blogs['title'],PDO::PARAM_STR);
+            $stmt->bindValue(':content', $blogs['content'],PDO::PARAM_STR);
+            $stmt->bindValue(':category', $blogs['category'],PDO::PARAM_INT);
+            $stmt->bindValue(':publish_status', $blogs['publish_status'],PDO::PARAM_INT);
+
+            $stmt->bindValue(':id', $blogs['id'],PDO::PARAM_INT);
+
+
+            $stmt->execute();
+            $dbh->commit();
+            //echo 'ブログを更新しました。';
+
+        }catch(PDOException $e){
+            $dbh->rollBack();
+            exit($e);
+        }
+    }
+}
+
+
+//画像の更新
+if(!function_exists('fileUpdate')) {
+    function fileUpdate($blogs, $file){
+
+        $sql = "SELECT posts_id FROM files JOIN posts ON files.posts_id = :id";
+
+        $dbh = dbConnect();
+        $dbh->beginTransaction();
+
+        try{
+            //＄blogs['id’]から該当するfilesテーブルのposts_idを取得
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id',$blogs['id'],PDO::PARAM_INT);
+            $stmt->execute();
+            $posts_id = $stmt->fetch();
+
+            //posts_idを使って、既存の画像を削除
+            $stmt = $dbh->prepare("DELETE FROM files WHERE posts_id = :posts_id");
+            $stmt->bindValue(':posts_id', $posts_id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            //新しい画像を入れる
+            $sql = "INSERT INTO files(file_name, file_path, caption, posts_id)VALUES(:file_name, :file_path, :caption, :post_id)";
+
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':file_name',$blogs['file_name'],PDO::PARAM_STR);
+            $stmt->bindValue(':file_path',$blogs['file_path'],PDO::PARAM_STR);
+            $stmt->bindValue(':caption',$blogs['caption'],PDO::PARAM_STR);
+            $stmt->bindValue(':post_id',$posts_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $dbh->commit();
+        }catch(PDOException $e){
+            $dbh->rollBack();
+            exit($e);}
+
+    }
+}
+
+
+//-------取得----------------------------------------------------------------
+
+//idとテーブル名を引数にして、DBからデータを取得
+if(!function_exists('getById')) {
+    function getById($id,$table){
+        if(empty($id)){
+            exit('不正なIDです。');
+        }
+
+        $dbh = dbConnect();
+        $stmt = $dbh->prepare("SELECT * FROM $table WHERE id = :id");
+        //注意すること！！！　sql文内で変数を展開する時はダブルクォーテーションにする！！シングルだと、変数展開できない。
+        $stmt->bindValue(':id',(int)$id, PDO::PARAM_INT);
+        //GET で送られてきたidは文字列として入ってくるので、（int）をここにつけることで、int型になる。そして数字として認識させる。なぜその必要があるのか？？？
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+}    
+
+if(!function_exists('getFileById')) {
+    function getFileById($id){
+        if(empty($id)){
+            exit('不正なIDです。');
+        }
+
+        $dbh = dbConnect();
+        $sql = "SELECT posts_id, file_name, file_path, caption FROM files JOIN posts ON files.posts_id = posts.id WHERE files.posts_id = :id";
+        $stmt = $dbh->prepare($sql);
+        //注意すること！！！　sql文内で変数を展開する時はダブルクォーテーションにする！！シングルだと、変数展開できない。
+        $stmt->bindValue(':id',(int)$id, PDO::PARAM_INT);
+        //GET で送られてきたidは文字列として入ってくるので、（int）をここにつけることで、int型になる。そして数字として認識させる。なぜその必要があるのか？？？
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+}
+
+
+//getById（）とほぼ同じ。。。引数なしで、順番DESCで取得するところが違うだけ。
+//投稿されたブログ記事と画像を全て取得??filesがある時はfilesのデータも取得したい...そんなことしなくてもコメントを取得するのと同じ方法でfileがある時だけ表示させる？？どっち？？
+if(!function_exists('getData')) {
+    function getData(){
+        $dbh = dbConnect();
+
+        $sql = 'SELECT * FROM posts ORDER BY id DESC';
+        //$sql = 'SELECT * FROM posts JOIN files ON posts.id = files.posts_id ORDER BY posts.id DESC';
+
+        $stmt = $dbh->query($sql);
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+}
+
+ //投稿されたブログの件数を取得
+ if(!function_exists('getDataCount')) {
+    function getDataCount(){
+        $dbh = dbConnect();
+
+        $sql = 'SELECT COUNT(*)FROM posts';
+
+        $stmt = $dbh->query($sql);
+
+        $result = $stmt->fetch();
+
+        return $result;
+    }
+ }
+
+//最新のブログ記事を取得
+if(!function_exists('getNewestBlog')) {
+    function getNewestBlog(){
+        $dbh = dbConnect();
+
+        $sql = "SELECT * FROM posts ORDER BY id DESC LIMIT 1";
+
+        $stmt = $dbh->query($sql);
+
+        $result_1 = $stmt->fetch();
+
+        return $result_1;
+    }
+}
+
+ //コメントを取得
+ if(!function_exists('getComment')) {
+    function getComment($id){
+        $dbh = dbConnect();
+
+        $sql = "SELECT * FROM comments JOIN posts ON comments.posts_id = posts.id WHERE posts.id = :id";
+
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':id',(int)$id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if(!$result){
+            //exit();
+        }
+
+        return $result;
+
+    }
+ }
+
+//お知らせ機能で使うため、全コメントを取得
+if(!function_exists('getAllComment')) {
+    function getAllComment(){
+        $dbh = dbConnect();
+
+        $sql = "SELECT comments.id, name, c_content, comment_at, posts_id FROM comments JOIN posts ON posts.id = comments.posts_id ORDER BY comment_at DESC";
+
+        $stmt = $dbh->prepare($sql);
+
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+
+    }
+ }
+
+ if(!function_exists('getCommentCount')) {
+    function getCommentCount(){
+        $dbh = dbConnect();
+
+        $sql = "SELECT COUNT(*) FROM comments JOIN posts ON posts.id = comments.posts_id ORDER BY comment_at DESC";
+
+        $stmt = $dbh->prepare($sql);
+
+        $stmt->execute();
+
+        $result = $stmt->fetch();
+
+        return $result;
+
+    }
+}
+
+//画像を取得　
+if(!function_exists('getFile')) {
+    function getFile($id){
+        $dbh = dbConnect();
+
+        $sql = "SELECT * FROM files JOIN posts ON files.posts_id = posts.id WHERE posts.id = :id";
+
+        $stmt = $dbh->prepare($sql);
+        $stmt ->bindValue(':id',(int)$id, PDO::PARAM_INT);
+        $stmt->execute();
+        $fileDatas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $fileDatas;
+
+    }
+}
+
+//プロフィールのデータ（でけでなくuserテーブルの全てだけど）を取得
+if(!function_exists('getProfileDatas')) {
+    function getProfileDatas($user_id){
+        $dbh = dbConnect();
+
+        $sql = "SELECT * FROM users WHERE id = :id";
+
+        $stmt = $dbh->prepare($sql);
+        $stmt ->bindValue(':id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $profileDatas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $profileDatas;
+    }
+}
+
+
+//ーーーーーーーーー削除ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+
+//ブログ削除　メインテーブルから　返り値なしでOK??
+if(!function_exists('deleteMain')) {
+    function deleteMain($id,$table){
+        if(empty($id)){
+            exit('不正なIDです。');
+        }
+
+    $dbh = dbConnect();
+    $stmt = $dbh->prepare("DELETE FROM $table WHERE id = :id");
+    //注意すること！！！　sql文内で変数を展開する時はダブルクォーテーションにする！！シングルだと、変数展開できない。
+    $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
+    //GET で送られてきたidは文字列として入ってくるので、（int）をここにつけることで、int型になる。そして数字として認識させる。なぜその必要があるのか？？？
+    $stmt->execute();
+    //echo '記事は削除されました。';
+    }
+}
+
+//ブログ削除　付随のテーブルから
+if(!function_exists('deleteSide')) {
+    function deleteSide($id,$table){
+    if(empty($id)){
+        exit('不正なIDです。');
+    }
+
+    $dbh = dbConnect();
+    $stmt = $dbh->prepare("DELETE FROM $table WHERE posts_id = :id");
+    //注意すること！！！　sql文内で変数を展開する時はダブルクォーテーションにする！！シングルだと、変数展開できない。
+    $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
+    //GET で送られてきたidは文字列として入ってくるので、（int）をここにつけることで、int型になる。そして数字として認識させる。なぜその必要があるのか？？？
+    $stmt->execute();
+    //echo '記事は削除されました。';
+
+    }
+}
+
+//-------------------その他-----------------------------
+
+//いいねランキング
+if(!function_exists('likesRanking')) {
+    function likesRanking(){
+     $dbh = dbConnect();
+      //下の関数はMySQLでは使えない。。。
+     //$sql = "SELECT title, RANK() OVER(ORDER BY likes DESC) AS ranking, post_at, likes FROM posts";
+ 
+     $sql = "SELECT likes, id, title, post_at, category FROM posts ORDER BY likes DESC LIMIT 10";
+     $stmt = $dbh->query($sql);
+     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+     return $results;
+ 
+     //$sql = "SELECT * FROM posts WHERE";
+     //$stmt = $dbh->query($sql);
+     //$results2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+     
+     //return $results2
+ 
+    }
+ }
+
+
+//XSS対策エスケープ
+if(!function_exists('h')) {
+    function h($s){
+        return htmlspecialchars($s, ENT_QUOTES, "UTF-8");
+    }
+
+    //ブログのバリデーション　返り値はなしでOK？？？
+    function blogValidate($blogs){
+
+        if(empty($blogs['title'])){
+            exit('タイトルを入力してください。');
+        }
+
+        if(mb_strlen($blogs['title'])>26){
+            exit('タイトルは25字以下にして下さい。');
+        }
+
+        if(empty($blogs['content'])){
+            exit('本文を入力して下さい。');
+        }
+
+        if(empty($blogs['category'])){
+            exit('カテゴリーは必須です。');
+        }
+
+        if(empty($blogs['publish_status'])){
+            exit('公開ステータスは必須です。');
+        }
+    }
+
+    //カテゴリーを数字表記からちゃんとした文字表現に変更
+    function setCateName($cate){
+        if($cate ===0){
+            return '指定なし';
+        }
+
+        if($cate=== 1){
+            return 'テーマ１';
+        }
+
+        if($cate === 2){
+            return 'テーマ２';
+        }
+
+        if($cate === 3){
+            return 'その他';
+        }
+    }
+}

@@ -1,0 +1,80 @@
+@charset "utf-8";
+
+html,body
+ul, ol, li,
+h1, h2, h3, h4, h5, h6, div {
+  margin: 0;
+  padding: 0;
+}
+
+body{
+    font-family:'Javanese Text','Mongolian Baiti','Palatino Linotype';
+    min-height: 100vh;
+}
+
+li{
+    list-style: none;
+}
+
+/*------------------------------*/
+
+.wrapper{
+    height:80vh;
+    background-color: white;
+    color:#626063;
+}
+
+.container{
+    margin-top: 5rem;
+}
+
+.typein{
+    background-color:#f8f4e6;
+    border-radius: 15px;
+    padding: 2rem;
+    width: 800px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.error_msg p{
+    color: red;
+}
+
+.form_item p{
+margin: 15px 0 3px 0;}
+
+
+
+.btn{
+    margin-top: 20px;
+    margin-bottom: 20px;;
+    width: 120px;
+    line-height: 1.428571429;
+    border-radius: 50px;
+    padding: 8px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #49484d;
+    background-color:#bbe2f1;
+  }
+
+.btn:hover{
+    cursor:pointer;
+}
+
+.fixed_btn {
+	text-decoration: none;
+	color:#626063;
+	position: absolute;
+    bottom: 1rem;
+    right: 1.5rem;
+}
+
+.fixed_btn :hover{
+	font-weight: bold;
+}
+
+.error-box li{
+    color: red;
+}
