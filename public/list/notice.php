@@ -15,34 +15,33 @@ if (!$_SESSION['login']) {
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
-ini_set('display_errors',true);
-$comments = getAllComment();
-//var_dump($comments);
+//ini_set('display_errors',true);
 
-foreach($comments as $comment => $val){
-    var_dump($comment);
-}
+//未読コメント数
+$unreadCommentCount = getUnreadCommentCount();
 
+//未読コメントの内容
+$unreadComments = getUnreadComments();
+//var_dump($unreadComments);
+//foreach($unreadComments as $unreadComment){
+    //var_dump($unreadComment['name']);
+//}
 
+//コメントを既読にする
+//var_dump($_POST);
+if($_POST){
+  $read = $_POST['read_status'];
+  $comments_id = $_POST['comments_id'];
 
-$commentCount = getCommentCount();
-//var_dump($commentCount);
-var_dump($_POST);
-$read = $_POST['read'];
-$comments_id = $_POST['comments_id'];
-//$comment['id]はコメントテーブルのid
-foreach($comments as $comment=>$val){
-//var_dump($val['id']);
-  if($read = 1 && $comments_id == $val['id']){
-      var_dump($val['id']);
-      unset($comments[$comment]);
-       
+   if(!empty($read) && $comments_id){
+     switchToRead($comments_id);
+
+     //お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
+//var_dump($UnreadCommentCount['COUNT(*)']);
    }
    
-
 }
-var_dump($comments);
-
 
 
 //postのcomments_id(コメントテーブルのid)で照合して、配列$commentからコメントデータを排除したい。そうしないと、どんどんこのページが一杯になってしまう。
@@ -52,6 +51,7 @@ var_dump($comments);
 //$array = ['a'=>1,'b'=>2,'c'=>3,'d'=>4,'e'=>5,'f'=>5];
 //unset($array['a']);
 //var_dump($array);
+
 
 
 ?>
@@ -78,27 +78,25 @@ var_dump($comments);
             <div class="container">
             　  <div class="typein">
                   <div class="frame">
-                      <h2 class="form_title">お知らせは以下の通りです。(<?php echo $commentCount['COUNT(*)'].'件';?>)</h2>
+                      <h2 class="form_title">未読のコメントが<?php echo $unreadCommentCount['COUNT(*)'].'件';?>あります。</h2>
+                      <br>
 
-
-                            <?php foreach($comments as $comment => $val):?>
+                            <?php foreach($unreadComments as $unreadComment):?>
                                 <div class="result_box">
-                                 <?php// if($comment['posts_id'] == $posts_id && $read == 1):?>
-                                    <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($comment['posts_id'])?>">
-                                      
-                                    
                                     <dl>
-                                            <dt><?php echo $val['name'];?>さんがあなたの記事にコメントしました。</dt>
-                                            <dd><?php echo $val['comment_at'];?></dd>
-                                            <dd><?php echo $val['c_content'];?></dd>
+                                            <dt><strong><?php echo $unreadComment['name'];?>&nbsp;さんがあなたの記事にコメントしました。</strong></dt>
+                                            <br>
+                                            <dd>コメント投稿日時：<?php echo $unreadComment['comment_at'];?></dd>
+                                            <dd>コメント内容：<?php echo $unreadComment['c_content'];?></dd>
                                     </dl>
-                                    
-                                    </a>
-                                            <form action="./notice.php" method="post">
-                                               <input type="hidden" name="read" value="1">
-                                               <input type="hidden" name="comments_id" value="<?php echo $val['id'];?>">
-                                               <input type="submit" value="確認しました">
-                                            </form>
+                                    <br>
+                                    <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($unreadComment['posts_id'])?>">記事詳細ページへ</a>
+
+                                    <form action="./notice.php" method="post">
+                                        <input type="hidden" name="read_status" value="1">
+                                        <input type="hidden" name="comments_id" value="<?php echo $unreadComment['id'];?>">
+                                        <input class="btn" type="submit" value="既読にする">
+                                    </form>
                                 </div>
                                 
                             <?php endforeach;?>
