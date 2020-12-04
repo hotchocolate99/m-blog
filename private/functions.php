@@ -238,7 +238,7 @@ if(!function_exists('blogUpdate')) {
 
 //画像の更新
 if(!function_exists('fileUpdate')) {
-    function fileUpdate($blogs, $file, $save_filename){
+    function fileUpdate($blogs, $file, $save_path){
 
         //＄blogs['id’]から該当するfilesテーブルのidを取得
         $sql = "SELECT files.id FROM files JOIN posts ON files.posts_id = :id";
@@ -265,7 +265,7 @@ if(!function_exists('fileUpdate')) {
                 $stmt->bindValue(':caption', $blogs['caption'],PDO::PARAM_INT);
                 $stmt->bindValue(':id', $files_id,PDO::PARAM_INT);*/
             //--------------------------------------------------------------------------
-
+            
             //$files_idを使って、既存の画像を削除は上手く行かなかった。なんで？？ちゃんと$files_idの値もチェックしたのに。。。とりあえず、posts_idを使って削除。
             $sql = "DELETE FROM files WHERE posts_id = :id";
             $stmt = $dbh->prepare($sql);
@@ -277,12 +277,12 @@ if(!function_exists('fileUpdate')) {
 
             $stmt = $dbh->prepare($sql);
             $stmt->bindValue(':file_name',$file['name'],PDO::PARAM_STR);
-            $stmt->bindValue(':file_path',$save_filename,PDO::PARAM_STR);
+            $stmt->bindValue(':file_path',$save_path,PDO::PARAM_STR);
             $stmt->bindValue(':caption',$blogs['caption'],PDO::PARAM_STR);
             $stmt->bindValue(':posts_id',$blogs['id'],PDO::PARAM_INT);
             $stmt->execute();
             $dbh->commit();
-
+            
         }catch(PDOException $e){
             $dbh->rollBack();
             exit($e);}
