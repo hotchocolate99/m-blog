@@ -37,6 +37,9 @@ $search_word = $_POST['search_word'];
 //var_dump($search_word);
 $results = getSearchWord($search_word);
 
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
+
 
 ?>
 

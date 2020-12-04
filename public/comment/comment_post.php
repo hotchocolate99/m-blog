@@ -16,10 +16,16 @@ if (!$_SESSION['login']) {
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
-var_dump($_POST);
+
+//詳細ページから渡ってきた記事のid
+$blog_id = $_GET['id'];
+//var_dump($blog_id);
+
+//下は、コメント投稿ページから完了ページに飛ぶときにあたいが入るので、ここでは空っぽ。
+//var_dump($_POST);
 //var_dump((int)$id);
 $comment = $_POST;
-var_dump($comment);
+//var_dump($comment);
 
 
 //$p = getFile((int)$id);
@@ -33,6 +39,9 @@ var_dump($comment);
 //header('Location:home.php#selected_topic');
 //var_dump($SESSION);
 //↑ちゃんと配列になって入っている。
+
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
 
 ?>
 
@@ -69,7 +78,7 @@ var_dump($comment);
 
                             <input type="submit" value="投稿" class="btn">
                             <!--<input type="hidden" name="posts_id" value="<?php// if($p['id']){echo h($p['id']);}?>">-->
-                            <input type="hidden" name="posts_id" value="<?php if(!empty($id)){echo h($id);}?>">
+                            <input type="hidden" name="posts_id" value="<?php if(!empty($blog_id)){echo h($blog_id);}?>">
 
                             </form>
 

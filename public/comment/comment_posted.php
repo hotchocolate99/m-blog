@@ -16,7 +16,7 @@ require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
 $comment = $_POST;
-var_dump($comment['posts_id']);
+//var_dump($comment['posts_id']);
 
 //$posts_id = $_POST['posts_id'];
 //var_dump($posts_id);
@@ -38,6 +38,9 @@ if(!empty($comment)){
 
 }
 commentCreate($comment);
+
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
 
 ?>
 

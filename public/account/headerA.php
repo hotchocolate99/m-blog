@@ -6,9 +6,9 @@
 
             <div class="navi">
             <ul>
-               <?php //if(empty($_SESSION['user'])):?>
+               <?php if(!empty($_SESSION['user']) || empty($_SESSION['user'])):?>
                 <li><a href="./../../index.php" class="link_a"><span><i class="fas fa-home"></i>ホーム</span></a></li>
-               <?php //endif;?>
+               <?php endif;?>
 
                <?php if(!empty($_SESSION['user'])):?>
                 　<li><span><a href="./../blog/blog_post.php" class="link_a"><i class="fas fa-pencil-alt"></i>新記事投稿</span></a></li>

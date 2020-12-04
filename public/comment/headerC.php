@@ -15,7 +15,7 @@
                 <?php endif;?>
 
                 <?php if(!empty($_SESSION['user'])):?>
-                　<li><a href="#" class="link_a"><span><i class="fas fa-bell"></i>お知らせ</span></a></li>
+                　<li><a href="#" class="link_a"><span><i class="fas fa-bell"></i>お知らせ(<?php if($UnreadCommentCount){echo $UnreadCommentCount['COUNT(*)'];}?>)</span></a></li>
 　　　　　　　　　　<?php endif;?>
 
                 <?php if(empty($_SESSION['user'])):?>

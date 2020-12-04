@@ -128,6 +128,11 @@ if($blogs && $filename && $save_path || $caption){
 
 }
 
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
+
+
+
 ?>
 
 <!DOCTYPE html>

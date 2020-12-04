@@ -63,6 +63,10 @@ $category = (int)$result_posts['category'];
 //result['category']は文字列なので、$categoryに数字として代入するために（int）を付ける。
 $publish_status = $result_posts['publish_status'];
 
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
+
+
 
 
 ?>

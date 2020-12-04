@@ -38,6 +38,8 @@ $profiles = $_POST;
         }
         var_dump($_SESSION['0']['nickname']);
        // var_dump($user);
+
+
 ?>
 
 <!DOCTYPE html>

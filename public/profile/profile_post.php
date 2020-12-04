@@ -24,6 +24,8 @@ if(function_exists('getProfileDatas')) {
     $nickname = $profileDatas['0']['nickname'];
     $intro_text = $profileDatas['0']['intro_text'];
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">

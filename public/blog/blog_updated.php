@@ -3,7 +3,7 @@
 session_start();
 
 if (!$_SESSION['login']) {
-    header('Location: ./../../login.php');
+    header('Location: ./../../account/login.php');
     exit();
   }
 
@@ -27,6 +27,10 @@ var_dump($_FILES);
 $file = $_FILES;
 
 //ファイルのデータもポストで送られてきている。（$_FILESでは無く）
+
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
+var_dump($UnreadCommentCount['COUNT(*)']);
 
 
 

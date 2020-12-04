@@ -57,6 +57,10 @@ $cate2 = $logCounts['1'];
 
 $cate3 = $logCounts['2'];
 
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
+
+
 ?>
 
 

@@ -108,7 +108,11 @@ function likesCount($id){
     }
 
  //var_dump($likesCount);
+
 //---------------------------------------------------------
+
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
 
 ?>
 
@@ -209,9 +213,9 @@ function likesCount($id){
                         <li><a href="./../list/list_files.php" class="link_a"><i class="fas fa-camera"></i>画像一覧</a></li>
                         <li class="list"><a href="#" class="link_a"><i class="fas fa-file"></i>テーマ別記事一覧</a>
                           <ul>
-                          <li><a href="./public/blog/blog_cate_list.php#cate1" class="link_a">テーマ１</a></li>
-                              <li><a href="./public/blog/blog_cate_list.php#cate2" class="link_a">テーマ２</a></li>
-                              <li><a href="./public/blog/blog_cate_list.php#cate3" class="link_a">その他</a></li>
+                          <li><a href="./blog_cate_list.php#cate1" class="link_a">テーマ１</a></li>
+                              <li><a href=".blog_cate_list.php#cate2" class="link_a">テーマ２</a></li>
+                              <li><a href="./blog_cate_list.php#cate3" class="link_a">その他</a></li>
                           </ul>
                         </li>
 

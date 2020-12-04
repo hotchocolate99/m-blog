@@ -48,7 +48,13 @@ $result = getFilesCount();
 //var_dump($allFiles);
 //var_dump($result);
 //↑も配列だった
-var_dump($_SERVER['DOCUMENT_ROOT']);
+//var_dump($_SERVER['DOCUMENT_ROOT']);
+
+
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
+
+
 ?>
 
 

@@ -120,8 +120,8 @@ foreach($rankingData as $key=>$value){
   //var_dump($value['ranking'].'位'.'/いいね獲得数は'.$value['likes'].'/タイトルは'.$value['title']);
 }
 
-$commentCount = getCommentCount();
-var_dump($commentCount);
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
 
 ?>
 
@@ -156,7 +156,7 @@ var_dump($commentCount);
                 <?php endif;?>
 
                 <?php if(!empty($_SESSION['user'])):?>
-                　<li><a href="./public/list/notice.php" class="link_a"><span><i class="fas fa-bell"></i>お知らせ(<?php echo $commentCount['COUNT(*)'];?>)</span></a></li>
+                　<li><a href="./public/list/notice.php" class="link_a"><span><i class="fas fa-bell"></i>お知らせ(<?php echo $UnreadCommentCount['COUNT(*)'];?>)</span></a></li>
 　　　　　　　　　　<?php endif;?>
 
                 <?php if(empty($_SESSION['user'])):?>

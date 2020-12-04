@@ -23,6 +23,11 @@ deleteMain($id,'posts');
 deleteSide($id,'comments');
 deleteSide($id,'files');
 
+
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
+
+
 ?>
 
 <!DOCTYPE html>

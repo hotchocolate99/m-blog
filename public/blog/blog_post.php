@@ -3,7 +3,7 @@
 session_start();
 
 if (!$_SESSION['login']) {
-    header('Location: ./../../login.php');
+    header('Location: ./../../account/login.php');
     exit();
   }
 
@@ -11,6 +11,13 @@ if (!$_SESSION['login']) {
     $user = $_SESSION['user'];
   }
 //--------------------------------
+require_once './../../private/database.php';
+require_once './../../private/functions.php';
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getUnreadCommentCount();
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">

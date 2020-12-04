@@ -36,13 +36,15 @@ if($_POST){
    if(!empty($read) && $comments_id){
      switchToRead($comments_id);
 
-     //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
+     //お知らせの隣に表示させる未読のコメント数 なぜか、ヘッダーの未読数とページ内の未読数の表示が同時に変わらない。ダブルクリックしないとだめ。
+//$UnreadCommentCount = getUnreadCommentCount();
 //var_dump($UnreadCommentCount['COUNT(*)']);
    }
    
 }
 
+//ヘッダーに未読数を表示させるために、ここでも関数を呼び出している
+$UnreadCommentCount = getUnreadCommentCount();
 
 //postのcomments_id(コメントテーブルのid)で照合して、配列$commentからコメントデータを排除したい。そうしないと、どんどんこのページが一杯になってしまう。
 //var_dump($comment);

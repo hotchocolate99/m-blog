@@ -238,35 +238,51 @@ if(!function_exists('blogUpdate')) {
 
 //画像の更新
 if(!function_exists('fileUpdate')) {
-    function fileUpdate($blogs, $file){
+    function fileUpdate($blogs, $file, $save_filename){
 
-        $sql = "SELECT posts_id FROM files JOIN posts ON files.posts_id = :id";
+        //＄blogs['id’]から該当するfilesテーブルのidを取得
+        $sql = "SELECT files.id FROM files JOIN posts ON files.posts_id = :id";
 
         $dbh = dbConnect();
         $dbh->beginTransaction();
 
         try{
-            //＄blogs['id’]から該当するfilesテーブルのposts_idを取得
             $stmt = $dbh->prepare($sql);
             $stmt->bindValue(':id',$blogs['id'],PDO::PARAM_INT);
             $stmt->execute();
-            $posts_id = $stmt->fetch();
+            $files_id = $stmt->fetch();
 
-            //posts_idを使って、既存の画像を削除
-            $stmt = $dbh->prepare("DELETE FROM files WHERE posts_id = :posts_id");
-            $stmt->bindValue(':posts_id', $posts_id, PDO::PARAM_INT);
+            //--------------------------------------------------------------------------
+            //画像のアップデート（置き換え）はどうしても出来なかった。。。エラーメッセージもない状態なのに、なぜか反映されない。。。
+            /*$sql = "UPDATE files SET file_name = :file_name, file_path = :file_path, caption = :caption
+
+                WHERE id = :id;";
+
+                $stmt = $dbh->prepare($sql);
+
+                $stmt->bindValue(':file_name', $file['name'],PDO::PARAM_STR);
+                $stmt->bindValue(':file_path', $save_filename,PDO::PARAM_STR);
+                $stmt->bindValue(':caption', $blogs['caption'],PDO::PARAM_INT);
+                $stmt->bindValue(':id', $files_id,PDO::PARAM_INT);*/
+            //--------------------------------------------------------------------------
+
+            //$files_idを使って、既存の画像を削除は上手く行かなかった。なんで？？ちゃんと$files_idの値もチェックしたのに。。。とりあえず、posts_idを使って削除。
+            $sql = "DELETE FROM files WHERE posts_id = :id";
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', (int)$blogs['id'], PDO::PARAM_INT);
             $stmt->execute();
-
-            //新しい画像を入れる
-            $sql = "INSERT INTO files(file_name, file_path, caption, posts_id)VALUES(:file_name, :file_path, :caption, :post_id)";
+        
+           //新しい画像を入れる（filesテーブルのいidは新しくなるけど、posts_idはそのままなので問題ないよね？？）
+            $sql = "INSERT INTO files(file_name, file_path, caption, posts_id) VALUES (:file_name, :file_path, :caption, :posts_id)";
 
             $stmt = $dbh->prepare($sql);
-            $stmt->bindValue(':file_name',$blogs['file_name'],PDO::PARAM_STR);
-            $stmt->bindValue(':file_path',$blogs['file_path'],PDO::PARAM_STR);
+            $stmt->bindValue(':file_name',$file['name'],PDO::PARAM_STR);
+            $stmt->bindValue(':file_path',$save_filename,PDO::PARAM_STR);
             $stmt->bindValue(':caption',$blogs['caption'],PDO::PARAM_STR);
-            $stmt->bindValue(':post_id',$posts_id,PDO::PARAM_INT);
+            $stmt->bindValue(':posts_id',$blogs['id'],PDO::PARAM_INT);
             $stmt->execute();
             $dbh->commit();
+
         }catch(PDOException $e){
             $dbh->rollBack();
             exit($e);}
@@ -350,7 +366,7 @@ if(!function_exists('getData')) {
     }
  }
 
-//最新のブログ記事を取得
+//最新のブログ記事取得
 if(!function_exists('getNewestBlog')) {
     function getNewestBlog(){
         $dbh = dbConnect();
@@ -359,9 +375,9 @@ if(!function_exists('getNewestBlog')) {
 
         $stmt = $dbh->query($sql);
 
-        $result_1 = $stmt->fetch();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $result_1;
+        return $result;
     }
 }
 
@@ -387,12 +403,12 @@ if(!function_exists('getNewestBlog')) {
     }
  }
 
-//お知らせ機能で使うため、全コメントを取得
-if(!function_exists('getAllComment')) {
-    function getAllComment(){
+//お知らせ機能で使うため、未読コメントを取得
+if(!function_exists('getUnreadComments')) {
+    function getUnreadComments(){
         $dbh = dbConnect();
 
-        $sql = "SELECT comments.id, name, c_content, comment_at, posts_id FROM comments JOIN posts ON posts.id = comments.posts_id ORDER BY comment_at DESC";
+        $sql = "SELECT * FROM comments WHERE read_status = '0' ORDER BY comment_at DESC";
 
         $stmt = $dbh->prepare($sql);
 
@@ -405,11 +421,12 @@ if(!function_exists('getAllComment')) {
     }
  }
 
- if(!function_exists('getCommentCount')) {
-    function getCommentCount(){
+//未読コメント数の取得
+ if(!function_exists('getUnreadCommentCount')) {
+    function getUnreadCommentCount(){
         $dbh = dbConnect();
 
-        $sql = "SELECT COUNT(*) FROM comments JOIN posts ON posts.id = comments.posts_id ORDER BY comment_at DESC";
+        $sql = "SELECT COUNT(*) FROM comments JOIN posts ON posts.id = comments.posts_id WHERE comments.read_status = 0 ORDER BY comment_at DESC";
 
         $stmt = $dbh->prepare($sql);
 
@@ -422,12 +439,33 @@ if(!function_exists('getAllComment')) {
     }
 }
 
-//画像を取得　
+//コメントステータスを既読にする
+if(!function_exists('switchToRead')) {
+  function switchToRead($comments_id){
+
+    $sql = "UPDATE comments SET read_status = 1 WHERE id = :id;";
+
+        $dbh = dbConnect();
+        try{
+            $stmt = $dbh->prepare($sql);
+            //$stmt->bindValue(':publish_status', $blogs['publish_status'],PDO::PARAM_INT);
+            $stmt->bindValue(':id', $comments_id,PDO::PARAM_INT);
+            $stmt->execute();
+
+        }catch(PDOException $e){
+            exit($e);
+        }
+
+  }
+}
+
+
+//画像を取得　引数：記事のid(filesテーブルのposts_id)であってfilesテーブルのidではない。
 if(!function_exists('getFile')) {
     function getFile($id){
         $dbh = dbConnect();
 
-        $sql = "SELECT * FROM files JOIN posts ON files.posts_id = posts.id WHERE posts.id = :id";
+        $sql = "SELECT files.* FROM files JOIN posts ON files.posts_id = posts.id WHERE posts.id = :id";
 
         $stmt = $dbh->prepare($sql);
         $stmt ->bindValue(':id',(int)$id, PDO::PARAM_INT);
@@ -458,7 +496,7 @@ if(!function_exists('getProfileDatas')) {
 
 //ーーーーーーーーー削除ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 
-//ブログ削除　メインテーブルから　返り値なしでOK??
+//ブログ削除　メインテーブルから　
 if(!function_exists('deleteMain')) {
     function deleteMain($id,$table){
         if(empty($id)){
