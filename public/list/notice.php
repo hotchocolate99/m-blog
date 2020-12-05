@@ -1,4 +1,11 @@
 <?php
+
+/**
+ 1.notice.phpに既読ボタンをつけて、read_statusを変更するために１をpostで送る。
+ 2.それを使って、コメントテーブルに変更を加える。
+ 3.コメントテーブルからread_statusが０のものだけ全て取得する。*
+ 4.取得したデータを表示させる。*/
+
 //----ログイン状態-----------------
 session_start();
 
@@ -17,6 +24,23 @@ require_once './../../private/functions.php';
 
 //ini_set('display_errors',true);
 
+//コメントを既読にする
+//var_dump($_POST);
+if($_POST){
+    $read = $_POST['read_status'];
+    $comments_id = $_POST['comments_id'];
+  
+     if(!empty($read) && $comments_id){
+       switchToRead($comments_id);
+  
+       //お知らせの隣に表示させる未読のコメント数 なぜか、ヘッダーの未読数とページ内の未読数の表示が同時に変わらない。ダブルクリックしないとだめ。
+  //$UnreadCommentCount = getUnreadCommentCount();
+  //var_dump($UnreadCommentCount['COUNT(*)']);
+     }
+     
+  }
+
+
 //未読コメント数
 $unreadCommentCount = getUnreadCommentCount();
 
@@ -27,21 +51,7 @@ $unreadComments = getUnreadComments();
     //var_dump($unreadComment['name']);
 //}
 
-//コメントを既読にする
-//var_dump($_POST);
-if($_POST){
-  $read = $_POST['read_status'];
-  $comments_id = $_POST['comments_id'];
 
-   if(!empty($read) && $comments_id){
-     switchToRead($comments_id);
-
-     //お知らせの隣に表示させる未読のコメント数 なぜか、ヘッダーの未読数とページ内の未読数の表示が同時に変わらない。ダブルクリックしないとだめ。
-//$UnreadCommentCount = getUnreadCommentCount();
-//var_dump($UnreadCommentCount['COUNT(*)']);
-   }
-   
-}
 
 //ヘッダーに未読数を表示させるために、ここでも関数を呼び出している
 $UnreadCommentCount = getUnreadCommentCount();
@@ -88,8 +98,8 @@ $UnreadCommentCount = getUnreadCommentCount();
                                     <dl>
                                             <dt><strong><?php echo $unreadComment['name'];?>&nbsp;さんがあなたの記事にコメントしました。</strong></dt>
                                             <br>
-                                            <dd>コメント投稿日時：<?php echo $unreadComment['comment_at'];?></dd>
-                                            <dd>コメント内容：<?php echo $unreadComment['c_content'];?></dd>
+                                            <dd>コメント投稿日時：<?php echo $unreadComment['comment_at'];?></dd><br>
+                                            <dd>コメント内容：<br><?php echo $unreadComment['c_content'];?></dd>
                                     </dl>
                                     <br>
                                     <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($unreadComment['posts_id'])?>">記事詳細ページへ</a>
