@@ -20,7 +20,7 @@ ini_set('display_errors',true);
 function getAllFiles(){
     $dbh = dbConnect();
 
-        $sql = "SELECT * FROM posts JOIN files ON posts.id = files.posts_id ORDER BY posts.id DESC";
+         $sql = "SELECT * FROM posts JOIN files ON posts.id = files.posts_id ORDER BY posts.id DESC";
 
         //JOIN posts ON files.posts_id = posts.id ORDER BY id DESC
         $stmt = $dbh->query($sql);
@@ -38,13 +38,17 @@ function getFilesCount(){
 
         $stmt = $dbh->query($sql);
 
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $result;
+        return $results;
 }
 
 $allFiles = getAllFiles();
-$result = getFilesCount();
+foreach($allFiles as $allFile){
+  //var_dump($allFile['id'].$allFile['file_path']);
+}
+
+$results = getFilesCount();
 //var_dump($allFiles);
 //var_dump($result);
 //↑も配列だった
@@ -54,7 +58,7 @@ $result = getFilesCount();
 //お知らせの隣に表示させる未読のコメント数
 $UnreadCommentCount = getUnreadCommentCount();
 
-
+//var_dump($allFiles);
 ?>
 
 
@@ -80,21 +84,24 @@ $UnreadCommentCount = getUnreadCommentCount();
             <div class="container">
             　  <div class="typein">
 
-                    <?php foreach($result as $value):?>
-                      <h2 class="form_title">画像一覧（全<?php echo $value["COUNT(*)"];?>件）</h2>
+                    <?php foreach($results as $result):?>
+                      <h2 class="form_title">画像一覧（全<?php echo $result["COUNT(*)"];?>件）</h2>
                     <?php endforeach;?>
 
                     <div class="frame">
+                    <?php if($allFiles):?>
                         <?php foreach($allFiles as $allFile):?>
+
                               <div class="file_box">
                                 <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($allFile['posts_id'])?>">
                                 <p><strong><?php echo "{$allFile['title']}";?></strong></P>
                                 <p><?php echo "{$allFile['post_at']}";?></P>
-                                <img src="<?php echo "{$allFile['file_path']}";?>"　width="180px" height="300px" alt="blog_image" >
+                                <img src="./../blog/<?php echo "{$allFile['file_path']}";?>"　width="120px" height="200px" alt="blog_image" >
                                 <p><?php echo $allFile['caption'];?></p>
                                 </a>
                               </div>
                         <?php endforeach;?>
+                        <?php endif;?>
 
                         <a href="#" class="fixed_btn">TOPへ戻る</a></div><br>
                         

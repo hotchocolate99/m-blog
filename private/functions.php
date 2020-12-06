@@ -240,49 +240,23 @@ if(!function_exists('blogUpdate')) {
 if(!function_exists('fileUpdate')) {
     function fileUpdate($blogs, $file, $save_path){
 
-        //＄blogs['id’]から該当するfilesテーブルのidを取得
-        $sql = "SELECT files.id FROM files JOIN posts ON files.posts_id = :id";
-
         $dbh = dbConnect();
         $dbh->beginTransaction();
 
         try{
-            $stmt = $dbh->prepare($sql);
-            $stmt->bindValue(':id',$blogs['id'],PDO::PARAM_INT);
-            $stmt->execute();
-            $files_id = $stmt->fetch();
+            $sql = "UPDATE files SET file_name = :file_name, file_path = :file_path, caption = :caption
 
-            //--------------------------------------------------------------------------
-            //画像のアップデート（置き換え）はどうしても出来なかった。。。エラーメッセージもない状態なのに、なぜか反映されない。。。
-            /*$sql = "UPDATE files SET file_name = :file_name, file_path = :file_path, caption = :caption
-
-                WHERE id = :id;";
+                WHERE posts_id = :id;";
 
                 $stmt = $dbh->prepare($sql);
-
                 $stmt->bindValue(':file_name', $file['name'],PDO::PARAM_STR);
-                $stmt->bindValue(':file_path', $save_filename,PDO::PARAM_STR);
+                $stmt->bindValue(':file_path', $save_path,PDO::PARAM_STR);
                 $stmt->bindValue(':caption', $blogs['caption'],PDO::PARAM_INT);
-                $stmt->bindValue(':id', $files_id,PDO::PARAM_INT);*/
-            //--------------------------------------------------------------------------
+                $stmt->bindValue(':id', $blogs['id'],PDO::PARAM_INT);
             
-            //$files_idを使って、既存の画像を削除は上手く行かなかった。なんで？？ちゃんと$files_idの値もチェックしたのに。。。とりあえず、posts_idを使って削除。
-            $sql = "DELETE FROM files WHERE posts_id = :id";
-            $stmt = $dbh->prepare($sql);
-            $stmt->bindValue(':id', (int)$blogs['id'], PDO::PARAM_INT);
-            $stmt->execute();
-        
-           //新しい画像を入れる（filesテーブルのいidは新しくなるけど、posts_idはそのままなので問題ないよね？？）
-            $sql = "INSERT INTO files(file_name, file_path, caption, posts_id) VALUES (:file_name, :file_path, :caption, :posts_id)";
+                $stmt->execute();
+                $dbh->commit();
 
-            $stmt = $dbh->prepare($sql);
-            $stmt->bindValue(':file_name',$file['name'],PDO::PARAM_STR);
-            $stmt->bindValue(':file_path',$save_path,PDO::PARAM_STR);
-            $stmt->bindValue(':caption',$blogs['caption'],PDO::PARAM_STR);
-            $stmt->bindValue(':posts_id',$blogs['id'],PDO::PARAM_INT);
-            $stmt->execute();
-            $dbh->commit();
-            
         }catch(PDOException $e){
             $dbh->rollBack();
             exit($e);}

@@ -1,20 +1,5 @@
 <?php
-//----ログイン状態-----------------
-session_start();
 
-ini_set('display_errors', true);
-
-if (!$_SESSION['login']) {
-    header('Location: ./../public/account/login.php');
-    exit();
-  }
-
-  if ($_SESSION['login']= true) {
-    $user = $_SESSION['user'];
-  }
-
-  
-//--------------------------------
 
 ini_set('display_errors',true);
 
@@ -22,22 +7,15 @@ ini_set('display_errors',true);
 require_once './private/database.php';
 require_once './private/functions.php';
 
+//ブログ関連-----------------------------------------------------------------------
+//ブログの全件の全てのデータを取得し、記事一覧を表示-----
+$blogDatas = getData();
+//var_dump($blogDatas);
+foreach($blogDatas as $blogData=>$val){
+  //var_dump($val);
+}
 
-//ブログの全件の全てのデータを取得し、記事一覧を表示
-$blogData = getData();
-//var_dump($blogData);
-
-
-//最新ブログ記事取得
-$newest_blogData = getNewestBlog();
-$id = $newest_blogData['id'];
-//↑の＄blogDataから、選択された$column['id']を取得するのが出来なかったので、一旦、それをdetail.phpにGETで送った。。。
-//それをSESSIONに入れて、またこのhome.phpに戻し、詳細を表示するようにした。
-//最新記事のがそうを取得
-$fileDatas = getFile($id);
-//var_dump($fileDatas);
-
-//ブログの総件数を取得
+//ブログの総件数を取得----------------------------
 $blogs_total = getDataCount();
 //↑ は配列だったので ↓
 //var_dump($total["COUNT(*)"]);
@@ -45,7 +23,16 @@ $blogs_total = getDataCount();
 //最新記事からでも記事一覧からでも詳細ページに遷移するために、idをGETで、渡している。
 
 
-//プロフィールの表示
+//最新ブログ記事の取得(postsテーブルのデータのみで画像はなし)-------
+$newestBlogs = getNewestBlog();
+foreach($newestBlogs as $newestBlog){
+  //var_dump($newestBlog);
+}
+//上のidを引数に入れて、最新記事の画像を取得
+$fileDatas = getFile($newestBlog['id']);
+//var_dump($fileDatas);
+
+//プロフィールの表示-------------------------------------------------------------------
 //var_dump($user['0']['id']);
 //if(getProfileDatas($user['0']['id']);){
 $profileDatas = getProfileDatas($user['0']['id']);
@@ -55,7 +42,8 @@ $nickname = $profileDatas['0']['nickname'];
 $intro_text = $profileDatas['0']['intro_text'];
 
 
-//いいねランキング（自分の）
+//いいねランキング--------------------------------------------------------------------
+//自分で試みたランキング（失敗）
 /*$likes_results = likesRanking();
 
 $i=0;
@@ -63,19 +51,16 @@ for($i=0; $i<10; $i++){
    foreach($likes_results as $likes_result){
      //var_dump($likes_results[0]['likes']);
      //var_dump($likes_results[0]['rank']);
-     
+
      if($likes_results[$i+1]['likes'] !== $likes_results[$i]['likes']){
       $likes_results[$i]['rank'] = $i+1;
      }else{$likes_results[$i+1]['rank'] = $likes_results[$i]['rank'];
      }
-     
 
    }
    var_dump($likes_results[7]);
 }
 */
-
-
 
 //いいねのランキング（先生の）
 $data = likesRanking();
@@ -120,7 +105,8 @@ foreach($rankingData as $key=>$value){
   //var_dump($value['ranking'].'位'.'/いいね獲得数は'.$value['likes'].'/タイトルは'.$value['title']);
 }
 
-//お知らせの隣に表示させる未読のコメント数
+
+//お知らせの隣に表示させる未読のコメント数-------------------------------------
 $UnreadCommentCount = getUnreadCommentCount();
 
 ?>
@@ -182,39 +168,38 @@ $UnreadCommentCount = getUnreadCommentCount();
 
                    <div class="newest">
                            <h5><i class="fas fa-pencil-alt"></i>最新記事</h5>
-
-                             <?php if($newest_blogData):?>
-                                 <h2 class="title"><?php echo h($newest_blogData['title']);?></h2>
+                          
+                                 <h2 class="title"><?php echo h($newestBlog['title']);?></h2>
                                  <div class="flex">
-                                    <p><?php echo h($newest_blogData['post_at']);?></p>
-                                    <p><?php echo h(setCateName($newest_blogData['category']))?></p>
+                                    <p><?php echo h($newestBlog['post_at']);?></p>
+                                    <p><?php echo h(setCateName($newestBlog['category']))?></p>
                                  </div>
-                                 <p class="blog_content"><?php echo h($newest_blogData['content'])?></p>
-                              <?php endif;?>
+                                 <p class="blog_content"><?php echo h($newestBlog['content'])?></p>
+                              
 
                               <?php if($fileDatas):?>
-                                    <?php foreach($fileDatas as $fileData):?>
-                                       <img src="<?php echo h( "{$fileData['file_path']}");?>"　width="240px" height="400px" alt="blog_image" >
-                                       <p><?php echo h("{$fileData['caption']}")?></p>
-                                    <?php endforeach;?>
+                                    <?php// foreach($fileDatas as $fileData):?>
+                                      <img src="./public/blog/<?php echo "{$fileDatas[0]['file_path']}";?>"　width="240px" height="400px" alt="blog_image" >
+                                       <p><?php echo h("{$fileDatas[0]['caption']}");?></p>
+                                    <?php //endforeach;?>
                               <?php endif;?>
 
                                  <br>
-                                 <div class="detail_a"><a class="link_aa" href="./public/blog/blog_detail.php?id=<?php echo h($newest_blogData['id'])?>">詳細へ</a></div>
+                                 <div class="detail_a"><a class="link_aa" href="./public/blog/blog_detail.php?id=<?php echo h($newestBlog['id'])?>">詳細へ</a></div>
 
                    </div><!--newest-->
 
                   <div class="blogs">
                       <h2><i class="fas fa-pencil-alt"></i>記事一覧<span>（全<?php echo $blogs_total["COUNT(*)"];?>件）</span></h2>
-                         <?php foreach($blogData as $column):?>
+                         <?php foreach($blogDatas as $blogData => $val):?>
 
                             <div class="blog_box"> 
-                                <a class="link_aa" href="./public/blog/blog_detail.php?id=<?php echo h($column['id'])?>">
+                                <a class="link_aa" href="./public/blog/blog_detail.php?id=<?php echo h($val['id'])?>">
                                     <dl>
-                                        <dt class="detail"><h3><?php echo h($column['title'])?></h3></dt>
+                                        <dt class="detail"><h3><?php echo h($val['title'])?></h3></dt>
                                         <div class="flex">
-                                          <dd class=date><?php echo h($column['post_at'])?></dd>
-                                          <dd><?php echo h(setCateName($column['category']))?></dd>
+                                          <dd class=date><?php echo h($val['post_at'])?></dd>
+                                          <dd><?php echo h(setCateName($val['category']))?></dd>
                                         </div>
                                     </dl>
                                 </a>

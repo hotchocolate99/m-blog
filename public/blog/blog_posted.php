@@ -164,7 +164,8 @@ $UnreadCommentCount = getUnreadCommentCount();
                         <p>投稿を完了しました。</P>
 
                         <?php $this_blog = getNewestBlog();?>
-                        <a class="fixed_btn" href="./blog_detail.php?id=<?php echo h($this_blog['id'])?>">記事詳細へ</a></div><br>
+
+                        <a class="fixed_btn" href="./blog_detail.php?id=<?php echo h($this_blog[0]['id'])?>">記事詳細へ</a></div><br>
                     </div>
                 </div>
             </div>

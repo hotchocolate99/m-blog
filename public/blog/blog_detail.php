@@ -49,7 +49,7 @@ $result = getById($id,'posts');
 //nullになる。。。。
 
 
-//表示する画像がある場合----------------------------------------------------------
+//表示する画像がある場合(引数は記事のid)----------------------------------------------------------
 //var_dump($id);
 $fileDatas = getFileById($id);
 //var_dump($fileDatas);
@@ -90,7 +90,7 @@ function likesCount($id){
     return $result;
  }
 
- var_dump($_GET['id']);
+ //var_dump($_GET['id']);
  if(!empty($_GET["id"])){
     $id = $_GET["id"];
     //var_dump($like_id);

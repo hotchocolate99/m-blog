@@ -119,10 +119,11 @@ $UnreadCommentCount = getUnreadCommentCount();
                         <br>
 
                         <div class="form_item">画像</div>
-                        <input name="file" type="file"/>
-                        <input type="hidden" name="file_name" value="<?php echo h($file_name);?>" /><br>
-                        <input type="hidden" name="file_path" value="<?php echo h($file_path);?>" /><br>
-                        <input type="hidden" name="posts_id" value="<?php echo h($posts_id);?>" /><br>
+                        <input name="img" type="file"/>
+                        <input type="hidden" name="MAX_FILE_SIZE" value="1048576" />
+                        <!--<input type="hidden" name="file_name" value="<?php// echo h($file_name);?>" /><br>
+                        <input type="hidden" name="file_path" value="<?php// echo h($file_path);?>" /><br>
+                        <input type="hidden" name="posts_id" value="<?php// echo h($posts_id);?>" /><br>
                         <br><!--name="MAX_FILE_SIZE"-->
 
                         <textarea
