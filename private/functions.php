@@ -453,13 +453,13 @@ if(!function_exists('getFile')) {
 
 //プロフィールのデータ（でけでなくuserテーブルの全てだけど）を取得
 if(!function_exists('getProfileDatas')) {
-    function getProfileDatas($user_id){
+    function getProfileDatas($users_id){
         $dbh = dbConnect();
 
-        $sql = "SELECT * FROM users WHERE id = :id";
+        $sql = "SELECT * FROM users JOIN posts ON users.id = posts.users_id WHERE users.id = :users_id";
 
         $stmt = $dbh->prepare($sql);
-        $stmt ->bindValue(':id', $user_id, PDO::PARAM_INT);
+        $stmt ->bindValue(':users_id', $users_id, PDO::PARAM_INT);
         $stmt->execute();
         $profileDatas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

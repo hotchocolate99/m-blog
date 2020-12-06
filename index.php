@@ -26,18 +26,17 @@ $blogs_total = getDataCount();
 //最新ブログ記事の取得(postsテーブルのデータのみで画像はなし)-------
 $newestBlogs = getNewestBlog();
 foreach($newestBlogs as $newestBlog){
-  //var_dump($newestBlog);
+  var_dump($newestBlog['users_id']);
 }
+$users_id = $newestBlog['users_id'];
 //上のidを引数に入れて、最新記事の画像を取得
 $fileDatas = getFile($newestBlog['id']);
 //var_dump($fileDatas);
 
 //プロフィールの表示-------------------------------------------------------------------
-//var_dump($user['0']['id']);
-//if(getProfileDatas($user['0']['id']);){
-$profileDatas = getProfileDatas($user['0']['id']);
+//引数の$users_idは最新記事を書いたユーザーのid
+$profileDatas = getProfileDatas($users_id);
 
-//}
 $nickname = $profileDatas['0']['nickname'];
 $intro_text = $profileDatas['0']['intro_text'];
 
@@ -215,13 +214,15 @@ $UnreadCommentCount = getUnreadCommentCount();
 
             <div class="right">
                 　　<div class="profile">
-                    <p class="prof_title"><i class="fas fa-user-circle"></i>プロフィール</p>
-                    <?php if(!empty($_SESSION['user'])):?>
+                    <p class="prof_title"><strong><i class="fas fa-user-circle">&nbsp;最新記事投稿者のプロフィール</i></strong></p>
                 　　　 <?php if($profileDatas):?>
                     　　　<h3 class="nickname"><?php echo $nickname;?></h3>
+                    　　　
                     　　　<p class="text"><?php echo $intro_text;?></p>
-                    　<?php endif;?>
-                    <?php endif;?>
+                    <a class="link_aa from_profile" href="./public/list/blogs_by_user.php?id=<?php echo h($users_id)?>"><?php echo $nickname;?>&nbsp;さんの記事一覧へ</a>
+                    
+                  <?php endif;?>
+                    
                 　　</div>
 
                 　　
