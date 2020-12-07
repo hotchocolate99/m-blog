@@ -10,10 +10,11 @@ session_start();
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
+  $users_id = $user[0]['id'];
 //--------------------------------
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
-var_dump($user[0]['id']);
+
 //↓getById（）とほぼ同じ。。。引数なしで、順番DESCで取得するところが違うだけ。サイドの記事一覧に使っている。
 $blogData = getData();
 //var_dump($blogData);
@@ -112,7 +113,7 @@ function likesCount($id){
 //---------------------------------------------------------
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
+$UnreadCommentCount = getUnreadCommentCount($users_id);
 
 ?>
 
@@ -157,9 +158,9 @@ $UnreadCommentCount = getUnreadCommentCount();
                     </div><!--frame-->
 
                     <div>
-　　　　　　　　　　　　　　<div class="likes"><a class="link_aa" href="./blog_detail.php?id=<?php echo h($result['id'])?>&plusLike=1"><i class="fas fa-heart"></i><p class="likes">いいね(<?php if(isset($likesCount)){echo $likesCount["likes"];}else{echo $likesSoFar["likes"];}?>)</p></a></div>
+　　　　　　　　　　　　　　<div class="likes"><a class="link_aa" href="./blog_detail.php?id=<?php echo h($idResult['id'])?>&plusLike=1"><i class="fas fa-heart"></i><p class="likes">いいね(<?php if(isset($likesCount)){echo $likesCount["likes"];}else{echo $likesSoFar["likes"];}?>)</p></a></div>
 
-                        <a class="link_aa" href="./../comment/comment_post.php?id=<?php echo h($result['id'])?>"><span><i class="fas fa-comment"></i>この記事にコメントする</span></a>
+                        <a class="link_aa" href="./../comment/comment_post.php?id=<?php echo h($idResult['id'])?>"><span><i class="fas fa-comment"></i>この記事にコメントする</span></a>
                        <!--getで記事のidをコメントページに渡している-->
                     </div>
 
@@ -167,8 +168,8 @@ $UnreadCommentCount = getUnreadCommentCount();
                         <?php if($user[0]['id'] == $idResult['users_id']):?>
 
                     　　   <div class="opt">
-                       　　   <a class="link_aa" href="./blog_update.php?id=<?php echo h($result['id'])?>"><i class="fas fa-edit"></i>記事の編集</a>
-                       　　   <a class="link_aa" href="./blog_delete.php?id=<?php echo h($result['id'])?>"><i class="fas fa-trash-alt"></i>記事の削除</a>
+                       　　   <a class="link_aa" href="./blog_update.php?id=<?php echo h($idResult['id'])?>"><i class="fas fa-edit"></i>記事の編集</a>
+                       　　   <a class="link_aa" href="./blog_delete.php?id=<?php echo h($idResult['id'])?>"><i class="fas fa-trash-alt"></i>記事の削除</a>
                     　　   </div><!--opt-->
                        <?php endif ;?>
                     <?php endif;?>
@@ -230,12 +231,13 @@ $UnreadCommentCount = getUnreadCommentCount();
                          <?php foreach($blogData as $column):?>
 
                             <div class="blog_box"> 
+                                <p class="small"><a class="link_aa" href="./../list/blogs_by_user.php?id=<?php echo h($column['users_id'])?>"><?php echo h($column['nickname'])?></a>さんの投稿</p>
                                 <a class="link_aa" href="./blog_detail.php?id=<?php echo h($column['id'])?>">
 
                                         <div class="detail small"><span><?php echo h($column['title'])?></span></div>
                                           <div class="date small"><?php echo h($column['post_at'])?></div>
                                           <div class="small"><?php echo h(setCateName($column['category']))?></div>
-
+                                          <div class="small">(<i class="fas fa-heart"></i><?php echo h($column['likes'])?>)</div>
                                 </a>
                             </div>
                          <?php endforeach;?>
