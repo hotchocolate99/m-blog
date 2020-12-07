@@ -10,7 +10,7 @@ if (!$_SESSION['login']) {
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
-//var_dump($_SESSION);
+
 //--------------------------------
 ini_set('display_errors',true);
 
@@ -40,7 +40,7 @@ if(function_exists('getProfileDatas')) {
 
     <body>
 
-       <?php include './headerP.php' ?>
+       <?php include './../../header.php' ?>
        
 
 

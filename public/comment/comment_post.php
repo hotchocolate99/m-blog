@@ -10,6 +10,7 @@ if (!$_SESSION['login']) {
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
+  $users_id = $user[0]['id'];
 //--------------------------------
 
 //ini_set('display_errors',true);
@@ -41,7 +42,7 @@ $comment = $_POST;
 //↑ちゃんと配列になって入っている。
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
+$UnreadCommentCount = getUnreadCommentCount($users_id);
 
 ?>
 
@@ -59,7 +60,7 @@ $UnreadCommentCount = getUnreadCommentCount();
 
     <body>
 
-        <?php include './headerC.php';?>
+        <?php include './../../header.php';?>
 
         <div class="wrapper">
             <div class="container">

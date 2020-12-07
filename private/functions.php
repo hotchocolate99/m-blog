@@ -69,10 +69,10 @@ require_once 'database.php';
 
 //ブログ新規投稿(画像あり)
 if(!function_exists('blogCreateWithFile')) {
-    function blogCreateWithFile($blogs, $filename, $save_path, $caption){
+    function blogCreateWithFile($blogs, $filename, $save_path, $caption, $users_id){
 
-        $sql = "INSERT INTO posts(title, content, category, publish_status, likes)
-                VALUES(:title, :content, :category, :publish_status, 0)";
+        $sql = "INSERT INTO posts(title, content, category, publish_status, likes, users_id)
+                VALUES(:title, :content, :category, :publish_status, 0, :users_id)";
 
         $dbh = dbConnect();
         $dbh->beginTransaction();
@@ -83,6 +83,7 @@ if(!function_exists('blogCreateWithFile')) {
             $stmt->bindValue(':content', $blogs['content'],PDO::PARAM_STR);
             $stmt->bindValue(':category', $blogs['category'],PDO::PARAM_INT);
             $stmt->bindValue(':publish_status', $blogs['publish_status'],PDO::PARAM_INT);
+            $stmt->bindValue(':users_id', $users_id,PDO::PARAM_INT);
 
             $stmt->execute();
 
@@ -110,10 +111,10 @@ if(!function_exists('blogCreateWithFile')) {
 
  //ブログ新規投稿(画像なし)
  if(!function_exists('blogCreateWithoutFile')) {
-    function blogCreateWithoutFile($blogs){
+    function blogCreateWithoutFile($blogs, $users_id){
 
-        $sql = "INSERT INTO posts(title, content, category, publish_status, likes)
-                VALUES(:title, :content, :category, :publish_status, 0)";
+        $sql = "INSERT INTO posts(title, content, category, publish_status, likes, users_id)
+                VALUES(:title, :content, :category, :publish_status, 0, :users_id)";
 
         $dbh = dbConnect();
         $dbh->beginTransaction();
@@ -124,6 +125,7 @@ if(!function_exists('blogCreateWithFile')) {
             $stmt->bindValue(':content', $blogs['content'],PDO::PARAM_STR);
             $stmt->bindValue(':category', $blogs['category'],PDO::PARAM_INT);
             $stmt->bindValue(':publish_status', $blogs['publish_status'],PDO::PARAM_INT);
+            $stmt->bindValue(':users_id', $users_id,PDO::PARAM_INT);
 
             $stmt->execute();
             $dbh->commit();
@@ -314,7 +316,7 @@ if(!function_exists('getData')) {
     function getData(){
         $dbh = dbConnect();
 
-        $sql = 'SELECT * FROM posts ORDER BY id DESC';
+        $sql = 'SELECT posts.*, users.nickname FROM posts JOIN users ON posts.users_id = users.id ORDER BY posts.id DESC';
         //$sql = 'SELECT * FROM posts JOIN files ON posts.id = files.posts_id ORDER BY posts.id DESC';
 
         $stmt = $dbh->query($sql);
@@ -345,7 +347,7 @@ if(!function_exists('getNewestBlog')) {
     function getNewestBlog(){
         $dbh = dbConnect();
 
-        $sql = "SELECT * FROM posts ORDER BY id DESC LIMIT 1";
+        $sql = "SELECT posts.*, users.nickname FROM posts JOIN users ON posts.users_id = users.id ORDER BY posts.id DESC LIMIT 1";
 
         $stmt = $dbh->query($sql);
 
@@ -385,7 +387,7 @@ if(!function_exists('getUnreadComments')) {
         $sql = "SELECT * FROM comments WHERE read_status = '0' ORDER BY comment_at DESC";
 
         $stmt = $dbh->prepare($sql);
-
+        
         $stmt->execute();
 
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -397,13 +399,13 @@ if(!function_exists('getUnreadComments')) {
 
 //未読コメント数の取得
  if(!function_exists('getUnreadCommentCount')) {
-    function getUnreadCommentCount(){
+    function getUnreadCommentCount($users_id){
         $dbh = dbConnect();
 
-        $sql = "SELECT COUNT(*) FROM comments JOIN posts ON posts.id = comments.posts_id WHERE comments.read_status = 0 ORDER BY comment_at DESC";
-
+        $sql = "SELECT COUNT(*) FROM comments JOIN posts ON posts.id = comments.posts_id WHERE posts.users_id = :users_id AND comments.read_status = 0 ORDER BY comment_at DESC";
+        
         $stmt = $dbh->prepare($sql);
-
+        $stmt->bindValue(':users_id',(int)$users_id, PDO::PARAM_INT);
         $stmt->execute();
 
         $result = $stmt->fetch();
@@ -514,7 +516,7 @@ if(!function_exists('likesRanking')) {
       //下の関数はMySQLでは使えない。。。
      //$sql = "SELECT title, RANK() OVER(ORDER BY likes DESC) AS ranking, post_at, likes FROM posts";
  
-     $sql = "SELECT likes, id, title, post_at, category FROM posts ORDER BY likes DESC LIMIT 10";
+     $sql = "SELECT likes, posts.id, title, post_at, category, posts.users_id, users.nickname FROM posts JOIN users ON posts.users_id = users.id ORDER BY likes DESC LIMIT 10";
      $stmt = $dbh->query($sql);
      $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
      return $results;

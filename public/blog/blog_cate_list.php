@@ -2,14 +2,10 @@
 //----ログイン状態-----------------
 session_start();
 
-if (!$_SESSION['login']) {
-    header('Location: ./../../account/login.php');
-    exit();
-  }
-
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
+  $users_id = $user[0]['id'];
 //--------------------------------
 
 require_once './../../private/database.php';
@@ -58,7 +54,7 @@ $cate2 = $logCounts['1'];
 $cate3 = $logCounts['2'];
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
+$UnreadCommentCount = getUnreadCommentCount($users_id);
 
 
 ?>
@@ -78,7 +74,7 @@ $UnreadCommentCount = getUnreadCommentCount();
 
     <body>
 
-        <?php include './headerB.php';?>
+        <?php include './../../header.php';?>
 
         <div class="wrapper">
             <div class="container">

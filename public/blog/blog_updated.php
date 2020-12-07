@@ -10,6 +10,7 @@ if (!$_SESSION['login']) {
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
+  $users_id = $user[0]['id'];
 //--------------------------------
 
 ini_set('display_errors',true);
@@ -18,7 +19,7 @@ require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
 $blogs = $_POST;
-//var_dump($blogs);
+var_dump($blogs['users_id']);
 
 $file = $_FILES['img'];
 var_dump($file);
@@ -89,7 +90,7 @@ if(is_uploaded_file($tmp_path)){
 //var_dump($save_filename);
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
+$UnreadCommentCount = getUnreadCommentCount($users_id);
 //var_dump($UnreadCommentCount['COUNT(*)']);
 
 
@@ -118,7 +119,7 @@ fileUpdate($blogs,$file,$save_path);
 
     <body>
 
-           <?php include './headerB.php';?>
+           <?php include './../../header.php';?>
 
             <div class="wrapper">
                 <div class="container">

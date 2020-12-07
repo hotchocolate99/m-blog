@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="./../../css/header.css">
     </head>
     <body>
-        <?php include './headerA.php';?>
+        <?php include './../../header.php';?>
 
         <div class="wrapper">
             <div class="container">

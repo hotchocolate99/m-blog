@@ -131,12 +131,8 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
 
     <body>
 
-        <?php include './headerB.php';?>
-        <?php// include ($_SERVER['DOCUMENT_ROOT'].'/headerB.php');?>
+        <?php include './../../header.php';?>
 
-
-
-        
         <div class="wrapper">
             <div class="container">
                 <div class="left">
@@ -174,7 +170,7 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                        <?php endif ;?>
                     <?php endif;?>
 
-                    <div class="frame">
+                    <div class="frame second">
                         <h2 class="title">コメント一覧</h2>
 
                              <?php if($comDatas = getComment($id)):?>

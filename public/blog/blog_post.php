@@ -10,11 +10,12 @@ if (!$_SESSION['login']) {
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
+  $users_id = $user[0]['id'];
 //--------------------------------
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
+$UnreadCommentCount = getUnreadCommentCount($users_id);
 
 
 
@@ -32,8 +33,7 @@ $UnreadCommentCount = getUnreadCommentCount();
 
     <body>
 
-       <?php include './headerB.php';?>
-
+       <?php include './../../header.php';?>
 
         <div class="wrapper">
             <div class="container">

@@ -135,43 +135,8 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
 </head>
 
 <body>
-
-   <header>
-
-    <div class="h_container">
-
-            <div class="logo"><span><i class="fas fa-pencil-alt"></i>m-blog</span></div>
-
-            <div class="navi">
-               <ul>
-               <?php// if(!empty($_SESSION['user']) || empty($_SESSION['user'])):?>
-                 <li><a href="./index.php" class="link_a"><span><i class="fas fa-home"></i>ホーム</span></a></li>
-               <?php// endif;?>
-
-               <?php if(!empty($_SESSION['user'])):?>
-                　<li><span><a href="./public/blog/blog_post.php" class="link_a"><i class="fas fa-pencil-alt"></i>新記事投稿</span></a></li>
-                <?php endif;?>
-
-                <?php if(!empty($_SESSION['user'])):?>
-                　<li><a href="./public/list/notice.php" class="link_a"><span><i class="fas fa-bell"></i>お知らせ(<?php echo $UnreadCommentCount['COUNT(*)'];?>)</span></a></li>
-　　　　　　　　　　<?php endif;?>
-
-                <?php if(empty($_SESSION['user'])):?>
-                  <li><a href="./public/account/register.php" class="link_a"><span><i class="fas fa-user"></i>新規登録</span></a></li>
-                <?php else:?>
-                　<li><a href="./public/profile/profile_post.php" class="link_a"><span><i class="fas fa-user"></i>プロフィール</span></a></li>
-                <?php endif;?>
-
-                <?php if(empty($_SESSION['user'])):?>
-                　<li><a href="./public/account/login.php" class="link_a"><span><i class="fas fa-lock"></i>ログイン</span></a>
-                <?php else:?>
-                  <li><a href="./public/account/logout.php" class="link_a"><span><i class="fas fa-lock"></i>ログアウト</span></a>
-                <?php endif;?>
-              </ul>
-         </div><!--navi-->
-    </div><!--container-->
-
-</header>
+<?php include './header.php';?>
+   
 
   <div class="wrapper">
      <div class="container">
@@ -232,7 +197,7 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                 　　　 <?php if($profileDatas):?>
                     　　　<h3 class="nickname"><?php echo $nickname;?></h3>
                     　　　<p class="text"><?php echo $intro_text;?></p>
-                    　　　<a class="link_aa from_profile" href="./public/list/blogs_by_user.php?id=<?php echo h($users_id)?>"><?php echo $nickname;?>&nbsp;さんの記事一覧へ</a>
+                    　　　<a class="link_aa from_profile" href="/public/list/blogs_by_user.php?id=<?php echo h($users_id)?>"><?php echo $nickname;?>&nbsp;さんの記事一覧へ</a>
 
                   　　<?php endif;?>
 
@@ -243,7 +208,7 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                     　<ul>
                         <li>
                             <div class="search">
-                                <form action="./public/list/list_search_result.php" method="post">
+                                <form action="/public/list/list_search_result.php" method="post">
                                     <input type="text" name="search_word" class="sample2Text" placeholder="記事検索">
                                 </form>
                             </div>
@@ -252,9 +217,9 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                         <li><a href="./public/list/list_files.php" class="link_a"><i class="fas fa-camera"></i>画像一覧</a></li>
                         <li class="list"><a href="#" class="link_a"><i class="fas fa-file"></i>テーマ別記事一覧</a>
                           <ul>
-                              <li><a href="./public/blog/blog_cate_list.php#cate1" class="link_a">テーマ１</a></li>
-                              <li><a href="./public/blog/blog_cate_list.php#cate2" class="link_a">テーマ２</a></li>
-                              <li><a href="./public/blog/blog_cate_list.php#cate3" class="link_a">その他</a></li>
+                              <li><a href="/public/blog/blog_cate_list.php#cate1" class="link_a">テーマ１</a></li>
+                              <li><a href="/public/blog/blog_cate_list.php#cate2" class="link_a">テーマ２</a></li>
+                              <li><a href="/public/blog/blog_cate_list.php#cate3" class="link_a">その他</a></li>
                           </ul>
                         </li>
                         </li>
@@ -277,13 +242,13 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                               
                               <div class="blog_box"> 
                               
-                                  <a class="link_aa" href="./public/blog/blog_detail.php?id=<?php echo h($value['id'])?>">
+                                  <a class="link_aa" href="/public/blog/blog_detail.php?id=<?php echo h($value['id'])?>">
 
                                             <div class="detail "><strong><?php echo $value['ranking'].'位'?>&nbsp;<?php echo h($value['title'])?></strong>&nbsp;&nbsp;(<i class="fas fa-heart"></i><?php echo h($value['likes'])?>)</div>
                                             <div class="date small"><?php echo h($value['post_at'])?></div>
                                             <div class="small"><?php echo h(setCateName($value['category']))?></div>
                                   </a>
-                                  <p class="who_posts"><a class="link_aa" href="./public/list/blogs_by_user.php?id=<?php echo h($value['users_id'])?>"><?php echo $value['nickname'];?></a>&nbsp;さんの投稿</p>
+                                  <p class="who_posts"><a class="link_aa" href="/public/list/blogs_by_user.php?id=<?php echo h($value['users_id'])?>"><?php echo $value['nickname'];?></a>&nbsp;さんの投稿</p>
                               </div>
                           <?php endif;?>   
                          <?php endforeach;?>

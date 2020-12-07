@@ -2,14 +2,10 @@
 //----ログイン状態-----------------
 session_start();
 
-if (!$_SESSION['login']) {
-    header('Location: ./../../account/login.php');
-    exit();
-  }
-
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
+  $users_id = $user[0]['id'];
 //--------------------------------
 
 require_once './../../private/database.php';
@@ -56,7 +52,7 @@ $results = getFilesCount();
 
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
+$UnreadCommentCount = getUnreadCommentCount($users_id);
 
 //var_dump($allFiles);
 ?>
@@ -77,7 +73,7 @@ $UnreadCommentCount = getUnreadCommentCount();
 
     <body>
 
-        <?php include './headerL.php';?>
+        <?php include './../../header.php';?>
         
 
         <div class="wrapper">

@@ -61,7 +61,7 @@ if(!empty($_POST)){
   </head>
 
   <body>
-      <?php include './headerA.php';?>
+      <?php include './../../header.php';?>
     
       <div class="wrapper">
          <div class="container">

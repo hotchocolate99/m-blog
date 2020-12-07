@@ -1,4 +1,13 @@
 <?php
+//----ログイン状態-----------------
+session_start();
+
+  if ($_SESSION['login']= true) {
+    $user = $_SESSION['user'];
+  }
+  $users_id = $user[0]['id'];
+//--------------------------------
+
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
@@ -8,7 +17,7 @@ ini_set('display_errors',true);
 function getBlogByUser($users_id){
     $dbh = dbConnect();
     
-        $sql = "SELECT posts.id, title, category, post_at, content, likes, user_name FROM posts JOIN users ON posts.users_id = users.id WHERE posts.users_id = :users_id ORDER BY posts.id DESC";
+        $sql = "SELECT posts.id, title, category, post_at, content, likes, user_name, nickname, intro_text FROM posts JOIN users ON posts.users_id = users.id WHERE posts.users_id = :users_id ORDER BY posts.id DESC";
         $stmt = $dbh->prepare($sql);
         $stmt->bindValue(':users_id',$users_id, PDO::PARAM_INT);
         $stmt->execute();
@@ -24,7 +33,7 @@ $blogsByUser = getBlogByUser($users_id);
 //var_dump($blogsByUser);
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
+$UnreadCommentCount = getUnreadCommentCount($users_id);
 
 ?>
 
@@ -35,7 +44,7 @@ $UnreadCommentCount = getUnreadCommentCount();
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>テーマ別記事一覧</title>
+        <title>ユーザー別記事一覧</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
         <link rel="stylesheet" href="./../../css/cate_list.css">
         <link rel="stylesheet" href="./../../css/header.css">
@@ -43,15 +52,25 @@ $UnreadCommentCount = getUnreadCommentCount();
 
     <body>
 
-        <?php include './headerL.php';?>
+        <?php include './../../header.php';?>
 
         <div class="wrapper">
             <div class="container">
             　  <div class="typein">
-　　　　　　　　　　　　<h2 class="cate_title"><i class="fas fa-file"></i><?php echo $blogsByUser[0]['user_name'];?>さんの記事一覧</h2>
+
+            　　　　<div class="profile">
+
+                    　<p class="prof_title"><strong><i class="fas fa-user-circle">&nbsp;<?php echo $blogsByUser[0]['nickname'];?>&nbsp;&nbsp;さんのプロフィール</i></strong></p>
+                    　　　
+                    　　　<h3 class="nickname"><?php echo $blogsByUser[0]['nickname'];?></h3>
+                    　　　
+                    　　　<p class="text"><?php echo $blogsByUser[0]['intro_text'];?></p>
+            　　　　</div>
+
+　　　　　　　　　　　　<h2 class="cate_title"><i class="fas fa-file"></i><?php echo $blogsByUser[0]['nickname'];?>さんの記事一覧</h2>
                   <div class="frame">
-                                <?php foreach($blogsByUser as $blogByUser):?>
-                                    
+
+                                <?php foreach($blogsByUser as $blogByUser):?>　
                                     <div class="result_box">
                                         <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($blogByUser['id'])?>">
                                         <dl>

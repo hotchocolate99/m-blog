@@ -52,6 +52,10 @@ li{
     position: relative;
 }
 
+.second{
+    margin-top: 3rem;;
+}
+
 .stayAtLikeBtn{
     position: absolute;
     bottom: 3rem;

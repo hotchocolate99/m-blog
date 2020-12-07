@@ -9,14 +9,16 @@
 //----ログイン状態-----------------
 session_start();
 
-if (!$_SESSION['login']) {
+/*if (!$_SESSION['login']) {
     header('Location: ./../../account/login.php');
     exit();
-  }
+  }*/
 
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
+  $users_id = $user[0]['id'];
+  //var_dump($users_id);
 //--------------------------------
 
 require_once './../../private/database.php';
@@ -25,24 +27,19 @@ require_once './../../private/functions.php';
 //ini_set('display_errors',true);
 
 //コメントを既読にする
-//var_dump($_POST);
+var_dump($_POST);
 if($_POST){
     $read = $_POST['read_status'];
     $comments_id = $_POST['comments_id'];
-  
+
      if(!empty($read) && $comments_id){
        switchToRead($comments_id);
-  
-       //お知らせの隣に表示させる未読のコメント数 なぜか、ヘッダーの未読数とページ内の未読数の表示が同時に変わらない。ダブルクリックしないとだめ。
-  //$UnreadCommentCount = getUnreadCommentCount();
-  //var_dump($UnreadCommentCount['COUNT(*)']);
      }
-     
   }
 
 
 //未読コメント数
-$unreadCommentCount = getUnreadCommentCount();
+$unreadCommentCount = getUnreadCommentCount($users_id);
 
 //未読コメントの内容
 $unreadComments = getUnreadComments();
@@ -54,7 +51,7 @@ $unreadComments = getUnreadComments();
 
 
 //ヘッダーに未読数を表示させるために、ここでも関数を呼び出している
-$UnreadCommentCount = getUnreadCommentCount();
+$UnreadCommentCount = getUnreadCommentCount($users_id);
 
 //postのcomments_id(コメントテーブルのid)で照合して、配列$commentからコメントデータを排除したい。そうしないと、どんどんこのページが一杯になってしまう。
 //var_dump($comment);
@@ -84,7 +81,7 @@ $UnreadCommentCount = getUnreadCommentCount();
 
     <body>
 
-        <?php include './headerL.php';?>
+        <?php include './../../header.php';?>
 
         <div class="wrapper">
             <div class="container">

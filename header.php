@@ -15,23 +15,23 @@
                 <?php endif;?>
 
                 <?php if(!empty($_SESSION['user'])):?>
-                　<li><a href="/../list/notice.php" class="link_a"><span><i class="fas fa-bell"></i>お知らせ(<?php echo $UnreadCommentCount['COUNT(*)'];?>)</span></a></li>
+                　<li><a href="/public/list/notice.php" class="link_a"><span><i class="fas fa-bell"></i>お知らせ(<?php echo $UnreadCommentCount['COUNT(*)'];?>)</span></a></li>
 　　　　　　　　　　<?php endif;?>
 
                 <?php if(empty($_SESSION['user'])):?>
-                  <li><a href="/../account/register.php" class="link_a"><span><i class="fas fa-user"></i>新規登録</span></a></li>
+                  <li><a href="/public/account/register.php" class="link_a"><span><i class="fas fa-user"></i>新規登録</span></a></li>
                 <?php //else:?>
                   
                 <?php endif;?>
 
                 <?php if(!empty($_SESSION['user'])):?>
-                　<li><a href="/../profile/profile_post.php" class="link_a"><span><i class="fas fa-user"></i>プロフィール</span></a></li>
+                　<li><a href="/public/profile/profile_post.php" class="link_a"><span><i class="fas fa-user"></i>プロフィール</span></a></li>
                 <?php endif;?>
 
                 <?php if(empty($_SESSION['user'])):?>
-                　<li><a href="/../account/login.php" class="link_a"><span><i class="fas fa-lock"></i>ログイン</span></a>
+                　<li><a href="/public/account/login.php" class="link_a"><span><i class="fas fa-lock"></i>ログイン</span></a>
                 <?php else:?>
-                  <li><a href="/../account/logout.php" class="link_a"><span><i class="fas fa-lock"></i>ログアウト</span></a>
+                  <li><a href="/public/account/logout.php" class="link_a"><span><i class="fas fa-lock"></i>ログアウト</span></a>
                 <?php endif;?>
               </ul>
          </div><!--navi-->

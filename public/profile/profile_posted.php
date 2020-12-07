@@ -56,7 +56,7 @@ $profiles = $_POST;
 
     <body>
 
-       <?php include './headerP.php';?>
+       <?php include './../../header.php';?>
 
             <div class="wrapper">
                 <div class="container">

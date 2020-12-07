@@ -38,6 +38,36 @@ li{
     position: relative;
 }
 
+/*user profile----------------------------*/
+.profile{
+    background-color: white;
+    margin: 0px 50px;
+    min-height: 300px;
+    padding: 16px;
+position: relative;
+}
+
+.prof_title{
+    margin: 0px;
+    font-size: small;
+    font-weight: bold;
+    
+}
+
+.nickname{
+    text-align: center;
+    border-bottom: solid #f8f4e6; 5px;
+}
+
+.from_profile{
+position: absolute;
+text-align: center;
+bottom: 0.5rem;
+font-weight: bold;
+}
+/*--------------------------------------------------*/
+
+
 .cate_title{
     margin: 2rem 1rem;
 }

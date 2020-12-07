@@ -10,6 +10,7 @@ if (!$_SESSION['login']) {
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
+  $users_id = $user[0]['id'];
 //--------------------------------
 
 //echo __FILE__;
@@ -121,15 +122,15 @@ if($tmp_path && $save_path && $upload_dir){
 var_dump($file);
 
 if($blogs && $filename && $save_path || $caption){
-   blogCreateWithFile($blogs, $filename, $save_path, $caption);
+   blogCreateWithFile($blogs, $filename, $save_path, $caption, $users_id);
 
   }else if(!empty($blogs) && empty($file['file_path'])){
-     blogCreateWithoutFile($blogs);
+     blogCreateWithoutFile($blogs, $users_id);
 
 }
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
+$UnreadCommentCount = getUnreadCommentCount($users_id);
 
 
 
@@ -149,7 +150,7 @@ $UnreadCommentCount = getUnreadCommentCount();
 
     <body>
 
-      <?php include './headerB.php';?>
+      <?php include './../../header.php';?>
 
             <div class="wrapper">
                 <div class="container">

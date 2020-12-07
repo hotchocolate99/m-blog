@@ -148,7 +148,7 @@ position: relative;
     margin: 0px;
     font-size: small;
     font-weight: bold;
-    
+
 }
 
 .nickname{
@@ -253,6 +253,10 @@ padding: 0.5rem 1rem;
 
 .fa-heart{
     font-size: 12px;
+}
+
+.who_posts{
+    font-size: small;
 }
 
 /*---------------------------------*/
