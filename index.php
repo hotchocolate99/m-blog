@@ -1,5 +1,17 @@
 <?php
+//----ログイン状態-----------------
+session_start();
 
+/*if (!$_SESSION['login']) {
+    header('Location: ./../../account/login.php');
+    exit();
+  }*/
+
+  if ($_SESSION['login']= true) {
+    $user = $_SESSION['user'];
+  }
+  $users_id = $user[0]['id'];
+//--------------------------------
 
 ini_set('display_errors',true);
 
@@ -26,7 +38,7 @@ $blogs_total = getDataCount();
 //最新ブログ記事の取得(postsテーブルのデータのみで画像はなし)-------
 $newestBlogs = getNewestBlog();
 foreach($newestBlogs as $newestBlog){
-  var_dump($newestBlog['users_id']);
+  //var_dump($newestBlog);
 }
 $users_id = $newestBlog['users_id'];
 //上のidを引数に入れて、最新記事の画像を取得
@@ -36,7 +48,7 @@ $fileDatas = getFile($newestBlog['id']);
 //プロフィールの表示-------------------------------------------------------------------
 //引数の$users_idは最新記事を書いたユーザーのid
 $profileDatas = getProfileDatas($users_id);
-
+//var_dump($profileDatas);
 $nickname = $profileDatas['0']['nickname'];
 $intro_text = $profileDatas['0']['intro_text'];
 
@@ -98,7 +110,7 @@ function addRanking($data) {
 
 $rankingData = addRanking($data);
 
-//var_dump($rankingData);
+var_dump($rankingData);
 foreach($rankingData as $key=>$value){
   //var_dump($value);
   //var_dump($value['ranking'].'位'.'/いいね獲得数は'.$value['likes'].'/タイトルは'.$value['title']);
@@ -106,7 +118,7 @@ foreach($rankingData as $key=>$value){
 
 
 //お知らせの隣に表示させる未読のコメント数-------------------------------------
-$UnreadCommentCount = getUnreadCommentCount();
+$UnreadCommentCount = getUnreadCommentCount($users_id);
 
 ?>
 
@@ -167,14 +179,14 @@ $UnreadCommentCount = getUnreadCommentCount();
 
                    <div class="newest">
                            <h5><i class="fas fa-pencil-alt"></i>最新記事</h5>
-                          
+
+                                <p><a class="link_aa" href="./public/list/blogs_by_user.php?id=<?php echo h($users_id)?>"><?php echo $nickname;?></a>&nbsp;さんの投稿</p>
                                  <h2 class="title"><?php echo h($newestBlog['title']);?></h2>
                                  <div class="flex">
                                     <p><?php echo h($newestBlog['post_at']);?></p>
                                     <p><?php echo h(setCateName($newestBlog['category']))?></p>
                                  </div>
                                  <p class="blog_content"><?php echo h($newestBlog['content'])?></p>
-                              
 
                               <?php if($fileDatas):?>
                                     <?php// foreach($fileDatas as $fileData):?>
@@ -193,12 +205,14 @@ $UnreadCommentCount = getUnreadCommentCount();
                          <?php foreach($blogDatas as $blogData => $val):?>
 
                             <div class="blog_box"> 
+                                <p><a class="link_aa" href="./public/list/blogs_by_user.php?id=<?php echo h($val['users_id'])?>"><?php echo h($val['nickname'])?></a>&nbsp;さんの投稿</p>
                                 <a class="link_aa" href="./public/blog/blog_detail.php?id=<?php echo h($val['id'])?>">
                                     <dl>
                                         <dt class="detail"><h3><?php echo h($val['title'])?></h3></dt>
                                         <div class="flex">
                                           <dd class=date><?php echo h($val['post_at'])?></dd>
                                           <dd><?php echo h(setCateName($val['category']))?></dd>
+                                          <dd>(<i class="fas fa-heart"></i><?php echo h($val['likes'])?>)</dd>
                                         </div>
                                     </dl>
                                 </a>
@@ -217,12 +231,11 @@ $UnreadCommentCount = getUnreadCommentCount();
                     <p class="prof_title"><strong><i class="fas fa-user-circle">&nbsp;最新記事投稿者のプロフィール</i></strong></p>
                 　　　 <?php if($profileDatas):?>
                     　　　<h3 class="nickname"><?php echo $nickname;?></h3>
-                    　　　
                     　　　<p class="text"><?php echo $intro_text;?></p>
-                    <a class="link_aa from_profile" href="./public/list/blogs_by_user.php?id=<?php echo h($users_id)?>"><?php echo $nickname;?>&nbsp;さんの記事一覧へ</a>
-                    
-                  <?php endif;?>
-                    
+                    　　　<a class="link_aa from_profile" href="./public/list/blogs_by_user.php?id=<?php echo h($users_id)?>"><?php echo $nickname;?>&nbsp;さんの記事一覧へ</a>
+
+                  　　<?php endif;?>
+
                 　　</div>
 
                 　　
@@ -263,12 +276,14 @@ $UnreadCommentCount = getUnreadCommentCount();
                           <?php if($value['ranking'] !== null):?>
                               
                               <div class="blog_box"> 
+                              
                                   <a class="link_aa" href="./public/blog/blog_detail.php?id=<?php echo h($value['id'])?>">
 
                                             <div class="detail "><strong><?php echo $value['ranking'].'位'?>&nbsp;<?php echo h($value['title'])?></strong>&nbsp;&nbsp;(<i class="fas fa-heart"></i><?php echo h($value['likes'])?>)</div>
                                             <div class="date small"><?php echo h($value['post_at'])?></div>
                                             <div class="small"><?php echo h(setCateName($value['category']))?></div>
                                   </a>
+                                  <p class="who_posts"><a class="link_aa" href="./public/list/blogs_by_user.php?id=<?php echo h($value['users_id'])?>"><?php echo $value['nickname'];?></a>&nbsp;さんの投稿</p>
                               </div>
                           <?php endif;?>   
                          <?php endforeach;?>
