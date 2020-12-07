@@ -2,19 +2,18 @@
 //----ログイン状態-----------------
 session_start();
 
-if (!$_SESSION['login']) {
+/*if (!$_SESSION['login']) {
     header('Location: ./../../account/login.php');
     exit();
-  }
+  }*/
 
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
 //--------------------------------
-
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
-
+var_dump($user[0]['id']);
 //↓getById（）とほぼ同じ。。。引数なしで、順番DESCで取得するところが違うだけ。サイドの記事一覧に使っている。
 $blogData = getData();
 //var_dump($blogData);
@@ -33,7 +32,8 @@ $id = $_GET['id'];
 
 
 //選択された記事の詳細を表示するため、前ページからGETで受け取ったidを引数にしてgetById()を呼び出し、詳細情報を取得。またこの＄resul['id']を次ページ（編集やコメント、削除）へ送る。
-$result = getById($id,'posts');
+$idResult = getById($id,'posts');
+var_dump($idResult);
 //テーブル名はクォーテーション付けなくても大丈夫だった。
 //$_SESSION = $result;
 //header('Location:home.php#selected_topic');
@@ -141,10 +141,10 @@ $UnreadCommentCount = getUnreadCommentCount();
                 <div class="left">
 
                     <div class="frame">
-                        <h2 class="title"><?php echo h($result['title']);?></h2>
-                        <p class="date_posted"><?php echo h($result['post_at']);?></p>
-                        <p><?php echo h(setCateName($result['category']));?></p>
-                        <p class="blog_content"><?php echo h($result['content'])?></p>
+                        <h2 class="title"><?php echo h($idResult['title']);?></h2>
+                        <p class="date_posted"><?php echo h($idResult['post_at']);?></p>
+                        <p><?php echo h(setCateName($idResult['category']));?></p>
+                        <p class="blog_content"><?php echo h($idResult['content'])?></p>
 
                         <?php if($fileDatas):?>
                                 <img src="<?php echo "{$fileDatas['file_path']}";?>"　width="240px" height="400px" alt="blog_image" >
@@ -164,10 +164,13 @@ $UnreadCommentCount = getUnreadCommentCount();
                     </div>
 
                     <?php if(!empty($_SESSION['user'])):?>
-                    　　<div class="opt">
-                       　　<a class="link_aa" href="./blog_update.php?id=<?php echo h($result['id'])?>"><i class="fas fa-edit"></i>記事の編集</a>
-                       　　<a class="link_aa" href="./blog_delete.php?id=<?php echo h($result['id'])?>"><i class="fas fa-trash-alt"></i>記事の削除</a>
-                    　　</div><!--opt-->
+                        <?php if($user[0]['id'] == $idResult['users_id']):?>
+
+                    　　   <div class="opt">
+                       　　   <a class="link_aa" href="./blog_update.php?id=<?php echo h($result['id'])?>"><i class="fas fa-edit"></i>記事の編集</a>
+                       　　   <a class="link_aa" href="./blog_delete.php?id=<?php echo h($result['id'])?>"><i class="fas fa-trash-alt"></i>記事の削除</a>
+                    　　   </div><!--opt-->
+                       <?php endif ;?>
                     <?php endif;?>
 
                     <div class="frame">
