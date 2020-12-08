@@ -243,29 +243,48 @@ if(!function_exists('fileUpdate')) {
     function fileUpdate($blogs, $file, $save_path){
 
         $dbh = dbConnect();
-        $dbh->beginTransaction();
 
         try{
             $sql = "UPDATE files SET file_name = :file_name, file_path = :file_path, caption = :caption
 
-                WHERE posts_id = :id;";
+                WHERE posts_id = :posts_id;";
 
                 $stmt = $dbh->prepare($sql);
                 $stmt->bindValue(':file_name', $file['name'],PDO::PARAM_STR);
                 $stmt->bindValue(':file_path', $save_path,PDO::PARAM_STR);
                 $stmt->bindValue(':caption', $blogs['caption'],PDO::PARAM_INT);
-                $stmt->bindValue(':id', $blogs['id'],PDO::PARAM_INT);
+                $stmt->bindValue(':posts_id', $blogs['id'],PDO::PARAM_INT);
             
                 $stmt->execute();
-                $dbh->commit();
 
         }catch(PDOException $e){
-            $dbh->rollBack();
+           
             exit($e);}
 
     }
 }
 
+//記事の更新時に画像を追加する
+if(!function_exists('addNewFile')) {
+      function addNewFile($blogs, $file, $save_path){
+              $dbh = dbConnect();
+
+           try{
+
+                $sql = "INSERT INTO files(file_name, file_path, caption, posts_id) VALUES (:file_name, :file_path, :caption, :posts_id)";
+
+                $stmt = $dbh->prepare($sql);
+                $stmt->bindValue(':file_name',$file['name'],PDO::PARAM_STR);
+                $stmt->bindValue(':file_path',$save_path,PDO::PARAM_STR);
+                $stmt->bindValue(':caption',$blogs['caption'],PDO::PARAM_STR);
+                $stmt->bindValue(':posts_id',$blogs['id'],PDO::PARAM_INT);
+                $stmt->execute();
+                
+
+           }catch(PDOException $e){
+            exit($e);}
+       }
+}
 
 //-------取得----------------------------------------------------------------
 
@@ -505,6 +524,28 @@ if(!function_exists('deleteSide')) {
     //echo '記事は削除されました。';
 
     }
+}
+
+//ブログのアップデート時に画像だけ削除
+if(!function_exists('deleteFile')) {
+    function deleteFile($posts_id, $file_path_to_delete){
+        if(empty($posts_id)){
+            exit('不正なIDです。');
+        }
+        /*$dbh = dbConnect();
+        $stmt = $dbh->prepare("DELETE FROM files WHERE posts_id = :posts_id");
+            $stmt->bindValue(':posts_id', $posts_id, PDO::PARAM_INT);
+            $stmt->execute();*/
+
+        $dbh = dbConnect();
+        $stmt = $dbh->prepare("DELETE FROM files WHERE posts_id = :posts_id AND file_path = :file_path");
+        $stmt->bindValue(':posts_id', (int)$posts_id, PDO::PARAM_INT);
+        $stmt->bindValue(':file_path', $file_path_to_delete ,PDO::PARAM_STR);
+        $stmt->execute();
+
+
+   }
+
 }
 
 //-------------------その他-----------------------------
