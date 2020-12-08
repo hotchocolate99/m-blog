@@ -19,10 +19,21 @@ require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
 $blogs = $_POST;
-var_dump($blogs['users_id']);
+var_dump($blogs);
 
-$file = $_FILES['img'];
-var_dump($file);
+if($_POST['file_path_to_delete']){
+ $file_path_to_delete = $_POST['file_path_to_delete'];
+}
+//var_dump($file_path_to_delete);
+
+var_dump($_FILES['pic']);
+if($_FILES['img']){
+   $file = $_FILES['img'];
+}else if($_FILES['pic']){
+    $file = $_FILES['pic'];
+}
+
+//var_dump($file);
 
 $filename = basename($file['name']);
 $tmp_path = $file['tmp_name'];
@@ -99,9 +110,17 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
 //---------------------------------------------------
 blogValidate($blogs);
 blogUpdate($blogs);
-if(!empty($file['name'])){
-fileUpdate($blogs,$file,$save_path);
+if(!empty($_FILES['img']['name'])){
+
+   fileUpdate($blogs,$file,$save_path);
+}else if($file_path_to_delete){
+    deleteFile($blogs['id'], $file_path_to_delete);
 }
+
+if(!empty($_FILES['pic'])){
+    addNewFile($blogs, $file, $save_path);
+}
+
 
 ?>
 
