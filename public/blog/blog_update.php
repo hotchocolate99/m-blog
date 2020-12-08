@@ -67,9 +67,6 @@ $publish_status = $result_posts['publish_status'];
 //お知らせの隣に表示させる未読のコメント数
 $UnreadCommentCount = getUnreadCommentCount($users_id);
 
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -120,13 +117,31 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                         <br>
 
                         <div class="form_item">画像</div>
-                        <input name="img" type="file"/>
-                        <input type="hidden" name="MAX_FILE_SIZE" value="1048576" />
-                        <!--<input type="hidden" name="file_name" value="<?php// echo h($file_name);?>" /><br>
-                        <input type="hidden" name="file_path" value="<?php// echo h($file_path);?>" /><br>
-                        <input type="hidden" name="posts_id" value="<?php// echo h($posts_id);?>" /><br>
-                        <br><!--name="MAX_FILE_SIZE"-->
+                        　<?php if(!empty($fileDatas['file_path'])):?>
+                        　　　<img src="./../blog/<?php echo "{$fileDatas['file_path']}";?>"　width="120px" height="200px" alt="blog_image" >
+                             <br>
+                             <br>
+                            　<p>画像を変更する場合は、新しい画像を選択してください。</p>
+                                <input name="img" type="file"/>
+                                <input type="hidden" name="MAX_FILE_SIZE" value="1048576" />
+                                <!--<input type="hidden" name="file_name" value="<?php// echo h($file_name);?>" /><br>
+                                <input type="hidden" name="file_path" value="<?php// echo h($file_path);?>" /><br>
+                                <input type="hidden" name="posts_id" value="<?php// echo h($posts_id);?>" /><br>
+                                <br><!--name="MAX_FILE_SIZE"-->
+                              <br>
 
+                              <p>画像を削除する場合は、画像削除にチェックを入れて下さい。</p>
+                                <div class="form_item"></div>
+                                <input type="radio" name="file_path_to_delete" value="<?php echo "{$fileDatas['file_path']}";?>">画像削除
+
+                        　<?php else:?>
+                             <p>画像を追加する場合は、画像を選択して下さい。</p>
+                               <input name="pic" type="file"/>
+                               <input type="hidden" name="MAX_FILE_SIZE" value="1048576" />
+                         <?php endif;?>
+
+                        <br>
+                        <br>
                         <textarea
                            name="caption"
                            placeholder="キャプション（140文字以下)"
@@ -135,7 +150,6 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
 
                         <br>
                         <br>
-
 
                          <input type="submit" value="更新" class="btn">
 
