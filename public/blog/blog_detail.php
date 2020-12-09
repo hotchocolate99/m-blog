@@ -115,6 +115,12 @@ function likesCount($id){
 //お知らせの隣に表示させる未読のコメント数
 $UnreadCommentCount = getUnreadCommentCount($users_id);
 
+//全ユーザーのデータを取得------------------------------------------------
+$allUsers = getAllusers();
+//var_dump($allUsers);
+foreach($allUsers as $allUser){
+  var_dump($allUser['id']);
+}
 ?>
 
 
@@ -216,6 +222,14 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                           <li><a href="./blog_cate_list.php#cate1" class="link_a">テーマ１</a></li>
                               <li><a href=".blog_cate_list.php#cate2" class="link_a">テーマ２</a></li>
                               <li><a href="./blog_cate_list.php#cate3" class="link_a">その他</a></li>
+                          </ul>
+                        </li>
+
+                        <li class="list"><a href="#" class="link_a"><i class="fas fa-file"></i>ユーザー別記事一覧</a>
+                          <ul>
+                            <?php foreach($allUsers as $allUser):?>
+                              <li><a class="link_a" href="/public/list/blogs_by_user.php?id=<?php echo h($allUser['id'])?>"><?php echo $allUser['nickname'];?>&nbsp;さんの記事一覧</a></li>
+                            <?php endforeach;?>
                           </ul>
                         </li>
 
