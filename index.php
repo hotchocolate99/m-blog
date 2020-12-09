@@ -18,10 +18,10 @@ ini_set('display_errors',true);
 
 require_once './private/database.php';
 require_once './private/functions.php';
-
+//var_dump($_SESSION['user']);
 //ブログ関連-----------------------------------------------------------------------
 //ブログの全件の全てのデータを取得し、記事一覧を表示-----
-$blogDatas = getData();
+$blogDatas = getData($_SESSION['user']);
 //var_dump($blogDatas);
 foreach($blogDatas as $blogData=>$val){
   //var_dump($val);
@@ -110,7 +110,7 @@ function addRanking($data) {
 
 $rankingData = addRanking($data);
 
-var_dump($rankingData);
+//var_dump($rankingData);
 foreach($rankingData as $key=>$value){
   //var_dump($value);
   //var_dump($value['ranking'].'位'.'/いいね獲得数は'.$value['likes'].'/タイトルは'.$value['title']);
@@ -119,6 +119,13 @@ foreach($rankingData as $key=>$value){
 
 //お知らせの隣に表示させる未読のコメント数-------------------------------------
 $UnreadCommentCount = getUnreadCommentCount($users_id);
+
+//全ユーザーのデータを取得
+$allUsers = getAllusers();
+//var_dump($allUsers);
+foreach($allUsers as $allUser){
+  var_dump($allUser['id']);
+}
 
 ?>
 
@@ -197,7 +204,7 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                 　　　 <?php if($profileDatas):?>
                     　　　<h3 class="nickname"><?php echo $nickname;?></h3>
                     　　　<p class="text"><?php echo $intro_text;?></p>
-                    　　　<a class="link_aa from_profile" href="/public/list/blogs_by_user.php?id=<?php echo h($users_id)?>"><?php echo $nickname;?>&nbsp;さんの記事一覧へ</a>
+                    　　　<a class="link_aa from_profile" href="/public/list/blogs_by_user.php?id=<?php echo $allUser['id'];?>"><?php echo $allUser['nickname'];?>&nbsp;さんの記事一覧へ</a>
 
                   　　<?php endif;?>
 
@@ -215,6 +222,7 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                         </li>
 
                         <li><a href="./public/list/list_files.php" class="link_a"><i class="fas fa-camera"></i>画像一覧</a></li>
+
                         <li class="list"><a href="#" class="link_a"><i class="fas fa-file"></i>テーマ別記事一覧</a>
                           <ul>
                               <li><a href="/public/blog/blog_cate_list.php#cate1" class="link_a">テーマ１</a></li>
@@ -222,7 +230,15 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                               <li><a href="/public/blog/blog_cate_list.php#cate3" class="link_a">その他</a></li>
                           </ul>
                         </li>
+
+                        <li class="list"><a href="#" class="link_a"><i class="fas fa-file"></i>ユーザー別記事一覧</a>
+                          <ul>
+                            <?php foreach($allUsers as $allUser):?>
+                              <li><a class="link_a" href="/public/list/blogs_by_user.php?id=<?php echo h($allUser['id'])?>"><?php echo $allUser['nickname'];?>&nbsp;さんの記事一覧</a></li>
+                            <?php endforeach;?>
+                          </ul>
                         </li>
+                        
 
 　　　　　　　　　　　　　</ul>
 　　　　　　　　　　　</div><!--menu-->

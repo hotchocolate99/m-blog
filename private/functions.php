@@ -434,25 +434,7 @@ if(!function_exists('getUnreadComments')) {
     }
 }
 
-//コメントステータスを既読にする
-if(!function_exists('switchToRead')) {
-  function switchToRead($comments_id){
 
-    $sql = "UPDATE comments SET read_status = 1 WHERE id = :id;";
-
-        $dbh = dbConnect();
-        try{
-            $stmt = $dbh->prepare($sql);
-            //$stmt->bindValue(':publish_status', $blogs['publish_status'],PDO::PARAM_INT);
-            $stmt->bindValue(':id', $comments_id,PDO::PARAM_INT);
-            $stmt->execute();
-
-        }catch(PDOException $e){
-            exit($e);
-        }
-
-  }
-}
 
 
 //画像を取得　引数：記事のid(filesテーブルのposts_id)であってfilesテーブルのidではない。
@@ -488,6 +470,20 @@ if(!function_exists('getProfileDatas')) {
     }
 }
 
+//全ユーザーのデータを取得
+if(!function_exists('getAllusers')) {
+    function getAllusers(){
+        $dbh = dbConnect();
+
+        $sql = "SELECT * FROM users";
+
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $results;
+    }
+}
 
 //ーーーーーーーーー削除ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 
@@ -621,3 +617,24 @@ if(!function_exists('h')) {
         }
     }
 }
+
+
+//コメントステータスを既読にする
+if(!function_exists('switchToRead')) {
+    function switchToRead($comments_id){
+  
+      $sql = "UPDATE comments SET read_status = 1 WHERE id = :id;";
+  
+          $dbh = dbConnect();
+          try{
+              $stmt = $dbh->prepare($sql);
+              //$stmt->bindValue(':publish_status', $blogs['publish_status'],PDO::PARAM_INT);
+              $stmt->bindValue(':id', $comments_id,PDO::PARAM_INT);
+              $stmt->execute();
+  
+          }catch(PDOException $e){
+              exit($e);
+          }
+  
+    }
+  }
