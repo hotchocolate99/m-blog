@@ -65,7 +65,7 @@ $category = (int)$result_posts['category'];
 $publish_status = $result_posts['publish_status'];
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount($users_id);
+$UnreadCommentCount = getCommentCount($users_id, 0);
 
 ?>
 

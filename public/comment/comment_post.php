@@ -20,7 +20,7 @@ require_once './../../private/functions.php';
 
 //詳細ページから渡ってきた記事のid
 $blog_id = $_GET['id'];
-//var_dump($blog_id);
+var_dump($blog_id);
 
 //下は、コメント投稿ページから完了ページに飛ぶときにあたいが入るので、ここでは空っぽ。
 //var_dump($_POST);
@@ -42,7 +42,7 @@ $comment = $_POST;
 //↑ちゃんと配列になって入っている。
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount($users_id);
+$UnreadCommentCount = getCommentCount($users_id, 0);
 
 ?>
 
@@ -67,6 +67,20 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                 <div class="typein">
 
                         <h2 class="form_title"><span><i class="fas fa-comment"></i>この記事にコメントする</span></h2>
+                        
+                        <div class="error_msg">
+                        <?php if (isset($_GET["error"])):?>
+
+                            <?php if ($_GET["error"]=="invalid_c_name"):?>
+                            <p><?php echo " 名前を入力して下さい。";?></p>
+                            <?php endif;?>
+
+                            <?php if ($_GET["error"]=="invalid_c_content"):?>
+                            <p><?php echo "コメントはは200字以下にして下さい。";?></p>
+                            <?php endif;?>
+
+                            <?php endif;?>
+                        </div><!--error_msg-->
 
                             <form action="./comment_posted.php" method="POST"　class="formspace">
 

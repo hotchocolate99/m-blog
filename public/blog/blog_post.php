@@ -15,8 +15,7 @@ if (!$_SESSION['login']) {
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount($users_id);
-
+$UnreadCommentCount = getCommentCount($users_id, 0);
 
 
 ?>

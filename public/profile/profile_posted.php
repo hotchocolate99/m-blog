@@ -9,6 +9,7 @@ if (!$_SESSION['login']) {
 
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
+    $user_id = $_SESSION['user'][0]['id'];
   }
 //--------------------------------
 
@@ -39,7 +40,8 @@ $profiles = $_POST;
         var_dump($_SESSION['0']['nickname']);
        // var_dump($user);
 
-
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getCommentCount($users_id, 0);
 ?>
 
 <!DOCTYPE html>

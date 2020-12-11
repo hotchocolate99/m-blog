@@ -52,8 +52,7 @@ $results = getFilesCount();
 
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount($users_id);
-
+$UnreadCommentCount = getCommentCount($users_id, 0);
 //var_dump($allFiles);
 ?>
 

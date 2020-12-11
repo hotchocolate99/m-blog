@@ -11,6 +11,7 @@ session_start();
     $user = $_SESSION['user'];
   }
   $users_id = $user[0]['id'];
+  //!users_id はログインしているユーザーのid。　 user_idは最新記事投稿者のid。紛らわしい。。。
 //--------------------------------
 
 ini_set('display_errors',true);
@@ -19,6 +20,7 @@ ini_set('display_errors',true);
 require_once './private/database.php';
 require_once './private/functions.php';
 //var_dump($_SESSION['user']);
+
 //ブログ関連-----------------------------------------------------------------------
 //ブログの全件の全てのデータを取得し、記事一覧を表示-----
 $blogDatas = getData($_SESSION['user']);
@@ -40,14 +42,15 @@ $newestBlogs = getNewestBlog();
 foreach($newestBlogs as $newestBlog){
   //var_dump($newestBlog);
 }
-$users_id = $newestBlog['users_id'];
+$newestPost_id = $newestBlog['id'];
+//var_dump($user_id);
 //上のidを引数に入れて、最新記事の画像を取得
-$fileDatas = getFile($newestBlog['id']);
+$fileDatas = getFile($newestPost_id);
 //var_dump($fileDatas);
 
 //プロフィールの表示-------------------------------------------------------------------
-//引数の$users_idは最新記事を書いたユーザーのid
-$profileDatas = getProfileDatas($users_id);
+//引数の$user_idは最新記事を書いたユーザーのid
+$profileDatas = getProfileDatas($newestBlog['users_id']);
 //var_dump($profileDatas);
 $nickname = $profileDatas['0']['nickname'];
 $intro_text = $profileDatas['0']['intro_text'];
@@ -118,13 +121,13 @@ foreach($rankingData as $key=>$value){
 
 
 //お知らせの隣に表示させる未読のコメント数-------------------------------------
-$UnreadCommentCount = getUnreadCommentCount($users_id);
-
-//全ユーザーのデータを取得
+$UnreadCommentCount = getCommentCount($users_id, 0);
+//var_dump($users_id);
+//全ユーザーのデータを取得------------------------------------------------
 $allUsers = getAllusers();
 //var_dump($allUsers);
 foreach($allUsers as $allUser){
-  var_dump($allUser['id']);
+  //var_dump($allUser['id']);
 }
 
 ?>
@@ -174,23 +177,30 @@ foreach($allUsers as $allUser){
 
                   <div class="blogs">
                       <h2><i class="fas fa-pencil-alt"></i>記事一覧<span>（全<?php echo $blogs_total["COUNT(*)"];?>件）</span></h2>
+                      <table>
+                            <?php $i=1;
+                                 for($i=1; $i>= $blogs_total["COUNT(*)"]; $i++);?>
+
+                            <tr>
+                            <td>
                          <?php foreach($blogDatas as $blogData => $val):?>
 
                             <div class="blog_box"> 
+                            <strong><?php echo $i++;?>.</strong>
                                 <p><a class="link_aa" href="./public/list/blogs_by_user.php?id=<?php echo h($val['users_id'])?>"><?php echo h($val['nickname'])?></a>&nbsp;さんの投稿</p>
                                 <a class="link_aa" href="./public/blog/blog_detail.php?id=<?php echo h($val['id'])?>">
                                     <dl>
                                         <dt class="detail"><h3><?php echo h($val['title'])?></h3></dt>
-                                        <div class="flex">
-                                          <dd class=date><?php echo h($val['post_at'])?></dd>
-                                          <dd><?php echo h(setCateName($val['category']))?></dd>
-                                          <dd>(<i class="fas fa-heart"></i><?php echo h($val['likes'])?>)</dd>
-                                        </div>
+                                        <!--<div class="flex">-->
+                                          <dd class=date><?php echo h($val['post_at'])?>&nbsp;&nbsp;<?php echo h(setCateName($val['category']))?>&nbsp;&nbsp;(<i class="fas fa-heart"></i><?php echo h($val['likes'])?>)</dd>
+                                        <!--</div>-->
                                     </dl>
                                 </a>
                             </div>
                          <?php endforeach;?>
-
+                         </td>
+                         </tr>
+                         </table>
                   </div>
 
                   <div><a href="#" class="fixed_btn to_top">TOPへ戻る</a></div><br>
@@ -204,7 +214,7 @@ foreach($allUsers as $allUser){
                 　　　 <?php if($profileDatas):?>
                     　　　<h3 class="nickname"><?php echo $nickname;?></h3>
                     　　　<p class="text"><?php echo $intro_text;?></p>
-                    　　　<a class="link_aa from_profile" href="/public/list/blogs_by_user.php?id=<?php echo $allUser['id'];?>"><?php echo $allUser['nickname'];?>&nbsp;さんの記事一覧へ</a>
+                    　　　<a class="link_aa from_profile" href="/public/list/blogs_by_user.php?id=<?php echo $profileDatas['0']['id'];?>"><?php echo $nickname;?>&nbsp;さんの記事一覧へ</a>
 
                   　　<?php endif;?>
 

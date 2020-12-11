@@ -9,12 +9,14 @@ if (!$_SESSION['login']) {
 
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
+    $users_id = $_SESSION['user'][0]['id'];
   }
 
 //--------------------------------
 ini_set('display_errors',true);
-
-
+var_dump($_SESSION['user'][0]['id']);
+require_once './../../private/database.php';
+require_once './../../private/functions.php';
 
 //プロフィールの更新の際、既存のデータを表示できない。。。
 //var_dump($user['0']['id']);
@@ -25,7 +27,8 @@ if(function_exists('getProfileDatas')) {
     $intro_text = $profileDatas['0']['intro_text'];
 }
 
-
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getCommentCount($users_id, 0);
 ?>
 <!DOCTYPE html>
 <html lang="ja">

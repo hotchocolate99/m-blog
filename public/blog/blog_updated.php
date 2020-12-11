@@ -101,7 +101,7 @@ if(is_uploaded_file($tmp_path)){
 //var_dump($save_filename);
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount($users_id);
+$UnreadCommentCount = getCommentCount($users_id, 0);
 //var_dump($UnreadCommentCount['COUNT(*)']);
 
 

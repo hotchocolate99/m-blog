@@ -68,6 +68,8 @@ $caption = filter_input(INPUT_POST,'caption',FILTER_SANITIZE_SPECIAL_CHARS);
       //  header('Location:./blog_post.php?error=invalid_caption');
       //  exit();
     //}
+
+    
    if($caption){
         if(strlen($caption) > 140){
             header('Location:./blog_post.php?error=invalid_caption_length');
@@ -129,9 +131,8 @@ if($blogs && $filename && $save_path || $caption){
 
 }
 
-//お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount($users_id);
-
+//お知らせの隣に表示させる未読のコメント数（これはログインユーザーの。セッションの。）
+$UnreadCommentCount = getCommentCount($users_id, 0);
 
 
 ?>

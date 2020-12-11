@@ -62,6 +62,10 @@ li{
     background-color: white;
 }
 
+.horizontal{
+    display: inline-block;
+}
+
 .btn{
     margin-top: 20px;
     margin-bottom: 20px;;
@@ -74,6 +78,10 @@ li{
     color: #49484d;
     background-color:#bbe2f1;
   }
+
+.red{
+    background-color: #f2a88a;
+}
 
 .btn:hover{
     cursor:pointer;

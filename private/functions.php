@@ -398,15 +398,35 @@ if(!function_exists('getNewestBlog')) {
     }
  }
 
-//お知らせ機能で使うため、未読コメントを取得
-if(!function_exists('getUnreadComments')) {
-    function getUnreadComments(){
+ //全コメントを取得
+ if(!function_exists('getAllComment')) {
+    function getAllComment(){
         $dbh = dbConnect();
 
-        $sql = "SELECT * FROM comments WHERE read_status = '0' ORDER BY comment_at DESC";
+        $sql = "SELECT * FROM comments";
 
         $stmt = $dbh->prepare($sql);
-        
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if(!$results){
+            //exit();
+        }
+
+        return $results;
+
+    }
+ }
+
+//お知らせ機能で使うため、readstatus別にコメントを取得(!!なぜかcommentsテーブルのidを取得できていなかった。* from comments　としてもidがposts_idになっていた。。。)
+if(!function_exists('getCommentsByReadstatus')) {
+    function getCommentsByReadstatus($users_id, $readstatus){
+        $dbh = dbConnect();
+
+        $sql = "SELECT *, comments.id FROM comments JOIN posts ON posts.id = comments.posts_id WHERE posts.users_id = :users_id AND comments.read_status = :read_status ORDER BY comment_at DESC";
+
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':users_id',(int)$users_id, PDO::PARAM_INT);
+        $stmt->bindValue(':read_status',(int)$readstatus, PDO::PARAM_INT);
         $stmt->execute();
 
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -416,15 +436,16 @@ if(!function_exists('getUnreadComments')) {
     }
  }
 
-//未読コメント数の取得
- if(!function_exists('getUnreadCommentCount')) {
-    function getUnreadCommentCount($users_id){
+//readstatus別コメント数の取得
+ if(!function_exists('getCommentCount')) {
+    function getCommentCount($users_id, $read_status){
         $dbh = dbConnect();
 
-        $sql = "SELECT COUNT(*) FROM comments JOIN posts ON posts.id = comments.posts_id WHERE posts.users_id = :users_id AND comments.read_status = 0 ORDER BY comment_at DESC";
+        $sql = "SELECT COUNT(*) FROM comments JOIN posts ON posts.id = comments.posts_id WHERE posts.users_id = :users_id AND comments.read_status = :read_status ";
         
         $stmt = $dbh->prepare($sql);
         $stmt->bindValue(':users_id',(int)$users_id, PDO::PARAM_INT);
+        $stmt->bindValue(':read_status',(int)$read_status, PDO::PARAM_INT);
         $stmt->execute();
 
         $result = $stmt->fetch();
@@ -484,6 +505,7 @@ if(!function_exists('getAllusers')) {
         return $results;
     }
 }
+
 
 //ーーーーーーーーー削除ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 
@@ -638,3 +660,34 @@ if(!function_exists('switchToRead')) {
   
     }
   }
+
+//コメントステータスを未読にする
+  if(!function_exists('switchToUnread')) {
+    function switchToUnread($comments_id){
+  
+      $sql = "UPDATE comments SET read_status = 0 WHERE id = :id;";
+  
+          $dbh = dbConnect();
+          try{
+              $stmt = $dbh->prepare($sql);
+              //$stmt->bindValue(':publish_status', $blogs['publish_status'],PDO::PARAM_INT);
+              $stmt->bindValue(':id', $comments_id,PDO::PARAM_INT);
+              $stmt->execute();
+  
+          }catch(PDOException $e){
+              exit($e);
+          }
+  
+    }
+  }
+
+  //コメントの削除
+  if(!function_exists('deleteComment')) {
+    function deleteComment($comments_id){
+        $dbh = dbConnect();
+        $stmt = $dbh->prepare("DELETE FROM comments WHERE id = :id");
+        $stmt->bindValue(':id', (int)$comments_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+}
+  

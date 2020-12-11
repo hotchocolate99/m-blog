@@ -13,13 +13,17 @@ require_once './../../private/functions.php';
 
 ini_set('display_errors',true);
 
+//どこから送られてくるものでもgetのidは同じ。
+$allUser_id = $_GET['id'];
+var_dump($allUser_id);
 
-function getBlogByUser($users_id){
+//ユーザーid（getの）で、そのユーザーが投稿した全記事の全データを取得
+function getBlogByUser($id){
     $dbh = dbConnect();
     
         $sql = "SELECT posts.id, title, category, post_at, content, likes, user_name, nickname, intro_text FROM posts JOIN users ON posts.users_id = users.id WHERE posts.users_id = :users_id ORDER BY posts.id DESC";
         $stmt = $dbh->prepare($sql);
-        $stmt->bindValue(':users_id',$users_id, PDO::PARAM_INT);
+        $stmt->bindValue(':users_id',$id, PDO::PARAM_INT);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -27,14 +31,33 @@ function getBlogByUser($users_id){
 
 }
 
-//index.phpのプロフィールから送られてくるユーザーのidを使ってそのユーザーの書いた記事を全て取得
-$users_id = $_GET['id'];
-$blogsByUser = getBlogByUser($users_id);
+//ユーザーの投稿総数
+function getBlogCountByUser($id){
+    $dbh = dbConnect();
+    
+        $sql = "SELECT COUNT(*) FROM posts JOIN users ON posts.users_id = users.id WHERE posts.users_id = :users_id";
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':users_id',$id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        return $result;
+
+}
+
+
+
+//index.phpから送られてくるユーザーのidを使ってそのユーザーの書いた記事を全て取得
+$user_id = $_GET['id'];
+$blogsByUser = getBlogByUser($allUser_id);
 //var_dump($blogsByUser);
 
-//お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount($users_id);
+//ユーザーの投稿した記事の総数
+$blogCountByUser = getBlogCountByUser($allUser_id);
+var_dump($blogCountByUser);
 
+//お知らせの隣に表示させる未読のコメント数（これはログインユーザーの。セッションの。）
+$UnreadCommentCount = getCommentCount($users_id, 0);
 ?>
 
 
@@ -67,11 +90,21 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                     　　　<p class="text"><?php echo $blogsByUser[0]['intro_text'];?></p>
             　　　　</div>
 
-　　　　　　　　　　　　<h2 class="cate_title"><i class="fas fa-file"></i><?php echo $blogsByUser[0]['nickname'];?>さんの記事一覧</h2>
+　　　　　　　　　　　　<h2 class="cate_title"><i class="fas fa-file"></i><?php echo $blogsByUser[0]['nickname'];?>さんの記事一覧(<?php echo $blogCountByUser[0];?>件)</h2>
                   <div class="frame">
+
+                  <table>
+                            <?php $j=1;
+                                 for($j=1; $j>= 100; $j++);?>
+                            
+                            
+                            
+                            <tr>
+                            <td>
 
                                 <?php foreach($blogsByUser as $blogByUser):?>　
                                     <div class="result_box">
+                                    <strong><?php echo $j++;?>.</strong>
                                         <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($blogByUser['id'])?>">
                                         <dl>
                                                 <dt><strong><?php echo $blogByUser['title'];?></strong></dt>
@@ -83,6 +116,9 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
 
                                     </div>
                                 <?php endforeach;?>
+                                </td>
+                            </tr>
+                            </table>
                     </div><!--frame-->
 
                   <a href="#" class="fixed_btn to_home">TOPへ戻る</a><br>

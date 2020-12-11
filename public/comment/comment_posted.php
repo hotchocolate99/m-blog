@@ -16,8 +16,10 @@ if (!$_SESSION['login']) {
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
+var_dump($_POST);
+
 $comment = $_POST;
-//var_dump($comment['posts_id']);
+//var_dump($_POST);
 
 //$posts_id = $_POST['posts_id'];
 //var_dump($posts_id);
@@ -25,7 +27,7 @@ $comment = $_POST;
 
 if(!empty($comment)){
   if(empty($comment['name'])){
-    header('Location: ./comment_post.php?error=invalid_c_name');
+    header('Location: ./comment_post.php?error=invalid_c_name?');
     exit();
   }
 
@@ -41,7 +43,7 @@ if(!empty($comment)){
 commentCreate($comment);
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount($users_id);
+$UnreadCommentCount = getCommentCount($users_id, 0);
 
 ?>
 

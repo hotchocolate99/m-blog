@@ -179,7 +179,9 @@ padding: 0.5rem 1rem;
 
 .list:hover ul{
     background-color: #f8f4e6;
-	display:block;
+    display:block;
+    position: absolute;
+    z-index: 10;
 }
 
 .blog_box .small{

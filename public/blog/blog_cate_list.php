@@ -54,8 +54,7 @@ $cate2 = $logCounts['1'];
 $cate3 = $logCounts['2'];
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount($users_id);
-
+$UnreadCommentCount = getCommentCount($users_id, 0);
 
 ?>
 
@@ -82,8 +81,15 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
 　　　　　　　　　　　　<h2 class="cate_title"><i class="fas fa-file"></i>テーマ別記事一覧</h2>
                   <div class="frame">
                             <h2 class="form_title"><a name="cate1">テーマ１（<?php echo $cate1["COUNT(*)"];?>件）</a></h2>
+                            <table>
+                            <?php $i=1;
+                                 for($i=1; $i>= $cate1["COUNT(*)"]; $i++);?>
+
+                            <tr>
+                            <td>
                                 <?php foreach($blogsByCate1 as $blogByCate1):?>
                                     <div class="result_box">
+                                    <strong><?php echo $i++;?>.</strong>
                                         <a class="link_aa" href="./blog_detail.php?id=<?php echo h($blogByCate1['id'])?>">
                                         <dl>
                                                 <dt><strong><?php echo $blogByCate1['title'];?></strong></dt>
@@ -96,13 +102,23 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                                                 <dd><?php //echo $search_word.strstr($result['content'],$search_word,true);?></dd>-->
                                     </div>
                                 <?php endforeach;?>
+                                </td>
+                            </tr>
+                            </table>
                     </div><!--frame-->
 
 
                         <div class="frame">
                             <h2 class="form_title"><a name="cate2">テーマ2（<?php echo $cate2["COUNT(*)"];?>件）</a></h2>
+                            <table>
+                            <?php $i=1;
+                                 for($i=1; $i>= $cate2["COUNT(*)"]; $i++);?>
+
+                            <tr>
+                            <td>
                                 <?php foreach($blogsByCate2 as $blogByCate2):?>
                                     <div class="result_box">
+                                    <strong><?php echo $i++;?>.</strong>
                                         <a class="link_aa" href="./blog_detail.php?id=<?php echo h($blogByCate2['id'])?>">
                                             <dl>
                                                 <dt><strong><?php echo $blogByCate2['title'];?></strong></dt>
@@ -113,12 +129,22 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                                         </a>
                                     </div>
                                 <?php endforeach;?>
+                                </td>
+                            </tr>
+                            </table>
                         </div><!--frame-->
 
                         <div class="frame">
                             <h2 class="form_title"><a name="cate3">その他（<?php echo $cate3["COUNT(*)"];?>件）</a></h2>
+                            <table>
+                            <?php $i=1;
+                                 for($i=1; $i>= $cate2["COUNT(*)"]; $i++);?>
+
+                            <tr>
+                            <td>
                                 <?php foreach($blogsByCate3 as $blogByCate3):?>
                                     <div class="result_box">
+                                    <strong><?php echo $i++;?>.</strong>
                                         <a class="link_aa" href="blog_detail.php?id=<?php echo h($blogByCate3['id'])?>">
                                         <dl>
                                                 <dt><strong><?php echo $blogByCate3['title'];?></strong></dt>
@@ -129,6 +155,9 @@ $UnreadCommentCount = getUnreadCommentCount($users_id);
                                         </a>
                                     </div>
                                 <?php endforeach;?>
+                                </td>
+                            </tr>
+                            </table>
                         </div><!--frame-->
                         
 

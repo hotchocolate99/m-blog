@@ -53,7 +53,7 @@ var_dump($idResult);
 //表示する画像がある場合(引数は記事のid)----------------------------------------------------------
 //var_dump($id);
 $fileDatas = getFileById($id);
-//var_dump($fileDatas);
+var_dump($fileDatas);
 
 
 
@@ -113,7 +113,7 @@ function likesCount($id){
 //---------------------------------------------------------
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount($users_id);
+$UnreadCommentCount = getCommentCount($users_id, 0);
 
 //全ユーザーのデータを取得------------------------------------------------
 $allUsers = getAllusers();
