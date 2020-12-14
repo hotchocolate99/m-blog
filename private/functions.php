@@ -279,7 +279,7 @@ if(!function_exists('addNewFile')) {
                 $stmt->bindValue(':caption',$blogs['caption'],PDO::PARAM_STR);
                 $stmt->bindValue(':posts_id',$blogs['id'],PDO::PARAM_INT);
                 $stmt->execute();
-                
+
 
            }catch(PDOException $e){
             exit($e);}
@@ -306,7 +306,7 @@ if(!function_exists('getById')) {
 
         return $result;
     }
-}    
+}
 
 if(!function_exists('getFileById')) {
     function getFileById($id){
@@ -317,9 +317,9 @@ if(!function_exists('getFileById')) {
         $dbh = dbConnect();
         $sql = "SELECT posts_id, file_name, file_path, caption FROM files JOIN posts ON files.posts_id = posts.id WHERE files.posts_id = :id";
         $stmt = $dbh->prepare($sql);
-        //注意すること！！！　sql文内で変数を展開する時はダブルクォーテーションにする！！シングルだと、変数展開できない。
+        
         $stmt->bindValue(':id',(int)$id, PDO::PARAM_INT);
-        //GET で送られてきたidは文字列として入ってくるので、（int）をここにつけることで、int型になる。そして数字として認識させる。なぜその必要があるのか？？？
+        
         $stmt->execute();
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -351,7 +351,7 @@ if(!function_exists('getData')) {
     function getDataCount(){
         $dbh = dbConnect();
 
-        $sql = 'SELECT COUNT(*)FROM posts';
+        $sql = 'SELECT COUNT(*) FROM posts';
 
         $stmt = $dbh->query($sql);
 
@@ -399,8 +399,8 @@ if(!function_exists('getNewestBlog')) {
  }
 
  //全コメントを取得
- if(!function_exists('getAllComment')) {
-    function getAllComment(){
+ if(!function_exists('getAllComments')) {
+    function getAllComments(){
         $dbh = dbConnect();
 
         $sql = "SELECT * FROM comments";
@@ -475,12 +475,13 @@ if(!function_exists('getFile')) {
     }
 }
 
-//プロフィールのデータ（でけでなくuserテーブルの全てだけど）を取得
+//プロフィールのデータ（だけでなくuserテーブルの全てだけど）を取得
 if(!function_exists('getProfileDatas')) {
     function getProfileDatas($users_id){
         $dbh = dbConnect();
-
-        $sql = "SELECT * FROM users JOIN posts ON users.id = posts.users_id WHERE users.id = :users_id";
+         
+        //  users.idと明確に指定しないと、idキーの値がposts_idになってしまう。しかもユーザーによってまちまちなので、本当に謎。。。
+        $sql = "SELECT *, users.id FROM users JOIN posts ON users.id = posts.users_id WHERE users.id = :users_id";
 
         $stmt = $dbh->prepare($sql);
         $stmt ->bindValue(':users_id', $users_id, PDO::PARAM_INT);
@@ -496,8 +497,8 @@ if(!function_exists('getAllusers')) {
     function getAllusers(){
         $dbh = dbConnect();
 
-        $sql = "SELECT * FROM users";
-
+        //$sql = "SELECT * FROM users";
+        $sql = "SELECT count(*) AS user_count, users.* FROM users GROUP BY id";
         $stmt = $dbh->prepare($sql);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -103,6 +103,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
 
         <?php include './../../header.php';?>
 
+        <label for="check">
         <div class="wrapper">
             <div class="container">
             　  <div class="typein">
@@ -112,13 +113,16 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                       <h2 class="form_title"><?php if($unreadCommentCount['COUNT(*)']==0){echo '未読コメントはありません。';}else{echo '未読のコメントが'.$unreadCommentCount['COUNT(*)'].'件あります。';}?></h2>
                       <br>
                       <table>
-                                  
+                          
                              <?php $a = 1;?>
                             <tr>
                             <td>
-                            <?php foreach($unreadComments as $unreadComment):?>
+                            <?php//foreach($unreadComments as $unreadComment):?>
+                                <?php for($i=0; $i<$unreadCommentCount['COUNT(*)']; $i++):?>
+                                <?php $unreadComment = $unreadComments[$i];?>
+
                                <div class="result_box">
-                               <strong><?php echo $a++;?>.</strong>
+                               <strong><?php echo $i+1;?>.</strong>
                                     <div>
                                             <p>コメント投稿者：<?php echo $unreadComment['name'];?>&nbsp;さん</p>
                                             <p>コメント投稿日時：<?php echo $unreadComment['comment_at'];?></p>
@@ -140,7 +144,8 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                                            <input class="btn red" type="submit" value="コメント削除">
                                     </form>
                                 </div>
-                             <?php endforeach;?>
+                               <?php endfor;?>
+                             <?php// endforeach;?>
                              </td>
                             </tr>
                             </table>
@@ -198,7 +203,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                </div><!--typein-->
             </div><!--container-->
         </div><!--wrapper-->
-
+     </label>
     </body>
 </html>
 

@@ -34,7 +34,7 @@ $id = $_GET['id'];
 
 //選択された記事の詳細を表示するため、前ページからGETで受け取ったidを引数にしてgetById()を呼び出し、詳細情報を取得。またこの＄resul['id']を次ページ（編集やコメント、削除）へ送る。
 $idResult = getById($id,'posts');
-var_dump($idResult);
+//var_dump($idResult);
 //テーブル名はクォーテーション付けなくても大丈夫だった。
 //$_SESSION = $result;
 //header('Location:home.php#selected_topic');
@@ -53,7 +53,7 @@ var_dump($idResult);
 //表示する画像がある場合(引数は記事のid)----------------------------------------------------------
 //var_dump($id);
 $fileDatas = getFileById($id);
-var_dump($fileDatas);
+//var_dump($fileDatas);
 
 
 
@@ -119,7 +119,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
 $allUsers = getAllusers();
 //var_dump($allUsers);
 foreach($allUsers as $allUser){
-  var_dump($allUser['id']);
+  //var_dump($allUser['id']);
 }
 ?>
 
@@ -138,7 +138,7 @@ foreach($allUsers as $allUser){
     <body>
 
         <?php include './../../header.php';?>
-
+        <label for="check">
         <div class="wrapper">
             <div class="container">
                 <div class="left">
@@ -159,10 +159,10 @@ foreach($allUsers as $allUser){
 
                     </div><!--frame-->
 
-                    <div>
+                    <div class="icon_box">
 　　　　　　　　　　　　　　<div class="likes"><a class="link_aa" href="./blog_detail.php?id=<?php echo h($idResult['id'])?>&plusLike=1"><i class="fas fa-heart"></i><p class="likes">いいね(<?php if(isset($likesCount)){echo $likesCount["likes"];}else{echo $likesSoFar["likes"];}?>)</p></a></div>
 
-                        <a class="link_aa" href="./../comment/comment_post.php?id=<?php echo h($idResult['id'])?>"><span><i class="fas fa-comment"></i>この記事にコメントする</span></a>
+                        <a class="link_aa" href="./../comment/comment_post.php?id=<?php echo h($idResult['id'])?>"><span><i class="fas fa-comment"></i>コメントする</span></a>
                        <!--getで記事のidをコメントページに渡している-->
                     </div>
 
@@ -260,6 +260,6 @@ foreach($allUsers as $allUser){
             </div><!--container-->
         </div> <!--wrapper-->
 
-
+      </label>
     </body>
 </html>

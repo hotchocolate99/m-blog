@@ -19,8 +19,8 @@ $email = $_POST['email'];
 if(!$email || !filter_var($email,FILTER_VALIDATE_EMAIL)){
     $errors[] = 'メールアドレスを入力して下さい。';
 }
-require_once '../functions/database.php';
-require_once '../functions/classes.php';
+//require_once '../functions/database.php';
+//require_once '../functions/classes.php';
 $dbh = dbconnect();
   $user = findUserByEmail($dbh,$email);
 if($user){
@@ -39,7 +39,7 @@ if($password !== $password_conf){
 var_dump($_POST);
 if(count($errors) === 0){
 
-    require '../functions/classes.php';
+    //require '../functions/classes.php';
 
      $hasCreated = createUser($_POST);
      header('Location: ./registered.php');
@@ -71,7 +71,7 @@ if(count($errors) === 0){
      <?php include './../../header.php';?>
 
    
-
+     <label for="check">
     <div class="wrapper">
         <div class="container">
             <div class="typein">
@@ -116,4 +116,5 @@ if(count($errors) === 0){
             </div><!--typein-->
         </div><!--container-->
     </body><!--wrappr-->
+   </label>
 </html>

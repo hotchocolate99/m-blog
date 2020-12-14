@@ -15,7 +15,7 @@ ini_set('display_errors',true);
 
 //どこから送られてくるものでもgetのidは同じ。
 $allUser_id = $_GET['id'];
-var_dump($allUser_id);
+//var_dump($allUser_id);
 
 //ユーザーid（getの）で、そのユーザーが投稿した全記事の全データを取得
 function getBlogByUser($id){
@@ -49,12 +49,13 @@ function getBlogCountByUser($id){
 
 //index.phpから送られてくるユーザーのidを使ってそのユーザーの書いた記事を全て取得
 $user_id = $_GET['id'];
+//var_dump($_GET);
 $blogsByUser = getBlogByUser($allUser_id);
 //var_dump($blogsByUser);
 
 //ユーザーの投稿した記事の総数
 $blogCountByUser = getBlogCountByUser($allUser_id);
-var_dump($blogCountByUser);
+//var_dump($blogCountByUser);
 
 //お知らせの隣に表示させる未読のコメント数（これはログインユーザーの。セッションの。）
 $UnreadCommentCount = getCommentCount($users_id, 0);
@@ -77,6 +78,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
 
         <?php include './../../header.php';?>
 
+       <label for="check">
         <div class="wrapper">
             <div class="container">
             　  <div class="typein">
@@ -126,6 +128,6 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                </div><!--typein-->
             </div><!--container-->
         </div><!--wrapper-->
-
+      </label>
     </body>
 </html>

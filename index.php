@@ -123,11 +123,12 @@ foreach($rankingData as $key=>$value){
 //お知らせの隣に表示させる未読のコメント数-------------------------------------
 $UnreadCommentCount = getCommentCount($users_id, 0);
 //var_dump($users_id);
+
 //全ユーザーのデータを取得------------------------------------------------
 $allUsers = getAllusers();
 //var_dump($allUsers);
 foreach($allUsers as $allUser){
-  //var_dump($allUser['id']);
+ // var_dump($allUser);
 }
 
 ?>
@@ -147,7 +148,7 @@ foreach($allUsers as $allUser){
 <body>
 <?php include './header.php';?>
    
-
+<label for="check">
   <div class="wrapper">
      <div class="container">
             <div class="left">
@@ -288,7 +289,7 @@ foreach($allUsers as $allUser){
             </div><!--right-->
         </div><!--container-->
   </div> <!--wrapper-->
-
+                          </label>                         
 </body>
 </html>
 

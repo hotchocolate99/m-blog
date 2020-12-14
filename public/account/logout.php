@@ -26,6 +26,7 @@ session_destroy();
     <body>
         <?php include './../../header.php';?>
 
+        <label for="check">
         <div class="wrapper">
             <div class="container">
                <div class="typein">
@@ -36,5 +37,6 @@ session_destroy();
                </div><!--typein-->
            </div><!--container-->
         </div> <!--wrapper-->
+      </label>
     </body>
 </html>

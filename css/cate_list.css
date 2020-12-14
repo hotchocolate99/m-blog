@@ -146,6 +146,38 @@ font-weight: bold;
 }
 
 
+/*レスポンシブ PC firtst*/
+/*tablet*/
+@media(max-width: 896px){
+    .typein{
+        background-color:#f8f4e6;
+        border-radius: 15px;
+        padding: 3rem 1rem;
+        width: 350px;
+        min-height: 30vh;
+        margin: 0 auto;
+        position: relative;
+    }
+}
+
+/*mobile*/
+@media(max-width: 480px){
+    h2{
+        font-size: 20px;
+    }
+
+    .typein{
+        background-color:#f8f4e6;
+        border-radius: 15px;
+        padding: 3rem 1rem;
+        width: 250px;
+        min-height: 30vh;
+        margin: 0 auto;
+        position: relative;
+    }
+    }
+
+
 
 
 

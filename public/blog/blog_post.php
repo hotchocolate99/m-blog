@@ -34,6 +34,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
 
        <?php include './../../header.php';?>
 
+       <label for="check">
         <div class="wrapper">
             <div class="container">
                  <div class="typein">
@@ -126,7 +127,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                 </div><!--typein-->
             </div><!--container-->
         </div> <!--wrapper-->
-
+      </label>
     </body>
 </html>
 

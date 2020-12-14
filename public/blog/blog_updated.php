@@ -140,6 +140,7 @@ if(!empty($_FILES['pic'])){
 
            <?php include './../../header.php';?>
 
+           <label for="check">
             <div class="wrapper">
                 <div class="container">
                 　 <div class="typein">
@@ -150,6 +151,6 @@ if(!empty($_FILES['pic'])){
 
                 </div>
             </div>
-
+      </label>
     </body>
 </html>

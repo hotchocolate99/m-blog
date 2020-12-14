@@ -114,6 +114,7 @@ span{
     position: fixed;
     bottom: 1rem;
     right: 1.5rem;
+    z-index: 10;
 }
 
 .fixed_btn :hover{
@@ -269,3 +270,61 @@ padding: 0.5rem 1rem;
     padding-top: 100px;
 }
 /*上でフッターが下に引っ張られる。*/
+
+/*レスポンシブ PC firtst*/
+/*tablet*/
+@media(max-width: 896px){
+    img{width:120px; 
+        height:200px;}
+
+    .left{
+        background-color: #f8f4e6;
+        border-radius: 15px;
+        padding: 2rem;
+        min-height:90vh;
+        width: 60%;
+        max-width: 600px;
+        margin: 0 1rem 0 0;
+        position: relative;
+    }
+
+    .right{
+        background-color: #f8f4e6;
+        width: 20%;
+        max-width: 200px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        border-radius: 15px;
+    }
+    
+    .sample2Text {
+
+        width            : 100px;            /* inputの幅           */
+        background-image : url(./img/mg.png);
+        font-weight: 900;/* 背景画像：虫眼鏡(*1)*/
+        background-repeat  : no-repeat;        /* 背景は繰り返さない  */
+        background-position: 8px center;       /* 背景の位置          */
+        background-size    : auto 60%;         /* 背景のサイズ        */
+        background-color   : #fff;             /* 背景色              */
+        margin             : 0 auto;           /* サンプルは中央寄せ  */
+        padding-left       : 30px;             /* 虫眼鏡分の左余白    */
+        border             : 2px solid #666;   /* 枠線　幅,実践,色    */
+        border-radius      : 50px;              /* 角丸                */
+        color              : #555;             /* 文字色              */
+        font-size          : 14px;             /* フォントサイズ      */
+        letter-spacing     : 0.1em;            /* 文字間隔            */
+        font-weight        : normal;             /* 太字                */
+        outline            : 0;                 /* 入力薄枠を非表示    */
+        padding:6px 35px;
+
+}
+
+/*mobile*/
+@media(max-width: 480px){
+h2{
+    font-size: 20px;
+}
+}
+
+
