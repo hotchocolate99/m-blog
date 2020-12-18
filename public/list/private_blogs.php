@@ -17,11 +17,11 @@ ini_set('display_errors',true);
 $allUser_id = $_GET['id'];
 //var_dump($allUser_id);
 
-//ユーザーid（getの）で、そのユーザーが投稿した全公開記事の全データを取得
-function getBlogByUser($id){
+//ユーザーid（getの）で、そのユーザーが投稿した非公開記事を取得
+function getPrivateBlogByUser($id){
     $dbh = dbConnect();
     
-        $sql = "SELECT posts.id, title, category, post_at, content, likes, user_name, nickname, intro_text FROM posts JOIN users ON posts.users_id = users.id WHERE publish_status = 1 AND posts.users_id = :users_id ORDER BY posts.id DESC";
+        $sql = "SELECT posts.id, title, category, post_at, content, likes, user_name, nickname, intro_text FROM posts JOIN users ON posts.users_id = users.id AND publish_status = 2 WHERE posts.users_id = :users_id ORDER BY posts.id DESC";
         $stmt = $dbh->prepare($sql);
         $stmt->bindValue(':users_id',$id, PDO::PARAM_INT);
         $stmt->execute();
@@ -31,11 +31,11 @@ function getBlogByUser($id){
 
 }
 
-//ユーザーの投稿総数（公開記事のみ）
-function getBlogCountByUser($id){
+//ユーザーの投稿総数
+function getPrivateBlogCountByUser($id){
     $dbh = dbConnect();
     
-        $sql = "SELECT COUNT(*) FROM posts JOIN users ON posts.users_id = users.id WHERE publish_status = 1 AND posts.users_id = :users_id";
+        $sql = "SELECT COUNT(*) FROM posts JOIN users ON posts.users_id = users.id WHERE posts.users_id = :users_id AND publish_status = 2";
         $stmt = $dbh->prepare($sql);
         $stmt->bindValue(':users_id',$id, PDO::PARAM_INT);
         $stmt->execute();
@@ -50,11 +50,11 @@ function getBlogCountByUser($id){
 //index.phpから送られてくるユーザーのidを使ってそのユーザーの書いた記事を全て取得
 $user_id = $_GET['id'];
 //var_dump($_GET);
-$blogsByUser = getBlogByUser($allUser_id);
+$blogsByUser = getPrivateBlogByUser($allUser_id);
 //var_dump($blogsByUser);
 
 //ユーザーの投稿した記事の総数
-$blogCountByUser = getBlogCountByUser($allUser_id);
+$blogCountByUser = getPrivateBlogCountByUser($allUser_id);
 //var_dump($blogCountByUser);
 
 //お知らせの隣に表示させる未読のコメント数（これはログインユーザーの。セッションの。）
@@ -68,7 +68,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ユーザー別記事一覧</title>
+        <title>非公開記事一覧</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
         <link rel="stylesheet" href="./../../css/cate_list.css">
         <link rel="stylesheet" href="./../../css/header.css">
@@ -92,7 +92,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                     　　　<p class="text"><?php echo $blogsByUser[0]['intro_text'];?></p>
             　　　　</div>
 
-　　　　　　　　　　　　<h2 class="cate_title"><i class="fas fa-file"></i><?php echo $blogsByUser[0]['nickname'];?>さんの記事一覧(<?php echo $blogCountByUser[0];?>件)</h2>
+　　　　　　　　　　　　<h2 class="cate_title"><i class="fas fa-file"></i><?php echo $blogsByUser[0]['nickname'];?>さんの非公開記事一覧(<?php echo $blogCountByUser[0];?>件)</h2>
                   <div class="frame">
 
                   <table>

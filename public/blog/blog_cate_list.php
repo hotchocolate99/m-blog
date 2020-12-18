@@ -13,10 +13,11 @@ require_once './../../private/functions.php';
 
 //ini_set('display_errors',true);
 
+//カテゴリ別に記事を取得（公開記事のみ）　引数はカテゴリーの番号
 function getBlogByCate($cate){
     $dbh = dbConnect();
     
-        $sql = "SELECT * FROM posts WHERE category = :category ORDER BY id DESC";
+        $sql = "SELECT * FROM posts WHERE category = :category AND publish_status = 1 ORDER BY id DESC";
         $stmt = $dbh->prepare($sql);
         $stmt->bindValue(':category',$cate, PDO::PARAM_INT);
         $stmt->execute();
@@ -35,7 +36,7 @@ $blogsByCate3 = getBlogByCate(3);
 function getBlogCount(){
     $dbh = dbConnect();
 
-    $sql = 'SELECT category,COUNT(*)FROM posts GROUP BY category';
+    $sql = 'SELECT category,COUNT(*)FROM posts WHERE publish_status = 1 GROUP BY category';
 
     $stmt = $dbh->query($sql);
 

@@ -64,6 +64,7 @@ $readCommentCount = getCommentCount($users_id, 1);
 
 //未読コメントの内容取得
 $unreadComments = getCommentsByReadstatus($users_id, 0);
+//var_dump($unreadComments);
 
 //既読コメントの内容取得（！なぜかcommentsテーブルのidを取得できていなかった。* from comments　としてもidがposts_idになっていた。。。）
 $readComments = getCommentsByReadstatus($users_id, 1);
@@ -124,6 +125,9 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                                <div class="result_box">
                                <strong><?php echo $i+1;?>.</strong>
                                     <div>
+                                            <?php if ($unreadComment['publish_status'] == 2):?>
+                                                <P class="private_post"><?php echo '非公開';?></p>
+                                            <?php endif;?>
                                             <p>コメント投稿者：<?php echo $unreadComment['name'];?>&nbsp;さん</p>
                                             <p>コメント投稿日時：<?php echo $unreadComment['comment_at'];?></p>
                                             <p><?php echo $unreadComment['c_content'];?>
@@ -166,6 +170,9 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                                 
                             
                                     <div>
+                                            <?php if ($readComment['publish_status'] == 2):?>
+                                                <P class="private_post"><?php echo '非公開';?></p>
+                                            <?php endif;?>
                                             <p>コメント投稿者：<?php echo $readComment['name'];?>&nbsp;さん</p>
                                             <p>コメント投稿日時：<?php echo $readComment['comment_at'];?></p>
                                             <p><?php echo $readComment['c_content'];?></p>

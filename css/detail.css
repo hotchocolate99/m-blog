@@ -56,6 +56,10 @@ li{
     margin-top: 3rem;;
 }
 
+.private_post{
+    color:#f6ad49;
+}
+
 .stayAtLikeBtn{
     position: absolute;
     bottom: 3rem;

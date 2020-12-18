@@ -16,7 +16,7 @@ ini_set('display_errors',true);
 function getAllFiles(){
     $dbh = dbConnect();
 
-         $sql = "SELECT * FROM posts JOIN files ON posts.id = files.posts_id ORDER BY posts.id DESC";
+         $sql = "SELECT * FROM posts JOIN files ON posts.id = files.posts_id WHERE publish_status = 1 ORDER BY posts.id DESC";
 
         //JOIN posts ON files.posts_id = posts.id ORDER BY id DESC
         $stmt = $dbh->query($sql);

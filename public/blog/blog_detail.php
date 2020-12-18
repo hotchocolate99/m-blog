@@ -145,6 +145,9 @@ foreach($allUsers as $allUser){
 
                     <div class="frame">
                         <h2 class="title"><?php echo h($idResult['title']);?></h2>
+                        <?php if ($idResult['publish_status'] = 2):?>
+                        <P class="private_post"><?php echo '非公開';?></p>
+                        <?php endif;?>
                         <p class="date_posted"><?php echo h($idResult['post_at']);?></p>
                         <p><?php echo h(setCateName($idResult['category']));?></p>
                         <p class="blog_content"><?php echo h($idResult['content'])?></p>

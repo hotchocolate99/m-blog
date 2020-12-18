@@ -42,6 +42,14 @@ li{
     padding: 1rem;
 }
 
+.private_post{
+    color:#f6ad49;
+}
+
+.notfound{
+    padding-left: 2rem;
+}
+
 .result_box{
     border-bottom: solid #f8f4e6; 5px;
     padding: 0 1rem;
@@ -60,6 +68,7 @@ li{
 
 .frame{
     background-color: white;
+    min-height: 10rem;
 }
 
 .horizontal{

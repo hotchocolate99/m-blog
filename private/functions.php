@@ -200,7 +200,7 @@ if(!function_exists('commentCreate')) {
 
 //-----------------更新--------------------------------------------------------
 
-//ブログの更新
+//ブログの更新　（トランザクションの意味ある？？）
 if(!function_exists('blogUpdate')) {
     function blogUpdate($blogs){
 
@@ -208,9 +208,6 @@ if(!function_exists('blogUpdate')) {
                     title = :title, content = :content, category = :category, publish_status = :publish_status
 
                 WHERE id = :id;";
-
-        //insertの時もprepareいるの？？これってDBからデータを取得するのに使うんじゃないの？？ちなみに　「$sql = 'SELECT * FROM blog';」
-        //だからデータをDBから取り出してるよね？？
 
         $dbh = dbConnect();
         $dbh->beginTransaction();
@@ -308,6 +305,8 @@ if(!function_exists('getById')) {
     }
 }
 
+
+//posts.idを引数にして、画像を取得
 if(!function_exists('getFileById')) {
     function getFileById($id){
         if(empty($id)){
@@ -329,13 +328,13 @@ if(!function_exists('getFileById')) {
 }
 
 
-//getById（）とほぼ同じ。。。引数なしで、順番DESCで取得するところが違うだけ。
+//getById（）とほぼ同じ。。。引数なしで、順番DESCで取得するところが違うだけ。(公開記事のみ）
 //投稿されたブログ記事と画像を全て取得??filesがある時はfilesのデータも取得したい...そんなことしなくてもコメントを取得するのと同じ方法でfileがある時だけ表示させる？？どっち？？
 if(!function_exists('getData')) {
     function getData(){
         $dbh = dbConnect();
 
-        $sql = 'SELECT posts.*, users.nickname FROM posts JOIN users ON posts.users_id = users.id ORDER BY posts.id DESC';
+        $sql = 'SELECT posts.*, users.nickname FROM posts JOIN users ON posts.users_id = users.id WHERE publish_status = 1 ORDER BY posts.id DESC';
         //$sql = 'SELECT * FROM posts JOIN files ON posts.id = files.posts_id ORDER BY posts.id DESC';
 
         $stmt = $dbh->query($sql);
@@ -346,12 +345,12 @@ if(!function_exists('getData')) {
     }
 }
 
- //投稿されたブログの件数を取得
+ //投稿されたブログの件数(公開のみ)を取得
  if(!function_exists('getDataCount')) {
     function getDataCount(){
         $dbh = dbConnect();
 
-        $sql = 'SELECT COUNT(*) FROM posts';
+        $sql = 'SELECT COUNT(*) FROM posts WHERE publish_status = 1';
 
         $stmt = $dbh->query($sql);
 
@@ -361,12 +360,12 @@ if(!function_exists('getData')) {
     }
  }
 
-//最新のブログ記事取得
+//最新のブログ記事取得（公開のみ）
 if(!function_exists('getNewestBlog')) {
     function getNewestBlog(){
         $dbh = dbConnect();
 
-        $sql = "SELECT posts.*, users.nickname FROM posts JOIN users ON posts.users_id = users.id ORDER BY posts.id DESC LIMIT 1";
+        $sql = "SELECT posts.*, users.nickname FROM posts JOIN users ON posts.users_id = users.id WHERE publish_status = 1 ORDER BY posts.id DESC LIMIT 1";
 
         $stmt = $dbh->query($sql);
 
