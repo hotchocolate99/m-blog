@@ -84,14 +84,14 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                   <div class="frame">
                             <h2 class="form_title"><a name="cate1">テーマ１（<?php echo $cate1["COUNT(*)"];?>件）</a></h2>
                             <table>
-                            <?php $i=1;
-                                 for($i=1; $i>= $cate1["COUNT(*)"]; $i++);?>
-
+                            
                             <tr>
                             <td>
-                                <?php foreach($blogsByCate1 as $blogByCate1):?>
+                            <?php for($i=0; $i<$cate1["COUNT(*)"]; $i++):?>
+
+                                <?php $blogByCate1 = $blogsByCate1[$i];?>
                                     <div class="result_box">
-                                    <strong><?php echo $i++;?>.</strong>
+                                    <strong><?php echo $i+1;?>.</strong>
                                         <a class="link_aa" href="./blog_detail.php?id=<?php echo h($blogByCate1['id'])?>">
                                         <dl>
                                                 <dt><strong><?php echo $blogByCate1['title'];?></strong></dt>
@@ -103,7 +103,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                                                 <!--<dd><?php //echo mb_substr($result['content'],0,60);?></dd>
                                                 <dd><?php //echo $search_word.strstr($result['content'],$search_word,true);?></dd>-->
                                     </div>
-                                <?php endforeach;?>
+                                <?php endfor;?>
                                 </td>
                             </tr>
                             </table>

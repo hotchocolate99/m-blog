@@ -18,7 +18,7 @@ function getSearchWord($search_word){
 
     $results;
     if($search_word !== ""){
-        $sql = "SELECT * FROM posts WHERE title LIKE '%".$search_word."%' OR content LIKE '%".$search_word."%' OR post_at LIKE '%".$search_word."%'";
+        $sql = "SELECT * FROM posts WHERE publish_status = 1 AND title LIKE '%".$search_word."%' OR content LIKE '%".$search_word."%' OR post_at LIKE '%".$search_word."%'";
         $stmt = $dbh->query($sql);
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -31,7 +31,7 @@ function getSearchWord($search_word){
 $search_word = $_POST['search_word'];
 //var_dump($search_word);
 $results = getSearchWord($search_word);
-var_dump($results);
+//var_dump($results);
 
 //お知らせの隣に表示させる未読のコメント数
 $UnreadCommentCount = getCommentCount($users_id, 0);
@@ -62,26 +62,24 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
             　  <div class="typein">
                   <div class="frame">
                       <h2 class="form_title"><i class="fas fa-search"></i>検索ワード「<?php echo h($search_word);?>」の記事検索結果は次の通りです。</h2>
-                      <?php if(!$results):?>
+                            <?php if(empty($results)):?>
                                    <p class="notfound"><?php echo '検索ワードは見つかりませんでした。';?></p>
-                                <?php endif;?>
+                            <?php endif;?>
                             <?php foreach($results as $result):?>
-                                
 
                                 <div class="result_box">
                                     <?php if($result['publish_status']==1):?>
                                        <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($result['id'])?>">
                                          <dl>
                                              <dt><?php echo $result['title'];?></dt>
-                                             <dd>....<?php echo strstr($result['content'],$search_word);?>...</dd>
+                                             <dd><?php echo strstr($result['content'],$search_word);?></dd>
                                          </dl>
                                        </a>
-                                    <?php else:?>
-                                        <p class="notfound"><?php echo '検索ワードは見つかりませんでした。';?></p>
-                                    <?php endif;?>
+                                    
                                 </div>
+                                <?php endif;?>
                             <?php endforeach;?>
-
+                            
 
                   </div><!--frame-->
                   <a href="./../../index.php" class="fixed_btn">HOMEへ戻る</a><br>

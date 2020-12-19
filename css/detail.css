@@ -353,11 +353,103 @@ span{
     }
 }
 
+/*検索窓の調整*/
+@media(max-width: 1170px){
+    .sample2Text {
+
+        width            : 100px;            /* inputの幅           */
+        background-image : url(./img/mg.png);
+        font-weight: 900;/* 背景画像：虫眼鏡(*1)*/
+        background-repeat  : no-repeat;        /* 背景は繰り返さない  */
+        background-position: 8px center;       /* 背景の位置          */
+        background-size    : auto 60%;         /* 背景のサイズ        */
+        background-color   : #fff;             /* 背景色              */
+        margin             : 0 auto;           /* サンプルは中央寄せ  */
+        padding-left       : 30px;             /* 虫眼鏡分の左余白    */
+        border             : 2px solid #666;   /* 枠線　幅,実践,色    */
+        border-radius      : 50px;              /* 角丸                */
+        color              : #555;             /* 文字色              */
+        font-size          : 14px;             /* フォントサイズ      */
+        letter-spacing     : 0.1em;            /* 文字間隔            */
+        font-weight        : normal;             /* 太字                */
+        outline            : 0;                 /* 入力薄枠を非表示    */
+        padding:6px 35px;
+
+    }
+}
+
+/*ハンバーガーメニューのタイミングに合わせてサイドメニューをメイン部分の下へ移動する*/
+@media(max-width: 643px){
+    .container{
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+        margin-top: 2rem;
+        background-color: white;
+    }
+
+    .left{
+        background-color:#f8f4e6;
+        border-radius: 15px;
+        padding: 2rem;
+        max-width: 250px;
+        width: 250px;
+        min-height: 90vh;
+        margin: 0 1rem 0 0;
+        position: relative;
+    }
+    
+
+    .right{
+        margin-top: 2rem;
+        margin: 2rem aouto;
+        background-color: #f8f4e6;
+        width: 275px;
+        min-width: 275px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        border-radius: 15px;
+    }
+
+    .flex{
+        flex-direction: column;
+          
+    }
+
+}
+
 /*mobile*/
 @media(max-width: 480px){
-h2{
-    font-size: 20px;
-}
+
+    .flex{
+        flex-direction: column;
+          
+    }
+     h2{
+         font-size: 20px;
+     }
+
+     .sample2Text {
+        width            : 90px;            /* inputの幅           */
+        background-image : url(./img/mg.png);
+        font-weight: 900;/* 背景画像：虫眼鏡(*1)*/
+        background-repeat  : no-repeat;        /* 背景は繰り返さない  */
+        background-position: 8px center;       /* 背景の位置          */
+        background-size    : auto 60%;         /* 背景のサイズ        */
+        background-color   : #fff;             /* 背景色              */
+        margin             : 0 auto;           /* サンプルは中央寄せ  */
+        padding-left       : 30px;             /* 虫眼鏡分の左余白    */
+        border             : 2px solid #666;   /* 枠線　幅,実践,色    */
+        border-radius      : 50px;              /* 角丸                */
+        color              : #555;             /* 文字色              */
+        font-size          : 14px;             /* フォントサイズ      */
+        letter-spacing     : 0.1em;            /* 文字間隔            */
+        font-weight        : normal;             /* 太字                */
+        outline            : 0;                 /* 入力薄枠を非表示    */
+        padding:6px 35px;
+
+    }
 }
 
 

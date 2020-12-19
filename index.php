@@ -173,7 +173,7 @@ foreach($allUsers as $allUser){
                                     <p><?php echo h($newestBlog['post_at']);?></p>
                                     <p><?php echo h(setCateName($newestBlog['category']))?></p>
                                  </div>
-                                 <p class="blog_content"><?php echo h($newestBlog['content'])?></p>
+                                 <p class="blog_content"><?php echo nl2br(h($newestBlog['content']))?></p>
 
                               <?php if($fileDatas):?>
                                     <?php// foreach($fileDatas as $fileData):?>
@@ -202,9 +202,11 @@ foreach($allUsers as $allUser){
                                 <a class="link_aa" href="./public/blog/blog_detail.php?id=<?php echo h($blogData['id'])?>">
                                     <dl>
                                         <dt class="detail"><h3><?php echo h($blogData['title'])?></h3></dt>
-                                        <!--<div class="flex">-->
-                                          <dd class=date><?php echo h($blogData['post_at'])?>&nbsp;&nbsp;<?php echo h(setCateName($blogData['category']))?>&nbsp;&nbsp;(<i class="fas fa-heart"></i><?php echo h($blogData['likes'])?>)</dd>
-                                        <!--</div>-->
+                                        <div class="flex">
+                                          <dd class=date><?php echo h($blogData['post_at'])?></dd>
+                                          <dd><?php echo h(setCateName($blogData['category']))?></dd>
+                                          <dd>(<i class="fas fa-heart"></i><?php echo h($blogData['likes'])?>)</dd>
+                                        </div>
                                     </dl>
                                 </a>
                             </div>
@@ -225,8 +227,8 @@ foreach($allUsers as $allUser){
                     <p class="prof_title"><strong><i class="fas fa-user-circle">&nbsp;最新記事投稿者のプロフィール</i></strong></p>
                 　　　 <?php if($profileDatas):?>
                     　　　<h3 class="nickname"><?php echo $nickname;?></h3>
-                    　　　<p class="text"><?php echo $intro_text;?></p>
-                    　　　<a class="link_aa from_profile" href="/public/list/blogs_by_user.php?id=<?php echo $profileDatas['0']['id'];?>"><?php echo $nickname;?>&nbsp;さんの記事一覧へ</a>
+                    　　　<p class="text"><?php echo nl2br($intro_text);?></p>
+                    　　　<a class="link_aa from_profile" href="/public/list/blogs_by_user.php?id=<?php echo $profileDatas['0']['id'];?>"><?php echo $nickname;?>さんの記事一覧</a>
 
                   　　<?php endif;?>
 

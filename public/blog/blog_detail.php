@@ -150,11 +150,11 @@ foreach($allUsers as $allUser){
                         <?php endif;?>
                         <p class="date_posted"><?php echo h($idResult['post_at']);?></p>
                         <p><?php echo h(setCateName($idResult['category']));?></p>
-                        <p class="blog_content"><?php echo h($idResult['content'])?></p>
+                        <p class="blog_content"><?php echo nl2br(h($idResult['content']));?></p>
 
                         <?php if($fileDatas):?>
                                 <img src="<?php echo "{$fileDatas['file_path']}";?>"　width="240px" height="400px" alt="blog_image" >
-                                <p><?php if(isset($fileDatas['caption'])){echo "{$fileDatas['caption']}";}?></p>
+                                <p><?php if(isset($fileDatas['caption'])){echo nl2br("{$fileDatas['caption']}");}?></p>
                         <!--↑{}で囲むのは、変数を展開させるから。-->
                         <?php endif;?>
 
@@ -194,7 +194,7 @@ foreach($allUsers as $allUser){
                                           </dl>
 
                                           <div>
-                                     　      <p ><?php echo h($comData['c_content'])?></p>
+                                     　      <p ><?php echo nl2br(h($comData['c_content']));?></p>
                                      <!--↑のp class="blog_content"-->
                                           </div>
                                     </div><!--comment_box-->
@@ -253,3 +253,4 @@ foreach($allUsers as $allUser){
       </label>
     </body>
 </html>
+

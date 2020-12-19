@@ -7,7 +7,7 @@ session_start();
   }
   $users_id = $user[0]['id'];
 //--------------------------------
-
+//var_dump($user);
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
@@ -32,12 +32,12 @@ function getPrivateBlogByUser($id){
 }
 
 //ユーザーの投稿総数
-function getPrivateBlogCountByUser($id){
+function getPrivateBlogCountByUser($users_id){
     $dbh = dbConnect();
     
         $sql = "SELECT COUNT(*) FROM posts JOIN users ON posts.users_id = users.id WHERE posts.users_id = :users_id AND publish_status = 2";
         $stmt = $dbh->prepare($sql);
-        $stmt->bindValue(':users_id',$id, PDO::PARAM_INT);
+        $stmt->bindValue(':users_id',$users_id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch();
 
@@ -50,11 +50,11 @@ function getPrivateBlogCountByUser($id){
 //index.phpから送られてくるユーザーのidを使ってそのユーザーの書いた記事を全て取得
 $user_id = $_GET['id'];
 //var_dump($_GET);
-$blogsByUser = getPrivateBlogByUser($allUser_id);
+$blogsByUser = getPrivateBlogByUser($users_id);
 //var_dump($blogsByUser);
 
 //ユーザーの投稿した記事の総数
-$blogCountByUser = getPrivateBlogCountByUser($allUser_id);
+$blogCountByUser = getPrivateBlogCountByUser($users_id);
 //var_dump($blogCountByUser);
 
 //お知らせの隣に表示させる未読のコメント数（これはログインユーザーの。セッションの。）
@@ -85,14 +85,14 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
 
             　　　　<div class="profile">
 
-                    　<p class="prof_title"><strong><i class="fas fa-user-circle">&nbsp;<?php echo $blogsByUser[0]['nickname'];?>&nbsp;&nbsp;さんのプロフィール</i></strong></p>
+                    　<p class="prof_title"><strong><i class="fas fa-user-circle">&nbsp;<?php echo $user[0]['nickname'];?>&nbsp;&nbsp;さんのプロフィール</i></strong></p>
                     　　　
-                    　　　<h3 class="nickname"><?php echo $blogsByUser[0]['nickname'];?></h3>
+                    　　　<h3 class="nickname"><?php echo $user[0]['nickname'];?></h3>
                     　　　
-                    　　　<p class="text"><?php echo $blogsByUser[0]['intro_text'];?></p>
+                    　　　<p class="text"><?php echo $user[0]['intro_text'];?></p>
             　　　　</div>
 
-　　　　　　　　　　　　<h2 class="cate_title"><i class="fas fa-file"></i><?php echo $blogsByUser[0]['nickname'];?>さんの非公開記事一覧(<?php echo $blogCountByUser[0];?>件)</h2>
+　　　　　　　　　　　　<h2 class="cate_title"><i class="fas fa-file"></i><?php echo $user[0]['nickname'];?>さんの非公開記事一覧(<?php echo $blogCountByUser[0];?>件)</h2>
                   <div class="frame">
 
                   <table>

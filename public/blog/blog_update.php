@@ -112,8 +112,8 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                         <br>
 
                         <div class="form_item"></div>
-                        <input type="radio" name="publish_status" value="1" <?php if($publish_status === 1){ echo 'checked'; }?> >公開
-                        <input type="radio" name="publish_status" value="2" <?php if($publish_status === 2){ echo 'checked'; }?> >非公開
+                        <input class="radio" type="radio" name="publish_status" value="1" <?php if($publish_status === 1){ echo 'checked'; }?> >公開
+                        <input class="radio" type="radio" name="publish_status" value="2" <?php if($publish_status === 2){ echo 'checked'; }?> >非公開
                         <br>
                         <br>
 
@@ -144,6 +144,8 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                         <br>
                         <br>
                         <textarea
+
+                           calss="caption"
                            name="caption"
                            placeholder="キャプション（140文字以下)"
                            id="caption" cols="50" rows="10" 

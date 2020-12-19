@@ -48,8 +48,9 @@ li{
     background-color: white;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    justify-content: space-between;
+    justify-content: stretch;
+    padding-left: 2.5rem;
+    
 }
 
 .file_box{

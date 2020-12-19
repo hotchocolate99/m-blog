@@ -108,7 +108,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
         <div class="wrapper">
             <div class="container">
             　  <div class="typein">
-            <!--<h2 class="form_title">未読、既読コメントが合わせて<?php echo $unreadCommentCount['COUNT(*)'] + $readCommentCount['COUNT(*)'].'件';?>あります。</h2>-->
+            
             <br>
                   <div class="frame">
                       <h2 class="form_title"><?php if($unreadCommentCount['COUNT(*)']==0){echo '未読コメントはありません。';}else{echo '未読のコメントが'.$unreadCommentCount['COUNT(*)'].'件あります。';}?></h2>
@@ -130,7 +130,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                                             <?php endif;?>
                                             <p>コメント投稿者：<?php echo $unreadComment['name'];?>&nbsp;さん</p>
                                             <p>コメント投稿日時：<?php echo $unreadComment['comment_at'];?></p>
-                                            <p><?php echo $unreadComment['c_content'];?>
+                                            <p><?php echo nl2br($unreadComment['c_content']);?>
                                     </div>
                                     <br>
                                     <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($unreadComment['posts_id'])?>">記事詳細ページで確認する</a>
@@ -175,7 +175,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                                             <?php endif;?>
                                             <p>コメント投稿者：<?php echo $readComment['name'];?>&nbsp;さん</p>
                                             <p>コメント投稿日時：<?php echo $readComment['comment_at'];?></p>
-                                            <p><?php echo $readComment['c_content'];?></p>
+                                            <p><?php echo nl2br($readComment['c_content']);?></p>
                                     </div>
                                     <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($readComment['posts_id'])?>">記事詳細ページで確認する</a>
                                     <br>

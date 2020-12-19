@@ -89,7 +89,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                     　　　
                     　　　<h3 class="nickname"><?php echo $blogsByUser[0]['nickname'];?></h3>
                     　　　
-                    　　　<p class="text"><?php echo $blogsByUser[0]['intro_text'];?></p>
+                    　　　<p class="text"><?php echo nl2br($blogsByUser[0]['intro_text']);?></p>
             　　　　</div>
 
 　　　　　　　　　　　　<h2 class="cate_title"><i class="fas fa-file"></i><?php echo $blogsByUser[0]['nickname'];?>さんの記事一覧(<?php echo $blogCountByUser[0];?>件)</h2>
