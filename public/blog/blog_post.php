@@ -67,6 +67,10 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                                     <p><?php echo "キャプションを入力して下さい";?></p>
                                 <?php endif;?>
 
+                                <?php if ($_GET["error"]=="invalid_file"):?>
+                                    <p><?php echo "キャプションをつける画像がありません。";?></p>
+                                <?php endif;?>
+
                                 <?php if ($_GET["error"]=="invalid_caption_length"):?>
                                     <p><?php echo "キャプションは140文字以内で入力して下さい。";?></p>
                                 <?php endif;?>

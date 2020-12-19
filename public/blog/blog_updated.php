@@ -48,6 +48,10 @@ if($caption){
         header('Location:./blog_update.php?error=invalid_caption_length');
         exit();
     }
+    if(!empty($file)){
+        header('Location:./blog_update.php?error=invalid_file');
+      exit();
+    }
 }
 
 //ファイルサイズバリデーション。エラーの数字が２の時はサイズオーバーしているということなので。

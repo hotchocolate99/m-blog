@@ -75,6 +75,11 @@ $caption = filter_input(INPUT_POST,'caption',FILTER_SANITIZE_SPECIAL_CHARS);
             header('Location:./blog_post.php?error=invalid_caption_length');
             exit();
         }
+
+        if(!empty($file)){
+            header('Location:./blog_post.php?error=invalid_file');
+          exit();
+        }
     }
 
     //ファイルサイズバリデーション。エラーの数字が２の時はサイズオーバーしているということなので。

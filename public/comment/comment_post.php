@@ -2,11 +2,6 @@
 //----ログイン状態-----------------
 session_start();
 
-if (!$_SESSION['login']) {
-    header('Location: ./../../account/login.php');
-    exit();
-  }
-
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
@@ -19,8 +14,16 @@ require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
 //詳細ページから渡ってきた記事のid
-$blog_id = $_GET['id'];
-var_dump($blog_id);
+
+if(isset($_GET['id'])){
+    $posts_id = $_GET['id'];
+
+}
+//elseif(isset($_GET['posts_id'])){
+  //  $posts_id = $_GET['posts_id'];
+//}
+
+var_dump($posts_id);
 
 //下は、コメント投稿ページから完了ページに飛ぶときにあたいが入るので、ここでは空っぽ。
 //var_dump($_POST);
@@ -70,20 +73,21 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                         <h2 class="form_title"><span><i class="fas fa-comment"></i>この記事にコメントする</span></h2>
                         
                         <div class="error_msg">
-                        <?php if (isset($_GET["error"])):?>
+                        　<?php if (isset($_GET["error"])):?>
 
                             <?php if ($_GET["error"]=="invalid_c_name"):?>
                             <p><?php echo " 名前を入力して下さい。";?></p>
                             <?php endif;?>
 
                             <?php if ($_GET["error"]=="invalid_c_content"):?>
-                            <p><?php echo "コメントはは200字以下にして下さい。";?></p>
+                            <p><?php echo "コメントは200字以下で入力して下さい。";?></p>
                             <?php endif;?>
 
-                            <?php endif;?>
+                        　<?php endif;?>
                         </div><!--error_msg-->
 
                             <form action="./comment_posted.php" method="POST"　class="formspace">
+                            <input type="hidden" name="posts_id" value="<?php echo h($posts_id) ?>">
 
                             <p class="form_item">名前</p>
                             <input type="text" class="form_text" name="name">
@@ -93,16 +97,13 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                             <br>
 
                             <input type="submit" value="投稿" class="btn">
-                            <!--<input type="hidden" name="posts_id" value="<?php// if($p['id']){echo h($p['id']);}?>">-->
-                            <input type="hidden" name="posts_id" value="<?php if(!empty($blog_id)){echo h($blog_id);}?>">
-
                             </form>
 
 
 
 
 
-                            <a class="fixed_btn" href="./../blog/blog_detail.php?id=<?php echo h($id)?>">記事へ戻る</a><br>
+                            <a class="fixed_btn" href="./../blog/blog_detail.php?id=<?php echo h($posts_id)?>">記事へ戻る</a><br>
                 </div><!--typein-->
             </div><!--container-->
         </div> <!--wrapper-->

@@ -52,25 +52,13 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                  <div class="typein">
 
                       <h2 class="form_title">プロフィール入力フォーム</h2>
-                         <div class="error_msg">
-                            <?php if (isset($_GET["error"])):?>
-
-                                <?php if ($_GET["error"]=="invalid_nickname"):?>
-                                <p><?php echo "ニックネームを入力してください。";?></p>
-                                <?php endif;?>
-
-                                <?php if ($_GET["error"]=="invalid_intoro_text"):?>
-                                <p><?php echo "自己紹介文は200字以下にして下さい。";?></p>
-                                <?php endif;?>
-
-                            <?php endif;?>
-                        </div><!--error_msg-->
+                      
 
         　　　　　　　　　　　
                         <form action="./profile_posted.php" method="POST">
 
                         <?php if (isset($_GET["error"])):?>
-
+                            <div class="error_msg">
                            　<?php if ($_GET["error"]=="invalid_nickname"):?>
                             　　<p><?php echo "ニックネームを入力してください。";?></p>
                              <?php endif;?>
@@ -78,7 +66,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                              <?php if ($_GET["error"]=="invalid_intro_text"):?>
                                <p><?php echo "自己紹介文は300字以下にして下さい。";?></p>
                         　　  <?php endif;?>
-                        
+                        </div><!--error_msg-->
                         <?php endif;?>
 
 

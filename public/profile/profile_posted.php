@@ -24,6 +24,11 @@ $profiles = $_POST;
         exit();
     }
 
+    if(empty($profiles['intro_text'])){
+        header('Location: ./profile_post.php?error=invalid_intro_text');
+        exit();
+    }
+
     if(mb_strlen($profiles['intro_text'])>300){
         header('Location: ./profile_post.php?error=invalid_intro_text');
         exit();

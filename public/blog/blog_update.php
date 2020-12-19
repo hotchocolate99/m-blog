@@ -90,6 +90,53 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
             　<div class="typein">
                  <h2 class="form_title">記事編集フォーム</h2>
 
+                 <div class="error_msg">
+                            <?php if (isset($_GET["error"])):?>
+
+                                <?php if ($_GET["error"]=="invalid_title"):?>
+                                <p><?php echo "タイトルを入力してください。";?></p>
+                                <?php endif;?>
+
+                                <?php if ($_GET["error"]=="invalid_title_lengh"):?>
+                                <p><?php echo "タイトルは25字以下にして下さい。";?></p>
+                                <?php endif;?>
+
+                                <?php if ($_GET["error"]=="invalid_content"):?>
+                                <p><?php echo "本文を入力して下さい。";?></p>
+                                <?php endif;?>
+
+                                <?php if ($_GET["error"]=="invalid_category"):?>
+                                    <p><?php echo "カテゴリーは必須です。";?></p>
+                                <?php endif;?>
+
+                                <?php if ($_GET["error"]=="invalid_status"):?>
+                                    <p><?php echo "公開ステータスは必須です。";?></p>
+                                <?php endif;?>
+
+                                <?php if ($_GET["error"]=="invalid_caption"):?>
+                                    <p><?php echo "キャプションを入力して下さい";?></p>
+                                <?php endif;?>
+
+                                <?php if ($_GET["error"]=="invalid_file"):?>
+                                    <p><?php echo "キャプションをつける画像がありません。";?></p>
+                                <?php endif;?>
+
+                                <?php if ($_GET["error"]=="invalid_caption_length"):?>
+                                    <p><?php echo "キャプションは140文字以内で入力して下さい。";?></p>
+                                <?php endif;?>
+
+                                <?php if ($_GET["error"]=="invalid_filesize"):?>
+                                    <p><?php echo "ファイルサイズは１MB未満にして下さい。";?></p>
+                                <?php endif;?>
+
+                                <?php if ($_GET["error"]=="invalid_file"):?>
+                                    <p><?php echo "画像ファイルを添付して下さい。";?></p>
+                                <?php endif;?>
+
+
+                            <?php endif;?>
+                        </div><!--error_msg-->
+
                  <form action="./blog_updated.php" method="POST" enctype="multipart/form-data" class="formspace">
                     <input type="hidden" name="id" value="<?php echo h($id) ?>">
 
