@@ -23,14 +23,24 @@ require_once './private/functions.php';
 
 //ブログ関連-----------------------------------------------------------------------
 //ブログの全件の全てのデータを取得し、記事一覧を表示-----
-$blogDatas = getData($_SESSION['user']);
+////$blogDatas = getData();
+//$_SESSION['user']
 //var_dump($blogDatas);
-foreach($blogDatas as $blogData=>$val){
+//foreach($blogDatas as $blogData=>$val){
   //var_dump($val);
+//}
+
+//ブログ関連-----------------------------------------------------------------------
+//ブログの最新の５件を取得し、記事一覧を表示-----
+$blogDatas = getNewestBlog(5);
+//$_SESSION['user']
+//var_dump($blogDatas);
+foreach($blogDatas as $blogData){
+  //var_dump($blogData['id']);
 }
 
 //ブログの総件数を取得----------------------------
-$blogs_total = getDataCount();
+//$blogs_total = getDataCount();
 //↑ は配列だったので ↓
 //var_dump($total["COUNT(*)"]);
 
@@ -38,7 +48,8 @@ $blogs_total = getDataCount();
 
 
 //最新ブログ記事の取得(postsテーブルのデータのみで画像はなし)-------
-$newestBlogs = getNewestBlog();
+$newestBlogs = getNewestBlog(1);
+//var_dump($newestBlogs);
 foreach($newestBlogs as $newestBlog){
   //var_dump($newestBlog);
 }
@@ -177,28 +188,28 @@ foreach($allUsers as $allUser){
                    </div><!--newest-->
 
                   <div class="blogs">
-                      <h2><i class="fas fa-pencil-alt"></i>記事一覧<span>（全<?php echo $blogs_total["COUNT(*)"];?>件）</span></h2>
+                      <h2><i class="fas fa-pencil-alt"></i><span>最新記事５件</span></h2>
                       <table>
-                            <?php $i=1;
-                                 for($i=1; $i>= $blogs_total["COUNT(*)"]; $i++);?>
 
                             <tr>
                             <td>
-                         <?php foreach($blogDatas as $blogData => $val):?>
-
+                            <?php for($i=0; $i<5; $i++):?>
+                                <?php $blogData = $blogDatas[$i];?>
+                                
                             <div class="blog_box"> 
-                            <strong><?php echo $i++;?>.</strong>
-                                <p><a class="link_aa" href="./public/list/blogs_by_user.php?id=<?php echo h($val['users_id'])?>"><?php echo h($val['nickname'])?></a>&nbsp;さんの投稿</p>
-                                <a class="link_aa" href="./public/blog/blog_detail.php?id=<?php echo h($val['id'])?>">
+                            <strong><?php echo $i+1;?>.</strong>
+                                <p><a class="link_aa" href="./public/list/blogs_by_user.php?id=<?php echo h($blogData['users_id'])?>"><?php echo h($blogData['nickname'])?></a>&nbsp;さんの投稿</p>
+                                <a class="link_aa" href="./public/blog/blog_detail.php?id=<?php echo h($blogData['id'])?>">
                                     <dl>
-                                        <dt class="detail"><h3><?php echo h($val['title'])?></h3></dt>
+                                        <dt class="detail"><h3><?php echo h($blogData['title'])?></h3></dt>
                                         <!--<div class="flex">-->
-                                          <dd class=date><?php echo h($val['post_at'])?>&nbsp;&nbsp;<?php echo h(setCateName($val['category']))?>&nbsp;&nbsp;(<i class="fas fa-heart"></i><?php echo h($val['likes'])?>)</dd>
+                                          <dd class=date><?php echo h($blogData['post_at'])?>&nbsp;&nbsp;<?php echo h(setCateName($blogData['category']))?>&nbsp;&nbsp;(<i class="fas fa-heart"></i><?php echo h($blogData['likes'])?>)</dd>
                                         <!--</div>-->
                                     </dl>
                                 </a>
                             </div>
-                         <?php endforeach;?>
+                                
+                         <?php endfor;?>
                          </td>
                          </tr>
                          </table>
@@ -232,7 +243,7 @@ foreach($allUsers as $allUser){
                             </div>
                         </li>
 
-                        <li><a href="./public/list/list_files.php" class="link_a"><i class="fas fa-camera"></i>画像一覧</a></li>
+                        <li><a href="./public/list/all_blogs.php" class="link_a"><i class="fas fa-file"></i>投稿記事一覧</a></li>
 
                         <li class="list"><a href="#" class="link_a"><i class="fas fa-file"></i>テーマ別記事一覧</a>
                           <ul>
@@ -249,6 +260,8 @@ foreach($allUsers as $allUser){
                             <?php endforeach;?>
                           </ul>
                         </li>
+
+                        <li><a href="./public/list/list_files.php" class="link_a"><i class="fas fa-camera"></i>画像一覧</a></li>
                         
 
 　　　　　　　　　　　　　</ul>

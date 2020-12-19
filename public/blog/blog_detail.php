@@ -145,7 +145,7 @@ foreach($allUsers as $allUser){
 
                     <div class="frame">
                         <h2 class="title"><?php echo h($idResult['title']);?></h2>
-                        <?php if ($idResult['publish_status'] = 2):?>
+                        <?php if ($idResult['publish_status'] == 2):?>
                         <P class="private_post"><?php echo '非公開';?></p>
                         <?php endif;?>
                         <p class="date_posted"><?php echo h($idResult['post_at']);?></p>
@@ -219,7 +219,8 @@ foreach($allUsers as $allUser){
                             </div>
                         </li>
 
-                        <li><a href="./../list/list_files.php" class="link_a"><i class="fas fa-camera"></i>画像一覧</a></li>
+                        <li><a href="./../list/all_blogs.php" class="link_a"><i class="fas fa-file"></i>投稿記事一覧</a></li>
+                        
                         <li class="list"><a href="#" class="link_a"><i class="fas fa-file"></i>テーマ別記事一覧</a>
                           <ul>
                           <li><a href="./blog_cate_list.php#cate1" class="link_a">テーマ１</a></li>
@@ -236,26 +237,12 @@ foreach($allUsers as $allUser){
                           </ul>
                         </li>
 
+                        <li><a href="./../list/list_files.php" class="link_a"><i class="fas fa-camera"></i>画像一覧</a></li>
+
 　　　　　　　　　　　　　</ul>
 　　　　　　　　　　　</div><!--menu-->
 
-                  <div class="blogs">
-                      <p><span><i class="fas fa-pencil-alt"></i>記事一覧<span>（全<?php echo $total["COUNT(*)"];?>件）</span></p>
-                         <?php foreach($blogData as $column):?>
-
-                            <div class="blog_box"> 
-                                <p class="small"><a class="link_aa" href="./../list/blogs_by_user.php?id=<?php echo h($column['users_id'])?>"><?php echo h($column['nickname'])?></a>さんの投稿</p>
-                                <a class="link_aa" href="./blog_detail.php?id=<?php echo h($column['id'])?>">
-
-                                        <div class="detail small"><span><?php echo h($column['title'])?></span></div>
-                                          <div class="date small"><?php echo h($column['post_at'])?></div>
-                                          <div class="small"><?php echo h(setCateName($column['category']))?></div>
-                                          <div class="small">(<i class="fas fa-heart"></i><?php echo h($column['likes'])?>)</div>
-                                </a>
-                            </div>
-                         <?php endforeach;?>
-
-                  </div>
+                  
 
                   <div class="side_footer">footer</div>
                 　　　

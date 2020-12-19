@@ -76,7 +76,7 @@
                   <ul>
                     <li><a href="/public/account/logout.php" class="link_a"><span><i class="fas fa-lock"></i>ログアウト</span></a></li>
                     <li><a href="/public/profile/profile_post.php" class="link_a"><span><i class="fas fa-user"></i>プロフィール</span></a></li>
-                    <li><a class="link_a" href="/public/list/blogs_by_user.php?id=<?php echo $_SESSION['user'][0]['id'];?> "><span><i class="fas fa-file"></i>ユーザー記事一覧<span></a></li>
+                    <li><a class="link_a" href="/public/list/private_blogs.php?id=<?php echo $_SESSION['user'][0]['id'];?> "><span><i class="fas fa-file"></i>非公開記事一覧<span></a></li>
                 </ul>
                   </li>
                 <?php endif;?>

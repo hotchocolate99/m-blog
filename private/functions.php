@@ -360,16 +360,19 @@ if(!function_exists('getData')) {
     }
  }
 
-//最新のブログ記事取得（公開のみ）
+//最新のブログ記事取得（公開のみ）引数は取得する記事件数
 if(!function_exists('getNewestBlog')) {
-    function getNewestBlog(){
+    function getNewestBlog($amount){
         $dbh = dbConnect();
 
-        $sql = "SELECT posts.*, users.nickname FROM posts JOIN users ON posts.users_id = users.id WHERE publish_status = 1 ORDER BY posts.id DESC LIMIT 1";
-
-        $stmt = $dbh->query($sql);
-
+        //$sql = "SELECT posts.*, users.nickname FROM posts JOIN users ON posts.users_id = users.id WHERE publish_status = 1 ORDER BY posts.id DESC LIMIT 1";
+        $sql = "SELECT posts.*, users.nickname FROM posts JOIN users ON posts.users_id = users.id WHERE posts.publish_status = 1 ORDER BY posts.id DESC LIMIT :LIMIT";
+        
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':LIMIT',(int)$amount, PDO::PARAM_INT);
+        $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
 
         return $result;
     }
