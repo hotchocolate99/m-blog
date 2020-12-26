@@ -9,20 +9,21 @@
         <link rel="stylesheet" href="./../../css/header.css">
     </head>
     <body>
-        <?php include './headerA.php';?>
+        <?php include './../../header.php';?>
 
-        <div class="wrapper">
-            <div class="container">
-               <div class="typein">
-                    <p>ユーザー登録が完了しました。</p>
-                    <br>
-                    <a class="fixed_btn link_aa" href="./login.php">ログイン画面へ</a>
+        <label for="check">
+            <div class="wrapper">
+                <div class="container">
+                　　<div class="typein">
+                        <p>ユーザー登録が完了しました。</p>
+                        <br>
+                        <a class="fixed_btn link_aa" href="./login.php">ログイン画面へ</a>
 
-               </div><!--typein-->
-           </div><!--container-->
-       </div> <!--wrapper-->
+                　　</div><!--typein-->
+            　　</div><!--container-->
+        　　</div> <!--wrapper-->
+      </label>
 
-        
     </body>
 </html>
 

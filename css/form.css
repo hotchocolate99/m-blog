@@ -78,3 +78,156 @@ margin: 15px 0 3px 0;}
 .error-box li{
     color: red;
 }
+
+
+/*レスポンシブ PC firtst*/
+/*tablet*/
+@media(max-width: 896px){
+    .typein{
+        background-color:#f8f4e6;
+        border-radius: 15px;
+        padding: 3rem 1rem;
+        width: 350px;
+        min-height: 30vh;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    textarea{
+        width: 200px; 
+        height:600px;
+    }
+
+    input{
+        font-size: 8px;
+        width:150px;
+    }
+
+}
+
+
+
+/*ハンバーガーメニューのタイミングに合わせてサイドメニューをメイン部分の下へ移動する*/
+@media(max-width: 660px){
+    .input_h{
+        display: none;
+    }
+
+    .header_pc{
+        display: none;
+    }
+    .header_tab_mob{
+        display: block;
+    }
+    .link_container{
+        background-color: #ffe9a9;
+        width: 150px;
+        transform: translateX(-210px);
+        position: absolute;
+        z-index: 1;
+    }
+
+    .link_container ul{
+        flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .link_container li{
+        padding: 0 0 5px 20px;
+    }
+
+    .input_h:checked ~.link_container{
+        transform: translateX(0);
+        transition: 0.3s ease-in-out;
+        
+    }
+
+    .header_tab_mob{
+        height: 10px;
+    }
+
+    .home{
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    .typein{
+        background-color:#f8f4e6;
+        border-radius: 15px;
+        padding: 3rem 1rem;
+        width: 350px;
+        min-height: 30vh;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    textarea{
+        width: 200px; 
+        height:600px;
+    }
+
+    input{
+        font-size: 8px;
+        width:150px;
+    }
+
+}
+
+
+/*レスポンシブ PC firtst*/
+/*tablet*/
+/*@media(max-width: 896px){
+    
+}*/
+
+/*mobile*/
+@media(max-width: 480px){
+    h2{
+        font-size: 16px;
+    }
+
+    p{
+        font-size:12px;
+    }
+
+    a{
+        font-size: 12px;
+    }
+
+    .btn{
+        width: 90px;
+        height:30px;
+        font-size: 12px;
+
+    }
+
+    .typein{
+        background-color:#f8f4e6;
+        border-radius: 15px;
+        padding: 3rem 1rem;
+        width: 150px;
+        min-height: 30vh;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    textarea{
+        width: 150px; 
+        height:400px;
+    }
+
+    .caption{
+        width: 120px; 
+        height:200px;
+    }
+
+    .radio{
+        font-size: 8px;
+        width:50px;
+    }
+
+    input{
+        width: 130px;
+    }
+
+ }

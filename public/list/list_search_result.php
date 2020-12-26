@@ -2,44 +2,27 @@
 //----ログイン状態-----------------
 session_start();
 
-if (!$_SESSION['login']) {
-    header('Location: ./../../account/login.php');
-    exit();
-  }
-
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
+  $users_id = $user[0]['id'];
 //--------------------------------
+
+//ini_set('display_errors',true);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
-//ini_set('display_errors',true);
 
-function getSearchWord($search_word){
-    $dbh = dbConnect();
-
-    $results;
-    if($search_word !== ""){
-        $sql = "SELECT * FROM posts WHERE title LIKE '%".$search_word."%' OR content LIKE '%".$search_word."%' OR post_at LIKE '%".$search_word."%'";
-               //全角スペースを半角スペースに変えましたが、それでもまだ同じエラーが出ます。。。
-        $stmt = $dbh->query($sql);
-
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $results;
-
-    }
-}
 
 $search_word = $_POST['search_word'];
 //var_dump($search_word);
+
 $results = getSearchWord($search_word);
+//var_dump($results);
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
-
+$UnreadCommentCount = getCommentCount($users_id, 0);
 
 ?>
 
@@ -59,35 +42,41 @@ $UnreadCommentCount = getUnreadCommentCount();
 
     <body>
 
-        <?php include './headerL.php';?>
+        <?php include './../../header.php';?>
 
-        <div class="wrapper">
-            <div class="container">
-            　  <div class="typein">
-                  <div class="frame">
-                      <h2 class="form_title"><i class="fas fa-search"></i>検索ワード「<?php echo h($search_word);?>」の記事検索結果は次の通りです。</h2>
+        <label for="check">
+            <div class="wrapper">
+                <div class="container">
+                　  <div class="typein">
+                      <div class="frame">
+                        <h2 class="form_title"><i class="fas fa-search"></i>検索ワード「<?php echo h($search_word);?>」の記事検索結果は次の通りです。</h2>
+                                <?php if(empty($results)):?>
+                                    <p class="notfound"><?php echo '検索ワードは見つかりませんでした。';?></p>
+                                <?php endif;?>
 
+                                <?php foreach($results as $result):?>
 
-                            <?php foreach($results as $result):?>
-                                <div class="result_box">
-                                    <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($result['id'])?>">
-                                    <dl>
-                                            <dt><?php echo $result['title'];?></dt>
-                                            <dd>....<?php echo strstr($result['content'],$search_word);?>...</dd>
-                                    </dl>
-                                    </a>
-                                            
-                                </div>
-                            <?php endforeach;?>
+                                    <div class="result_box">
+                                        <?php if($result['publish_status']==1):?>
+                                           <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($result['id'])?>">
+                                             <dl>
+                                                <dt><?php echo $result['title'];?></dt>
+                                                <dd><?php echo strstr($result['content'],$search_word);?></dd>
+                                             </dl>
+                                           </a>
+                                        <?php endif;?>
+                                    </div><!--result_box-->
 
+                                <?php endforeach;?>
+                                
 
-                  </div><!--frame-->
-                  <a href="./../../index.php" class="fixed_btn">HOMEへ戻る</a><br>
+                      </div><!--frame-->
+                      <a href="./../../index.php" class="fixed_btn">HOMEへ戻る</a><br>
 
-               </div><!--typein-->
-            </div><!--container-->
-        </div><!--wrapper-->
-
+                   </div><!--typein-->
+                </div><!--container-->
+            </div><!--wrapper-->
+      </label>
     </body>
 </html>
 

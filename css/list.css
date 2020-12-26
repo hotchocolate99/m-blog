@@ -42,6 +42,14 @@ li{
     padding: 1rem;
 }
 
+.private_post{
+    color:#f6ad49;
+}
+
+.notfound{
+    padding-left: 2rem;
+}
+
 .result_box{
     border-bottom: solid #f8f4e6; 5px;
     padding: 0 1rem;
@@ -60,6 +68,11 @@ li{
 
 .frame{
     background-color: white;
+    min-height: 10rem;
+}
+
+.horizontal{
+    display: inline-block;
 }
 
 .btn{
@@ -74,6 +87,10 @@ li{
     color: #49484d;
     background-color:#bbe2f1;
   }
+
+.red{
+    background-color: #f2a88a;
+}
 
 .btn:hover{
     cursor:pointer;
@@ -93,6 +110,52 @@ li{
 .fixed_btn :hover{
 	font-weight: bold;
 }
+
+/*レスポンシブ PC firtst*/
+/*tablet*/
+@media(max-width: 896px){
+    .typein{
+        background-color:#f8f4e6;
+        border-radius: 15px;
+        padding: 3rem 1rem;
+        width: 250px;
+        min-height: 30vh;
+        margin: 0 auto;
+        position: relative;
+    }
+}
+
+/*mobile*/
+@media(max-width: 480px){
+    h2{
+        font-size: 16px;
+    }
+
+    p{
+        font-size:12px;
+    }
+
+    a{
+        font-size: 12px;
+    }
+
+    .btn{
+        width: 90px;
+        height:30px;
+        font-size: 12px;
+
+    }
+
+    .typein{
+        background-color:#f8f4e6;
+        border-radius: 15px;
+        padding: 3rem 1rem;
+        width: 150px;
+        min-height: 30vh;
+        margin: 0 auto;
+        position: relative;
+    }
+    }
 
 
 

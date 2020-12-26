@@ -10,10 +10,10 @@ if (!$_SESSION['login']) {
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
+  $users_id = $user[0]['id'];
 //--------------------------------
 
-//echo __FILE__;
-//ini_set('display_errors',true);
+ini_set('display_errors',true);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
@@ -21,9 +21,9 @@ require_once './../../private/functions.php';
 $blogs = $_POST;
 //var_dump($blogs);
 
-//$fileには配列でデータが入っている。
 $file = $_FILES['img'];
 //var_dump($file);
+
 //↓basename()関数で、ディレクトリトラバーサル対策。ファイルのパスを排除し、最後のファイル名の部分だけを返してくれるようにする。これでパスから情報を盗まれることはない。
 $filename = basename($file['name']);
 $tmp_path = $file['tmp_name'];
@@ -36,15 +36,15 @@ $save_filename = date('YmdHis'). $filename;
 $caption = filter_input(INPUT_POST,'caption',FILTER_SANITIZE_SPECIAL_CHARS);
 
 
-//ブログ記事、ファイルとキャプションのバリデーション　返り値はなしでOK？？？
+//ブログ記事、ファイルとキャプションのバリデーション
 
     if(empty($blogs['title'])){
-        header('Location: ./blog_post.php?error=invalid_title');
+        header('Location: ./blog_post.php?error=invalid_title&id='.$id);
         exit();
     }
 
     if(mb_strlen($blogs['title'])>30){
-        header('Location: ./blog_post.php?error=invalid_title_length');
+        header('Location: ./blog_post.php?error=invalid_title_length&id='.$id);
         exit();
     }
 
@@ -63,16 +63,20 @@ $caption = filter_input(INPUT_POST,'caption',FILTER_SANITIZE_SPECIAL_CHARS);
         exit();
     }
 
-    //if(empty($caption)){
-      //  header('Location:./blog_post.php?error=invalid_caption');
-      //  exit();
-    //}
-   if($caption){
+//画像がない時はキャプションも無しにする。（ちなみに画像ありのキャプション無しはあり。）
+   if(empty($file['name']) && $caption){
+    header('Location:./blog_post.php?error=invalid_file');
+    exit();
+   }
+    
+    if($caption && $file['name']){
         if(strlen($caption) > 140){
             header('Location:./blog_post.php?error=invalid_caption_length');
             exit();
         }
     }
+    
+    
 
     //ファイルサイズバリデーション。エラーの数字が２の時はサイズオーバーしているということなので。
     if($filesize){
@@ -109,28 +113,22 @@ if($tmp_path && $save_path && $upload_dir){
             $msgs[] = 'ファイルが保存できませんでした。';
         }
 
-    }else{
+    //}else{
         //$msgs[] = 'ファイルが選択されていません。';
-    }
+    //}
+  }
 }
-
-//if($blogs && !empty($filename) && !empty($save_path) && !empty($caption)){
- //   blogCreateWithoutFile($blogs);
-//}
-//var_dump($blogs);
-var_dump($file);
-
+//画像ありの場合となしの場合の投稿
 if($blogs && $filename && $save_path || $caption){
-   blogCreateWithFile($blogs, $filename, $save_path, $caption);
+   blogCreateWithFile($blogs, $filename, $save_path, $caption, $users_id);
 
   }else if(!empty($blogs) && empty($file['file_path'])){
-     blogCreateWithoutFile($blogs);
+     blogCreateWithoutFile($blogs, $users_id);
 
 }
 
-//お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
-
+//お知らせの隣に表示させる未読のコメント数（これはログインユーザーの。セッションの。）
+$UnreadCommentCount = getCommentCount($users_id, 0);
 
 
 ?>
@@ -149,26 +147,22 @@ $UnreadCommentCount = getUnreadCommentCount();
 
     <body>
 
-      <?php include './headerB.php';?>
+      <?php include './../../header.php';?>
 
+         <label for="check">
             <div class="wrapper">
                 <div class="container">
                 　   <div class="typein">
                         <p class="form_title"></p>
-                        <?php if($msgs):?>
-                          <?PHP foreach($msgs as $msg):?>
-                            <p><?php echo $msg;?></p>
-                          <?php endforeach ;?> 
-                        <?php endif ;?>
-
                         <p>投稿を完了しました。</P>
 
-                        <?php $this_blog = getNewestBlog();?>
-                        <a class="fixed_btn" href="./blog_detail.php?id=<?php echo h($this_blog['id'])?>">記事詳細へ</a></div><br>
-                    </div>
+                         <!--最新記事＝ここで投稿している記事なので、ここで最新記事のidを取得することで、詳細ページへ飛べるようにしている。-->
+                        <?php $this_blog = getNewestBlog(1);?>
+                          <a class="fixed_btn" href="./blog_detail.php?id=<?php echo h($this_blog[0]['id'])?>">記事詳細へ</a>
+                        <br>
+                     </div>
                 </div>
-            </div>
-
-
+              </div>
+         </label>
     </body>
-</html>
+  </html>

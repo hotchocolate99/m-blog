@@ -48,8 +48,9 @@ li{
     background-color: white;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    justify-content: space-between;
+    justify-content: stretch;
+    padding-left: 2.5rem;
+    
 }
 
 .file_box{
@@ -104,6 +105,53 @@ li{
 .fixed_btn :hover{
 	font-weight: bold;
 }
+
+
+/*レスポンシブ PC firtst*/
+/*tablet*/
+@media(max-width: 896px){
+    .typein{
+        background-color:#f8f4e6;
+        border-radius: 15px;
+        padding: 3rem 1rem;
+        width: 300px;
+        min-height: 30vh;
+        margin: 0 auto;
+        position: relative;
+    }
+}
+
+/*mobile*/
+@media(max-width: 480px){
+    h2{
+        font-size: 20px;
+    }
+
+    .typein{
+        background-color:#f8f4e6;
+        border-radius: 15px;
+        padding: 3rem 1rem;
+        width: 200px;
+        min-height: 30vh;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    img{
+        width: 60px;
+        height: 100px;
+    }
+    h2{
+        font-size: 16px;
+    }
+
+    p{
+        font-size: 10px;
+    }
+    }
+
+
+
 
 
 

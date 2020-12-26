@@ -9,6 +9,7 @@ if (!$_SESSION['login']) {
 
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
+    $users_id = $user[0]['id'];
   }
 //--------------------------------
 
@@ -20,6 +21,11 @@ $profiles = $_POST;
 
     if(empty($profiles['nickname'])){
         header('Location: ./profile_post.php?error=invalid_nickname');
+        exit();
+    }
+
+    if(empty($profiles['intro_text'])){
+        header('Location: ./profile_post.php?error=invalid_intro_text');
         exit();
     }
 
@@ -36,10 +42,10 @@ $profiles = $_POST;
         $_SESSION['0']['intro_text'] = $profiles['intro_text'];
 
         }
-        var_dump($_SESSION['0']['nickname']);
-       // var_dump($user);
+        
 
-
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getCommentCount($users_id, 0);
 ?>
 
 <!DOCTYPE html>
@@ -56,8 +62,9 @@ $profiles = $_POST;
 
     <body>
 
-       <?php include './headerP.php';?>
+       <?php include './../../header.php';?>
 
+       <label for="check">
             <div class="wrapper">
                 <div class="container">
                 　   <div class="typein">
@@ -69,7 +76,7 @@ $profiles = $_POST;
                     </div>
                 </div>
             </div>
-
+        </label>
 
     </body>
 </html>

@@ -61,8 +61,9 @@ if(!empty($_POST)){
   </head>
 
   <body>
-      <?php include './headerA.php';?>
+      <?php include './../../header.php';?>
     
+      <label for="check">
       <div class="wrapper">
          <div class="container">
             <div class="typein">
@@ -100,5 +101,6 @@ if(!empty($_POST)){
             </div><!--typein-->
          </div><!--container-->
       </div><!--wrapper-->
+    </label>
   </body>
 </html>

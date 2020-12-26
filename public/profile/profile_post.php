@@ -9,12 +9,14 @@ if (!$_SESSION['login']) {
 
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
+    $users_id = $_SESSION['user'][0]['id'];
   }
-//var_dump($_SESSION);
+
 //--------------------------------
 ini_set('display_errors',true);
-
-
+var_dump($_SESSION['user'][0]['id']);
+require_once './../../private/database.php';
+require_once './../../private/functions.php';
 
 //プロフィールの更新の際、既存のデータを表示できない。。。
 //var_dump($user['0']['id']);
@@ -25,7 +27,8 @@ if(function_exists('getProfileDatas')) {
     $intro_text = $profileDatas['0']['intro_text'];
 }
 
-
+//お知らせの隣に表示させる未読のコメント数
+$UnreadCommentCount = getCommentCount($users_id, 0);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -40,42 +43,30 @@ if(function_exists('getProfileDatas')) {
 
     <body>
 
-       <?php include './headerP.php' ?>
+       <?php include './../../header.php' ?>
        
 
-
+       <label for="check">
         <div class="wrapper">
             <div class="container">
                  <div class="typein">
 
                       <h2 class="form_title">プロフィール入力フォーム</h2>
-                         <div class="error_msg">
-                            <?php if (isset($_GET["error"])):?>
-
-                                <?php if ($_GET["error"]=="invalid_nickname"):?>
-                                <p><?php echo "ニックネームを入力してください。";?></p>
-                                <?php endif;?>
-
-                                <?php if ($_GET["error"]=="invalid_intoro_text"):?>
-                                <p><?php echo "自己紹介文は200字以下にして下さい。";?></p>
-                                <?php endif;?>
-
-                            <?php endif;?>
-                        </div><!--error_msg-->
+                      
 
         　　　　　　　　　　　
                         <form action="./profile_posted.php" method="POST">
 
                         <?php if (isset($_GET["error"])):?>
+                            <div class="error_msg">
+                            　<?php if ($_GET["error"]=="invalid_nickname"):?>
+                                　　<p><?php echo "ニックネームを入力してください。";?></p>
+                                <?php endif;?>
 
-                           　<?php if ($_GET["error"]=="invalid_nickname"):?>
-                            　　<p><?php echo "ニックネームを入力してください。";?></p>
-                             <?php endif;?>
-
-                             <?php if ($_GET["error"]=="invalid_intro_text"):?>
-                               <p><?php echo "自己紹介文は300字以下にして下さい。";?></p>
-                        　　  <?php endif;?>
-                        
+                                <?php if ($_GET["error"]=="invalid_intro_text"):?>
+                                    <p><?php echo "自己紹介文は300字以下にして下さい。";?></p>
+                            　　  <?php endif;?>
+                            </div><!--error_msg-->
                         <?php endif;?>
 
 
@@ -97,7 +88,7 @@ if(function_exists('getProfileDatas')) {
                 </div><!--typein-->
             </div><!--container-->
         </div> <!--wrapper-->
-
+     </label>
     </body>
 </html>
 

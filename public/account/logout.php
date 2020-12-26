@@ -24,8 +24,9 @@ session_destroy();
         <link rel="stylesheet" href="./../../css/header.css">
     </head>
     <body>
-        <?php include './headerA.php';?>
+        <?php include './../../header.php';?>
 
+        <label for="check">
         <div class="wrapper">
             <div class="container">
                <div class="typein">
@@ -36,5 +37,6 @@ session_destroy();
                </div><!--typein-->
            </div><!--container-->
         </div> <!--wrapper-->
+      </label>
     </body>
 </html>

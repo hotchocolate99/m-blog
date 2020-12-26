@@ -25,6 +25,23 @@ header{
 
 }
 
+.listH{
+    position: relative;
+}
+
+.listH ul{
+    position: absolute;
+    display: none;
+    
+}
+
+.listH:hover ul{
+    background-color: #ffe9a9;
+    display:block;
+    width: 12rem;
+}
+
+
 .link_a{
     text-decoration: none;
 	display:inlin-block;
@@ -42,4 +59,55 @@ header{
 .fas {
 	margin-right: 5px;
 }
+
+.header_tab_mob{
+    display: none;
+}
+
 /*----------------------*/
+
+/*レスポンシブ*/
+@media(max-width: 643px){
+    .input_h{
+        display: none;
+    }
+
+    .header_pc{
+        display: none;
+    }
+    .header_tab_mob{
+        display: block;
+    }
+    .link_container{
+        background-color: #ffe9a9;
+        width: 150px;
+        transform: translateX(-210px);
+        position: absolute;
+        z-index: 1;
+    }
+
+    .link_container ul{
+        flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .link_container li{
+        padding: 0 0 5px 20px;
+    }
+
+    .input_h:checked ~.link_container{
+        transform: translateX(0);
+        transition: 0.3s ease-in-out;
+        
+    }
+
+    .header_tab_mob{
+        height: 10px;
+    }
+
+    .home{
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+}

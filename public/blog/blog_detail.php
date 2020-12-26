@@ -2,63 +2,39 @@
 //----ログイン状態-----------------
 session_start();
 
-if (!$_SESSION['login']) {
-    header('Location: ./../../account/login.php');
-    exit();
-  }
-
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
+  $users_id = $user[0]['id'];
 //--------------------------------
+
+//ini_set('display_errors',true);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
-//↓getById（）とほぼ同じ。。。引数なしで、順番DESCで取得するところが違うだけ。サイドの記事一覧に使っている。
-$blogData = getData();
-//var_dump($blogData);
-///$newest_blogData = getNewestBlog();
-//var_dump($newest_blogData);
+//topページから詳細ページに遷移する時に$_GET['id']が渡ってくる。また、コメントのページから詳細ページに戻ってくる時は$_GET['posts_id']が渡ってくる。これらは同じ値なので、ここで$idに統一して、この後の処理で使いやすくしている。（反省点）
+if(isset($_GET['id'])){
+  $id = $_GET['id'];
 
-//↑の＄blogDataから、選択された$column['id']を取得するのが出来なかったので、一旦、それをdetail.phpにGETで送った。。。
-//それをSESSIONに入れて、またこのhome.phpに戻し、詳細を表示するようにした。
-
-$total = getDataCount();
-//↑ は配列だったので ↓
-//var_dump($total["COUNT(*)"]);
-
-//他のページから詳細ページに遷移するためにGETを使っている。<a href="blog_detail.php?id=<?php echo h($変数['id'])>">詳細へ<
-$id = $_GET['id'];
-
+}elseif(isset($_GET['posts_id'])){
+$id = $_GET['posts_id'];
+}
+//var_dump($id);
 
 //選択された記事の詳細を表示するため、前ページからGETで受け取ったidを引数にしてgetById()を呼び出し、詳細情報を取得。またこの＄resul['id']を次ページ（編集やコメント、削除）へ送る。
-$result = getById($id,'posts');
-//テーブル名はクォーテーション付けなくても大丈夫だった。
-//$_SESSION = $result;
-//header('Location:home.php#selected_topic');
-//var_dump($SESSION);
-//↑ちゃんと配列になって入っている。
-//var_dump($id);
-//if(!empty(getComment($id))){
-  //$comData = getComment($id);
-//}
+$idResult = getById($id,);
 
-//if(comData['pots_id']){}
-//var_dump($comData);
-//nullになる。。。。
-
-
-//表示する画像がある場合----------------------------------------------------------
-//var_dump($id);
+//表示する画像がある場合(引数は記事のid)----------------------------------------------------------
 $fileDatas = getFileById($id);
 //var_dump($fileDatas);
 
 
-
-//いいねボタンの処理-------------------------------------------------------------
+//いいねボタンの処理(引数は記事のid)-------------------------------------------------------------
 
 //var_dump($id);
+
+//ハートの隣にいいねの数を表示するため、いいねの総数を取得
 function likesSoFar($id){
     $dbh = dbConnect();
 
@@ -71,8 +47,7 @@ function likesSoFar($id){
     return $result;
  }
 
-
-
+//いいねが押された時の処理（likesカラムに１を足す処理）
 function likesCount($id){
     $dbh = dbConnect();
 
@@ -90,29 +65,31 @@ function likesCount($id){
     return $result;
  }
 
- var_dump($_GET['id']);
- if(!empty($_GET["id"])){
-    $id = $_GET["id"];
-    //var_dump($like_id);
 
-    if(!empty($_GET["plusLike"])){
-        $plusLike = $_GET["plusLike"];
-        $likesCount = likesCount($id);
+ //いいねが押されてたら、いいねを一つ増やし、URLのplusLikeのクエリを消す処理（plusLikeを消さないと、ページをリロードするたびにいいねが増えてしまうので。）
+  if(!empty($_GET["plusLike"])){
+      $plusLike = $_GET["plusLike"];
+      $likesCount = likesCount($id);
 
-        //$_SERVER['DOCUMENT_ROOT']は絶対パス。現在のページは$_SERVER['PHP_SELF']変数、または$_SERVER['SCRIPT_NAME']変数で取得出来る。そこにid足す　；）
-        header("Location:" .$_SERVER['PHP_SELF']."?id={$id}"."#stayAtLikeBtn");
+      //$_SERVER['DOCUMENT_ROOT']は絶対パス。現在のページは$_SERVER['PHP_SELF']変数、または$_SERVER['SCRIPT_NAME']変数で取得出来る。そこにid足す。stayAtLikeBtnはいいねボタンが押された時にページのトップへ行かないように付けたもの。
+      header("Location:" .$_SERVER['PHP_SELF']."?id={$id}"."#stayAtLikeBtn");
+  }
 
-        }else{
-          $likesSoFar = likesSoFar($id);
-        }
-    }
-
+//ハートの隣にいいねの数を表示する
+  $likesSoFar = likesSoFar($id);
  //var_dump($likesCount);
 
 //---------------------------------------------------------
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
+$UnreadCommentCount = getCommentCount($users_id, 0);
+
+//全ユーザーのデータを取得------------------------------------------------
+$allUsers = getAllusers();
+//var_dump($allUsers);
+foreach($allUsers as $allUser){
+  //var_dump($allUser['id']);
+}
 
 ?>
 
@@ -130,121 +107,120 @@ $UnreadCommentCount = getUnreadCommentCount();
 
     <body>
 
-        <?php include './headerB.php';?>
-        <?php// include ($_SERVER['DOCUMENT_ROOT'].'/headerB.php');?>
+        <?php include './../../header.php';?>
+        <label for="check">
+            <div class="wrapper">
+                <div class="container">
+                    <div class="left">
 
+                        <div class="frame">
+                            <h2 class="title"><?php echo h($idResult['title']);?></h2>
 
+                            <?php if ($idResult['publish_status'] == 2):?>
+                               <P class="private_post"><?php echo '非公開';?></p>
+                            <?php endif;?>
 
-        
-        <div class="wrapper">
-            <div class="container">
-                <div class="left">
+                               <p class="date_posted"><?php echo h($idResult['post_at']);?></p>
+                               <p><?php echo h(setCateName($idResult['category']));?></p>
+                               <p class="blog_content"><?php echo nl2br(h($idResult['content']));?></p>
 
-                    <div class="frame">
-                        <h2 class="title"><?php echo h($result['title']);?></h2>
-                        <p class="date_posted"><?php echo h($result['post_at']);?></p>
-                        <p><?php echo h(setCateName($result['category']));?></p>
-                        <p class="blog_content"><?php echo h($result['content'])?></p>
-
-                        <?php if($fileDatas):?>
+                            <?php if($fileDatas):?><!--↓{}で囲むのは、変数を展開させるから。-->
                                 <img src="<?php echo "{$fileDatas['file_path']}";?>"　width="240px" height="400px" alt="blog_image" >
-                                <p><?php if(isset($fileDatas['caption'])){echo "{$fileDatas['caption']}";}?></p>
-                        <!--↑{}で囲むのは、変数を展開させるから。-->
+                                <p><?php if(isset($fileDatas['caption'])){echo nl2br("{$fileDatas['caption']}");}?></p>
+                            <?php endif;?>
+
+                            <!--いいねボタンが非同期処理ではないため、ボタンが押されるとページのトップへ行ってしまう。それをなんとかしたくて、ここに非表示のaタグを付けた。-->
+                            <a class="stayAtLikeBtn" name="stayAtLikeBtn"></a>
+
+                        </div><!--frame-->
+
+                        <div class="icon_box">
+    　　　　　　　　　　　　　　<div class="likes"><a class="link_aa" href="./blog_detail.php?posts_id=<?php echo h($idResult['id'])?>&plusLike=1"><i class="fas fa-heart"></i><p class="likes">いいね(<?php if(isset($likesCount)){echo $likesCount["likes"];}else{echo $likesSoFar["likes"];}?>)</p></a></div>
+
+                            <a class="link_aa" href="./../comment/comment_post.php?id=<?php echo h($idResult['id'])?>"><span><i class="fas fa-comment"></i>コメントする</span></a>
+
+                        </div>
+
+                        <?php if(!empty($_SESSION['user'])):?>
+                            <?php if($user[0]['id'] == $idResult['users_id']):?>
+
+                        　　    <div class="opt">
+                          　　     <a class="link_aa" href="./blog_update.php?id=<?php echo h($idResult['id'])?>"><i class="fas fa-edit"></i>記事の編集</a>
+                          　　     <a class="link_aa" href="./blog_delete.php?id=<?php echo h($idResult['id'])?>"><i class="fas fa-trash-alt"></i>記事の削除</a>
+                        　　    </div><!--opt-->
+                            <?php endif ;?>
                         <?php endif;?>
 
-                      <a class="stayAtLikeBtn" name="stayAtLikeBtn"></a>
+                        <div class="frame second">
+                            <h2 class="title">コメント一覧</h2>
 
-                    </div><!--frame-->
+                                <?php if($comDatas = getComment($id)):?>
+                                    <?php foreach($comDatas as $comData):?>
 
-                    <div>
-　　　　　　　　　　　　　　<div class="likes"><a class="link_aa" href="./blog_detail.php?id=<?php echo h($result['id'])?>&plusLike=1"><i class="fas fa-heart"></i><p class="likes">いいね(<?php if(isset($likesCount)){echo $likesCount["likes"];}else{echo $likesSoFar["likes"];}?>)</p></a></div>
+                                        <div class="comment_box">
+                                             <dl>
+                                                <div class="flex">
+                                        　        <dt class="title"><?php echo h($comData['name']);?>さんのコメント</dt>
+                                        　        <dd class="date_posted"><?php echo h($comData['comment_at']);?></dd>
+                                                </div>
+                                              </dl>
 
-                        <a class="link_aa" href="./../comment/comment_post.php?id=<?php echo h($result['id'])?>"><span><i class="fas fa-comment"></i>この記事にコメントする</span></a>
-                       <!--getで記事のidをコメントページに渡している-->
-                    </div>
+                                              <div>
+                                        　        <p ><?php echo nl2br(h($comData['c_content']));?></p>
+                                              </div>
+                                        </div><!--comment_box-->
 
-                    <?php if(!empty($_SESSION['user'])):?>
-                    　　<div class="opt">
-                       　　<a class="link_aa" href="./blog_update.php?id=<?php echo h($result['id'])?>"><i class="fas fa-edit"></i>記事の編集</a>
-                       　　<a class="link_aa" href="./blog_delete.php?id=<?php echo h($result['id'])?>"><i class="fas fa-trash-alt"></i>記事の削除</a>
-                    　　</div><!--opt-->
-                    <?php endif;?>
+                                    <?php endforeach;?>
+                                <?php endif;?>
 
-                    <div class="frame">
-                        <h2 class="title">コメント一覧</h2>
-
-                             <?php if($comDatas = getComment($id)):?>
-                                 <?php foreach($comDatas as $comData):?>
-
-                                    <div class="comment_box">
-                                         <dl>
-                                            <div class="flex">
-                                     　        <dt class="title"><?php echo h($comData['name']);?>さんのコメント</dt>
-                                     　        <dd class="date_posted"><?php echo h($comData['comment_at']);?></dd>
-                                            </div>
-                                          </dl>
-
-                                          <div>
-                                     　      <p ><?php echo h($comData['c_content'])?></p>
-                                     <!--↑のp class="blog_content"-->
-                                          </div>
-                                    </div><!--comment_box-->
-
-                                 <?php endforeach;?>
-                             <?php endif;?>
-
-                             <a href="#" class="fixed_btn">TOPへ戻る</a><br>
+                                <a href="#" class="fixed_btn">TOPへ戻る</a><br>
 
 
-                    </div><!--frame-->
-                </div><!--left-->
+                        </div><!--frame second-->
+                    </div><!--left-->
 
-                <div class="right">
-                　　<div class="menu">
-                    　<ul>
-                        <li>
-                            <div class="search">
-                                <form action="./../list/list_search_result.php" method="post">
-                                    <input type="text" name="search_word" class="sample2Text" placeholder="記事検索">
-                                </form>
-                            </div>
-                        </li>
+                    <div class="right">
+                    　　<div class="menu">
+                        　<ul>
+                            <li>
+                                <div class="search">
+                                    <form action="./../list/list_search_result.php" method="post">
+                                        <input type="text" name="search_word" class="sample2Text" placeholder="記事検索">
+                                    </form>
+                                </div>
+                             </li>
 
-                        <li><a href="./../list/list_files.php" class="link_a"><i class="fas fa-camera"></i>画像一覧</a></li>
-                        <li class="list"><a href="#" class="link_a"><i class="fas fa-file"></i>テーマ別記事一覧</a>
-                          <ul>
-                          <li><a href="./blog_cate_list.php#cate1" class="link_a">テーマ１</a></li>
-                              <li><a href=".blog_cate_list.php#cate2" class="link_a">テーマ２</a></li>
-                              <li><a href="./blog_cate_list.php#cate3" class="link_a">その他</a></li>
-                          </ul>
-                        </li>
+                             <li><a href="./../list/all_blogs.php" class="link_a"><i class="fas fa-file"></i>投稿記事一覧</a></li>
+                            
+                             <li class="list"><a href="#" class="link_a"><i class="fas fa-file"></i>テーマ別記事一覧</a>
+                              
+                              <ul>
+                                  <li><a href="/public/blog/blog_cate_list.php#cate1" class="link_a">テーマ１</a></li>
+                                  <li><a href="/public/blog/blog_cate_list.php#cate2" class="link_a">テーマ２</a></li>
+                                  <li><a href="/public/blog/blog_cate_list.php#cate3" class="link_a">その他</a></li>
+                              </ul>
+                            </li>
 
-　　　　　　　　　　　　　</ul>
-　　　　　　　　　　　</div><!--menu-->
+                            <li class="list"><a href="#" class="link_a"><i class="fas fa-file"></i>ユーザー別記事一覧</a>
+                              <ul>
+                                <?php foreach($allUsers as $allUser):?>
+                                   <li><a class="link_a" href="/public/list/blogs_by_user.php?id=<?php echo h($allUser['id'])?>"><?php echo $allUser['nickname'];?>&nbsp;さんの記事一覧</a></li>
+                                <?php endforeach;?>
+                              </ul>
+                            </li>
 
-                  <div class="blogs">
-                      <p><span><i class="fas fa-pencil-alt"></i>記事一覧<span>（全<?php echo $total["COUNT(*)"];?>件）</span></p>
-                         <?php foreach($blogData as $column):?>
+                            <li><a href="./../list/list_files.php" class="link_a"><i class="fas fa-camera"></i>画像一覧</a></li>
 
-                            <div class="blog_box"> 
-                                <a class="link_aa" href="./blog_detail.php?id=<?php echo h($column['id'])?>">
+    　　　　　　　　　　　　　</ul>
+    　　　　　　　　　　　</div><!--menu-->
 
-                                        <div class="detail small"><span><?php echo h($column['title'])?></span></div>
-                                          <div class="date small"><?php echo h($column['post_at'])?></div>
-                                          <div class="small"><?php echo h(setCateName($column['category']))?></div>
+                      <div class="side_footer">footer</div>
+                    　　　
+                 </div><!--right-->
+               </div><!--container-->
+            </div> <!--wrapper-->
 
-                                </a>
-                            </div>
-                         <?php endforeach;?>
-
-                  </div>
-
-                  <div class="side_footer">footer</div>
-                　　　
-            </div><!--right-->
-            </div><!--container-->
-        </div> <!--wrapper-->
-
-
+      </label>
     </body>
 </html>
+

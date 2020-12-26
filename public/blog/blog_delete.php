@@ -10,22 +10,20 @@ if (!$_SESSION['login']) {
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
+  $users_id = $user[0]['id'];
 //--------------------------------
 
-ini_set('display_errors',true);
+//ini_set('display_errors',true);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
 $id = $_GET['id'];
 
-deleteMain($id,'posts');
-deleteSide($id,'comments');
-deleteSide($id,'files');
-
+delete($id,'posts');
 
 //お知らせの隣に表示させる未読のコメント数
-$UnreadCommentCount = getUnreadCommentCount();
+$UnreadCommentCount = getCommentCount($users_id, 0);
 
 
 ?>
@@ -43,8 +41,9 @@ $UnreadCommentCount = getUnreadCommentCount();
 
     <body>
 
-        <?php include './headerB.php';?>
+        <?php include './../../header.php';?>
 
+        <label for="check">
             <div class="wrapper">
                 <div class="container">
                 　  <div class="typein">
@@ -55,6 +54,6 @@ $UnreadCommentCount = getUnreadCommentCount();
                     </div>
                 </div>
             </div>
-
+        </label>
     </body>
 </html>
