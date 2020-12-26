@@ -7,46 +7,32 @@ session_start();
   }
   $users_id = $user[0]['id'];
 //--------------------------------
-ini_set('display_errors',true);
+//ini_set('display_errors',true);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
-
 $comment = $_POST;
-var_dump($comment);
+//var_dump($comment);
 $posts_id = $comment['posts_id'];
-var_dump($posts_id);
-
-//$posts_id = $_POST['posts_id'];
 //var_dump($posts_id);
-//var_dump($POST_id);
 
-//if(!empty($comment)){
   if(empty($comment['name'])){
-    header('Location: ./comment_post.php?error=invalid_c_name&posts_id=$posts_id');
+    header('Location: ./comment_post.php?error=invalid_c_name&posts_id='.$posts_id);
     exit();
   }
-//}
+
 
   if(empty($comment['c_content'])){
-    header('Location: ./comment_post.php?error=invalid_c_content&posts_id=$posts_id');
+    header('Location: ./comment_post.php?error=invalid_c_content&posts_id='.$posts_id);
     exit();
   }
 
   if(!empty($comment['c_content']) && mb_strlen($comment['c_content'])>200){
-    header('Location: ./comment_post.php?error=invalid_c_content&posts_id=$posts_id');
+    header('Location: ./comment_post.php?error=invalid_c_content&posts_id='.$posts_id);
     exit();
   }
 
-
-
-//if(!empty($comment['name'])){
-  //if(empty($comment)){
-    //header('Location: ./comment_post.php?error=invalid_c_content&posts_id=$posts_id');
-    //exit();
-  //}
-//}
 commentCreate($comment);
 
 //お知らせの隣に表示させる未読のコメント数
@@ -75,7 +61,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                <div class="typein">
 　　　　　　　　　　　　　<p>コメントを投稿しました。</p>
                       <br>
-                      <a class="fixed_btn link_aa" href="./../blog/blog_detail.php?id=<?php echo h($comment['posts_id'])?>">記事へ戻る</a>
+                      <a class="fixed_btn link_aa" href="./../blog/blog_detail.php?id=<?php echo h($posts_id)?>">記事へ戻る</a>
                       
                  </div><!--typein-->
             </div><!--container-->

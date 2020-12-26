@@ -13,36 +13,49 @@ session_start();
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
-//詳細ページから渡ってきた記事のid
-
+//詳細ページから渡ってきた記事のidとバリデーションに引っかかった場合にcomment_posted.phpから渡ってくる記事のidの名前を統一する処理
 if(isset($_GET['id'])){
     $posts_id = $_GET['id'];
 
+}elseif(isset($_GET['posts_id'])){
+  $posts_id = $_GET['posts_id'];
 }
-//elseif(isset($_GET['posts_id'])){
-  //  $posts_id = $_GET['posts_id'];
-//}
-
-var_dump($posts_id);
-
-//下は、コメント投稿ページから完了ページに飛ぶときにあたいが入るので、ここでは空っぽ。
-//var_dump($_POST);
-//var_dump((int)$id);
-$comment = $_POST;
-//var_dump($comment);
+//------------------------------------------------------------------
 
 
-//$p = getFile((int)$id);
-//var_dump($p);
-//foreach($p as $q){
-//    echo $q['id'];
-//}
-//$result = getById($id,'posts');
-//テーブル名はクォーテーション付けなくても大丈夫だった。
-//$_SESSION = $result;
-//header('Location:home.php#selected_topic');
-//var_dump($SESSION);
-//↑ちゃんと配列になって入っている。
+if(!function_exists('blogUpdate')) {
+    function blogUpdate($blogs, $posts_id){
+
+        $sql = "UPDATE posts SET
+                    title = :title, content = :content, category = :category, publish_status = :publish_status
+
+                WHERE id = :id;";
+
+        $dbh = dbConnect();
+        $dbh->beginTransaction();
+
+        try{
+            $stmt = $dbh->prepare($sql,);
+
+            $stmt->bindValue(':title', $blogs['title'],PDO::PARAM_STR);
+            $stmt->bindValue(':content', $blogs['content'],PDO::PARAM_STR);
+            $stmt->bindValue(':category', $blogs['category'],PDO::PARAM_INT);
+            $stmt->bindValue(':publish_status', $blogs['publish_status'],PDO::PARAM_INT);
+
+            $stmt->bindValue(':id', $posts_id,PDO::PARAM_INT);
+
+
+            $stmt->execute();
+            $dbh->commit();
+
+
+        }catch(PDOException $e){
+            $dbh->rollBack();
+            exit($e);
+        }
+    }
+}
+
 
 //お知らせの隣に表示させる未読のコメント数
 $UnreadCommentCount = getCommentCount($users_id, 0);
@@ -66,47 +79,43 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
         <?php include './../../header.php';?>
 
         <label for="check">
-        <div class="wrapper">
-            <div class="container">
-                <div class="typein">
+            <div class="wrapper">
+                <div class="container">
+                    <div class="typein">
 
-                        <h2 class="form_title"><span><i class="fas fa-comment"></i>この記事にコメントする</span></h2>
-                        
-                        <div class="error_msg">
-                        　<?php if (isset($_GET["error"])):?>
+                            <h2 class="form_title"><span><i class="fas fa-comment"></i>この記事にコメントする</span></h2>
+                            
+                            <div class="error_msg">
+                            　<?php if (isset($_GET["error"])):?>
 
-                            <?php if ($_GET["error"]=="invalid_c_name"):?>
-                            <p><?php echo " 名前を入力して下さい。";?></p>
-                            <?php endif;?>
+                                <?php if ($_GET["error"]=="invalid_c_name"):?>
+                                <p><?php echo " 名前を入力して下さい。";?></p>
+                                <?php endif;?>
 
-                            <?php if ($_GET["error"]=="invalid_c_content"):?>
-                            <p><?php echo "コメントは200字以下で入力して下さい。";?></p>
-                            <?php endif;?>
+                                <?php if ($_GET["error"]=="invalid_c_content"):?>
+                                <p><?php echo "コメントは200字以下で入力して下さい。";?></p>
+                                <?php endif;?>
 
-                        　<?php endif;?>
-                        </div><!--error_msg-->
+                            　<?php endif;?>
+                            </div><!--error_msg-->
 
                             <form action="./comment_posted.php" method="POST"　class="formspace">
-                            <input type="hidden" name="posts_id" value="<?php echo h($posts_id) ?>">
+                                <input type="hidden" name="posts_id" value="<?php echo h($posts_id) ?>">
 
-                            <p class="form_item">名前</p>
-                            <input type="text" class="form_text" name="name">
+                                <p class="form_item">名前</p>
+                                <input type="text" class="form_text" name="name">
 
-                            <div class="form_item"><p>コメント</p></div>
-                            <textarea name="c_content" id="c_content" cols="30" rows="10"></textarea>
-                            <br>
-
-                            <input type="submit" value="投稿" class="btn">
+                                <div class="form_item"><p>コメント</p></div>
+                                <textarea name="c_content" id="c_content" cols="30" rows="10"></textarea>
+                                <br>
+                                
+                                <input type="submit" value="投稿" class="btn">
                             </form>
-
-
-
-
-
                             <a class="fixed_btn" href="./../blog/blog_detail.php?id=<?php echo h($posts_id)?>">記事へ戻る</a><br>
-                </div><!--typein-->
-            </div><!--container-->
-        </div> <!--wrapper-->
+                    
+                    </div><!--typein-->
+                </div><!--container-->
+            </div> <!--wrapper-->
      </label>
     </body>
 </html>
