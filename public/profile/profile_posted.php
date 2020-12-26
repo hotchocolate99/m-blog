@@ -42,8 +42,7 @@ $profiles = $_POST;
         $_SESSION['0']['intro_text'] = $profiles['intro_text'];
 
         }
-        //var_dump($_SESSION['0']['nickname']);
-       // var_dump($user);
+        
 
 //お知らせの隣に表示させる未読のコメント数
 $UnreadCommentCount = getCommentCount($users_id, 0);
@@ -77,7 +76,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                     </div>
                 </div>
             </div>
-    </label>
+        </label>
 
     </body>
 </html>

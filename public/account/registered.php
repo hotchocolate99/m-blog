@@ -12,18 +12,18 @@
         <?php include './../../header.php';?>
 
         <label for="check">
-        <div class="wrapper">
-            <div class="container">
-               <div class="typein">
-                    <p>ユーザー登録が完了しました。</p>
-                    <br>
-                    <a class="fixed_btn link_aa" href="./login.php">ログイン画面へ</a>
+            <div class="wrapper">
+                <div class="container">
+                　　<div class="typein">
+                        <p>ユーザー登録が完了しました。</p>
+                        <br>
+                        <a class="fixed_btn link_aa" href="./login.php">ログイン画面へ</a>
 
-               </div><!--typein-->
-           </div><!--container-->
-       </div> <!--wrapper-->
+                　　</div><!--typein-->
+            　　</div><!--container-->
+        　　</div> <!--wrapper-->
       </label>
-        
+
     </body>
 </html>
 

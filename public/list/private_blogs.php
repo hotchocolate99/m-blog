@@ -79,55 +79,56 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
         <?php include './../../header.php';?>
 
        <label for="check">
-        <div class="wrapper">
+         <div class="wrapper">
             <div class="container">
             　  <div class="typein">
 
             　　　　<div class="profile">
 
-                    　<p class="prof_title"><strong><i class="fas fa-user-circle">&nbsp;<?php echo $user[0]['nickname'];?>&nbsp;&nbsp;さんのプロフィール</i></strong></p>
+                    　   <p class="prof_title"><strong><i class="fas fa-user-circle">&nbsp;<?php echo $user[0]['nickname'];?>&nbsp;&nbsp;さんのプロフィール</i></strong></p>
                     　　　
                     　　　<h3 class="nickname"><?php echo $user[0]['nickname'];?></h3>
                     　　　
                     　　　<p class="text"><?php echo $user[0]['intro_text'];?></p>
             　　　　</div>
 
-　　　　　　　　　　　　<h2 class="cate_title"><i class="fas fa-file"></i><?php echo $user[0]['nickname'];?>さんの非公開記事一覧(<?php echo $blogCountByUser[0];?>件)</h2>
-                  <div class="frame">
-
-                  <table>
-                            <?php $j=1;
-                                 for($j=1; $j>= 100; $j++);?>
+　　　　　　　　　　　<h2 class="cate_title"><i class="fas fa-file"></i><?php echo $user[0]['nickname'];?>さんの非公開記事一覧(<?php echo $blogCountByUser[0];?>件)</h2>
+                  
+                     <div class="frame">
+                         <table>
+                              <?php $j=1;
+                               for($j=1; $j>= 100; $j++);?>
                             
-                            
-                            
-                            <tr>
-                            <td>
+                                <tr>
+                                    <td>
 
-                                <?php foreach($blogsByUser as $blogByUser):?>　
-                                    <div class="result_box">
-                                    <strong><?php echo $j++;?>.</strong>
-                                        <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($blogByUser['id'])?>">
-                                        <dl>
-                                                <dt><strong><?php echo $blogByUser['title'];?></strong></dt>
-                                                <dd class="date"><?php echo setCateName($blogByUser['category']);?>&nbsp;&nbsp;<?php echo $blogByUser['post_at'];?>&nbsp;&nbsp;(<i class="fas fa-heart"></i><?php echo h($blogByUser['likes'])?>)</dd>
-                                                <br>
-                                                <dd class="content"><?php echo mb_substr($blogByUser['content'],0,60);?></dd>
-                                        </dl>
-                                        </a>
+                                        <?php foreach($blogsByUser as $blogByUser):?>　
+                                            <div class="result_box">
+                                            <strong><?php echo $j++;?>.</strong>
 
-                                    </div>
-                                <?php endforeach;?>
-                                </td>
-                            </tr>
-                            </table>
+                                                <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($blogByUser['id'])?>">
+                                                
+                                                    <dl>
+                                                        <dt><strong><?php echo $blogByUser['title'];?></strong></dt>
+                                                        <dd class="date"><?php echo setCateName($blogByUser['category']);?>&nbsp;&nbsp;<?php echo $blogByUser['post_at'];?>&nbsp;&nbsp;(<i class="fas fa-heart"></i><?php echo h($blogByUser['likes'])?>)</dd>
+                                                        <br>
+                                                        <dd class="content"><?php echo mb_substr($blogByUser['content'],0,60);?></dd>
+                                                    </dl>
+                                                </a>
+
+                                            </div>
+                                        <?php endforeach;?>
+                                    </td>
+                                </tr>
+                          </table>
                     </div><!--frame-->
 
-                  <a href="#" class="fixed_btn to_home">TOPへ戻る</a><br>
+                    <a href="#" class="fixed_btn to_home">TOPへ戻る</a><br>
 
                </div><!--typein-->
             </div><!--container-->
         </div><!--wrapper-->
       </label>
+      
     </body>
 </html>

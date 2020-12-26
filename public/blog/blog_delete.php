@@ -13,17 +13,14 @@ if (!$_SESSION['login']) {
   $users_id = $user[0]['id'];
 //--------------------------------
 
-ini_set('display_errors',true);
+//ini_set('display_errors',true);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
 $id = $_GET['id'];
 
-deleteMain($id,'posts');
-deleteSide($id,'comments');
-deleteSide($id,'files');
-
+delete($id,'posts');
 
 //お知らせの隣に表示させる未読のコメント数
 $UnreadCommentCount = getCommentCount($users_id, 0);

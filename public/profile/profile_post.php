@@ -59,14 +59,14 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
 
                         <?php if (isset($_GET["error"])):?>
                             <div class="error_msg">
-                           　<?php if ($_GET["error"]=="invalid_nickname"):?>
-                            　　<p><?php echo "ニックネームを入力してください。";?></p>
-                             <?php endif;?>
+                            　<?php if ($_GET["error"]=="invalid_nickname"):?>
+                                　　<p><?php echo "ニックネームを入力してください。";?></p>
+                                <?php endif;?>
 
-                             <?php if ($_GET["error"]=="invalid_intro_text"):?>
-                               <p><?php echo "自己紹介文は300字以下にして下さい。";?></p>
-                        　　  <?php endif;?>
-                        </div><!--error_msg-->
+                                <?php if ($_GET["error"]=="invalid_intro_text"):?>
+                                    <p><?php echo "自己紹介文は300字以下にして下さい。";?></p>
+                            　　  <?php endif;?>
+                            </div><!--error_msg-->
                         <?php endif;?>
 
 

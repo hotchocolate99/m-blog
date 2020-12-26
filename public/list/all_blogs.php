@@ -48,49 +48,43 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
         <?php include './../../header.php';?>
 
        <label for="check">
-        <div class="wrapper">
-            <div class="container">
-            　  <div class="typein">
-                   <h2><i class="fas fa-pencil-alt"></i>記事一覧<span>（全<?php echo $blogs_total["COUNT(*)"];?>件）</span></h2>
+          <div class="wrapper">
+              <div class="container">
+              　  <div class="typein">
+                    <h2><i class="fas fa-pencil-alt"></i>記事一覧<span>（全<?php echo $blogs_total["COUNT(*)"];?>件）</span></h2>
 
-            <div class="frame">
-
-                      <table>
-
+                    <div class="frame">
+                        <table>
                             <tr>
-                            <td>
+                              <td>
 
-                            <?php for($i=0; $i<$blogs_total['COUNT(*)']; $i++):?>
-                                <?php $blogData = $blogDatas[$i];?>
-                                
-                                    
-                            <div class="result_box"> 
-                            <strong><?php echo $i+1;?>.</strong>
-                                <p><a class="link_aa" href="/public/list/blogs_by_user.php?id=<?php echo h($blogData['users_id'])?>"><?php echo h($blogData['nickname'])?></a>&nbsp;さんの投稿</p>
-                                <a class="link_aa" href="/public/blog/blog_detail.php?id=<?php echo h($blogData['id'])?>">
-                                    <dl>
-                                        <dt class="detail"><h3><?php echo h($blogData['title'])?></h3></dt>
-                                        <!--<div class="flex">-->
-                                          <dd class=date><?php echo h($blogData['post_at'])?>&nbsp;&nbsp;<?php echo h(setCateName($blogData['category']))?>&nbsp;&nbsp;(<i class="fas fa-heart"></i><?php echo h($blogData['likes'])?>)</dd>
-                                        <!--</div>-->
-                                    </dl>
-                                </a>
-                            </div>
-                            
-                            
-                            <?php endfor;?>
+                                 <?php for($i=0; $i<$blogs_total['COUNT(*)']; $i++):?>
+                                   <?php $blogData = $blogDatas[$i];?>
+                                  
+                                    <div class="result_box"> 
+                                      <strong><?php echo $i+1;?>.</strong>
 
-                         </td>
-                         </tr>
+                                        <p><a class="link_aa" href="/public/list/blogs_by_user.php?id=<?php echo h($blogData['users_id'])?>"><?php echo h($blogData['nickname'])?></a>&nbsp;さんの投稿</p>
+                                          <a class="link_aa" href="/public/blog/blog_detail.php?id=<?php echo h($blogData['id'])?>">
+                                            <dl>
+                                              <dt class="detail"><h3><?php echo h($blogData['title'])?></h3></dt>
+                                                <dd class=date><?php echo h($blogData['post_at'])?>&nbsp;&nbsp;<?php echo h(setCateName($blogData['category']))?>&nbsp;&nbsp;(<i class="fas fa-heart"></i><?php echo h($blogData['likes'])?>)</dd>
+                                              </dl>
+                                          </a>
+                                      </div><!--result_box-->
+                              
+                                  <?php endfor;?>
+
+                              </td>
+                            </tr>
                          </table>
-                  </div>
+                     </div><!--frame-->
 
+                     <a href="#" class="fixed_btn to_home">TOPへ戻る</a><br>
 
-                  <a href="#" class="fixed_btn to_home">TOPへ戻る</a><br>
-
-               </div><!--typein-->
-            </div><!--container-->
-        </div><!--wrapper-->
+                </div><!--typein-->
+              </div><!--container-->
+          </div><!--wrapper-->
       </label>
     </body>
 </html>

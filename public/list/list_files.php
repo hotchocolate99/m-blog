@@ -8,45 +8,46 @@ session_start();
   $users_id = $user[0]['id'];
 //--------------------------------
 
+//ini_set('display_errors',true);
+
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
-ini_set('display_errors',true);
-
 function getAllFiles(){
-    $dbh = dbConnect();
+  $dbh = dbConnect();
 
-         $sql = "SELECT * FROM posts JOIN files ON posts.id = files.posts_id WHERE publish_status = 1 ORDER BY posts.id DESC";
+       $sql = "SELECT * FROM posts JOIN files ON posts.id = files.posts_id WHERE publish_status = 1 ORDER BY posts.id DESC";
 
-        //JOIN posts ON files.posts_id = posts.id ORDER BY id DESC
-        $stmt = $dbh->query($sql);
+      //JOIN posts ON files.posts_id = posts.id ORDER BY id DESC
+      $stmt = $dbh->query($sql);
 
-        $allFiles = $stmt->fetchAll(PDO::FETCH_ASSOC);;
+      $allFiles = $stmt->fetchAll(PDO::FETCH_ASSOC);;
 
-        return $allFiles;
+      return $allFiles;
 }
 
 function getFilesCount(){
-    $dbh = dbConnect();
+  $dbh = dbConnect();
 
-        $result;
-        $sql = "SELECT COUNT(*) FROM files";
+      $result;
+      $sql = "SELECT COUNT(*) FROM files";
 
-        $stmt = $dbh->query($sql);
+      $stmt = $dbh->query($sql);
 
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $results;
+      return $results;
 }
 
 $allFiles = getAllFiles();
 foreach($allFiles as $allFile){
-  //var_dump($allFile['id'].$allFile['file_path']);
+//var_dump($allFile['id'].$allFile['file_path']);
 }
+
 
 $results = getFilesCount();
 //var_dump($allFiles);
-//var_dump($result);
+//var_dump($results);
 //↑も配列だった
 //var_dump($_SERVER['DOCUMENT_ROOT']);
 
@@ -75,37 +76,38 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
         <?php include './../../header.php';?>
         
         <label for="check">
-        <div class="wrapper">
-            <div class="container">
-            　  <div class="typein">
+          <div class="wrapper">
+              <div class="container">
+              　  <div class="typein">
 
-                    <?php foreach($results as $result):?>
-                      <h2 class="form_title">画像一覧（全<?php echo $result["COUNT(*)"];?>件）</h2>
-                    <?php endforeach;?>
+                      <?php foreach($results as $result):?>
+                        <h2 class="form_title">画像一覧（全<?php echo $result["COUNT(*)"];?>件）</h2>
+                      <?php endforeach;?>
 
-                    <div class="frame">
-                    <?php if($allFiles):?>
-                        <?php foreach($allFiles as $allFile):?>
+                      <div class="frame">
+                      　　<?php if($allFiles):?>
+                          　　<?php foreach($allFiles as $allFile):?>
 
-                              <div class="file_box">
-                                <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($allFile['posts_id'])?>">
-                                <p><strong><?php echo "{$allFile['title']}";?></strong></P>
-                                <p><?php echo "{$allFile['post_at']}";?></P>
-                                <img src="./../blog/<?php echo "{$allFile['file_path']}";?>"　width="120px" height="200px" alt="blog_image" >
-                                <p><?php echo $allFile['caption'];?></p>
-                                </a>
-                              </div>
-                        <?php endforeach;?>
-                        <?php endif;?>
+                                <div class="file_box">
+                                  <a class="link_aa" href="./../blog/blog_detail.php?id=<?php echo h($allFile['posts_id'])?>">
+                                  <p><strong><?php echo "{$allFile['title']}";?></strong></P>
+                                  <p><?php echo "{$allFile['post_at']}";?></P>
+                                  <img src="./../blog/<?php echo "{$allFile['file_path']}";?>"　width="120px" height="200px" alt="blog_image" >
+                                  <p><?php echo $allFile['caption'];?></p>
+                                  </a>
+                                </div>
+                          　　<?php endforeach;?>
+                          <?php endif;?>
 
-                        <a href="#" class="fixed_btn">TOPへ戻る</a></div><br>
-                        
-                    </div>
+                          <a href="#" class="fixed_btn">TOPへ戻る</a></div><br>
+                          
+                      </div>
 
-               </div><!--typein-->
-            </div><!--container-->
-        </div><!--wrapper-->
-      </label>
+                </div><!--typein-->
+              </div><!--container-->
+          </div><!--wrapper-->
+      　</label>
+      
     </body>
 </html>
 
