@@ -2,11 +2,6 @@
 //----ログイン状態-----------------
 session_start();
 
-/*if (!$_SESSION['login']) {
-    header('Location: ./../../account/login.php');
-    exit();
-  }*/
-
   if ($_SESSION['login']= true) {
     $user = $_SESSION['user'];
   }
@@ -21,14 +16,6 @@ require_once './private/database.php';
 require_once './private/functions.php';
 //var_dump($_SESSION['user']);
 
-//ブログ関連-----------------------------------------------------------------------
-//ブログの全件の全てのデータを取得し、記事一覧を表示-----
-////$blogDatas = getData();
-//$_SESSION['user']
-//var_dump($blogDatas);
-//foreach($blogDatas as $blogData=>$val){
-  //var_dump($val);
-//}
 
 //ブログ関連-----------------------------------------------------------------------
 //ブログの最新の５件を取得し、記事一覧を表示-----
@@ -38,13 +25,6 @@ $blogDatas = getNewestBlog(5);
 foreach($blogDatas as $blogData){
   //var_dump($blogData['id']);
 }
-
-//ブログの総件数を取得----------------------------
-//$blogs_total = getDataCount();
-//↑ は配列だったので ↓
-//var_dump($total["COUNT(*)"]);
-
-//最新記事からでも記事一覧からでも詳細ページに遷移するために、idをGETで、渡している。
 
 
 //最新ブログ記事の取得(postsテーブルのデータのみで画像はなし)-------
@@ -59,6 +39,7 @@ $newestPost_id = $newestBlog['id'];
 $fileDatas = getFile($newestPost_id);
 //var_dump($fileDatas);
 
+
 //プロフィールの表示-------------------------------------------------------------------
 //引数の$user_idは最新記事を書いたユーザーのid
 $profileDatas = getProfileDatas($newestBlog['users_id']);
@@ -67,67 +48,19 @@ $nickname = $profileDatas['0']['nickname'];
 $intro_text = $profileDatas['0']['intro_text'];
 
 
-//いいねランキング--------------------------------------------------------------------
-//自分で試みたランキング（失敗）
-/*$likes_results = likesRanking();
 
-$i=0;
-for($i=0; $i<10; $i++){
-   foreach($likes_results as $likes_result){
-     //var_dump($likes_results[0]['likes']);
-     //var_dump($likes_results[0]['rank']);
-
-     if($likes_results[$i+1]['likes'] !== $likes_results[$i]['likes']){
-      $likes_results[$i]['rank'] = $i+1;
-     }else{$likes_results[$i+1]['rank'] = $likes_results[$i]['rank'];
-     }
-
-   }
-   var_dump($likes_results[7]);
-}
-*/
-
-//いいねのランキング（先生の）
+//いいねのランキング（先生の）-------------------------------------------------------------
 $data = likesRanking();
-
-function addRanking($data) {
-  $ranking = 0;
-  // １個目のlikesを入れておく
-  $likes = $data[0]['likes'];
-  // 最初の配列から最後から１個前の配列まで繰り返す
-  for ($i = 0; $i < count($data) -1; $i++) {
-      // 同一順位の場合に次のランキングを飛ばすための変数
-      $rankingOffset = 0;
-      // ランキングを加算する
-      $ranking+=1;
-      // ランキングをセットする
-      $data[$i]['ranking'] = $ranking;
-      // $iの次の配列から配列の最後まで繰り返す
-      for ($j = $i + 1; $j < count($data); $j++) {
-          // $iと$jのlikesが同じだったら同一のランキングをつける
-          if ($data[$i]['likes'] == $data[$j]['likes']) {
-              $data[$j]['ranking'] = $ranking;
-              // 同一順位の場合は次のランキングは飛ばしたいので$rankingOffsetを加算する
-              $rankingOffset+=1;
-          } else {
-              // 次のランキングを検査するためにrankingOffsetを$iに加算しておく
-              $i = $i + $rankingOffset;
-              // ランキングも同じようにrankingOffsetを加算する
-              $ranking = $ranking + $rankingOffset;
-              // チェックを打ち切る
-              break;
-          }
-      }
-  }
-  return $data;
-}
+//var_dump($data);
 
 $rankingData = addRanking($data);
+//var_dump($rankingData);
+
 
 //var_dump($rankingData);
 foreach($rankingData as $key=>$value){
-  //var_dump($value);
-  //var_dump($value['ranking'].'位'.'/いいね獲得数は'.$value['likes'].'/タイトルは'.$value['title']);
+//var_dump($value);
+//var_dump($value['ranking'].'位'.'/いいね獲得数は'.$value['likes'].'/タイトルは'.$value['title']);
 }
 
 
@@ -176,10 +109,10 @@ foreach($allUsers as $allUser){
                                  <p class="blog_content"><?php echo nl2br(h($newestBlog['content']))?></p>
 
                               <?php if($fileDatas):?>
-                                    <?php// foreach($fileDatas as $fileData):?>
+                                    
                                       <img src="./public/blog/<?php echo "{$fileDatas[0]['file_path']}";?>"　width="240px" height="400px" alt="blog_image" >
                                        <p><?php echo h("{$fileDatas[0]['caption']}");?></p>
-                                    <?php //endforeach;?>
+                                    
                               <?php endif;?>
 
                                  <br>
@@ -271,16 +204,11 @@ foreach($allUsers as $allUser){
 
                   <div class="blogs">
                     <p class="ranking_title"><strong><i class="fas fa-crown"></i>人気記事ランキング（10位）</strong></p>
-                    
-                    
-                       
-                         <?php// $i = 1; for($i=1; $i<=10; $i++){echo $i.'位';};?>
-                    
 
-                       
+
                             
                          <?php foreach($rankingData as $key=>$value):?>
-                          <?php if($value['ranking'] !== null):?>
+                           <?php if($value['ranking'] !== null):?>
                               
                               <div class="blog_box"> 
                               
@@ -292,7 +220,7 @@ foreach($allUsers as $allUser){
                                   </a>
                                   <p class="who_posts"><a class="link_aa" href="/public/list/blogs_by_user.php?id=<?php echo h($value['users_id'])?>"><?php echo $value['nickname'];?></a>&nbsp;さんの投稿</p>
                               </div>
-                          <?php endif;?>   
+                            <?php endif;?>   
                          <?php endforeach;?>
                          
                     
