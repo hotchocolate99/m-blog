@@ -100,7 +100,7 @@ foreach($allUsers as $allUser){
                    <div class="newest">
                            <h5><i class="fas fa-pencil-alt"></i>最新記事</h5>
 
-                                <p><a class="link_aa" href="./public/list/blogs_by_user.php?id=<?php echo h($users_id)?>"><?php echo $nickname;?></a>&nbsp;さんの投稿</p>
+                                <p><a class="link_aa" href="./public/list/blogs_by_user.php?id=<?php echo h($newestBlog['users_id'])?>"><?php echo $nickname;?></a>&nbsp;さんの投稿</p>
                                  <h2 class="title"><?php echo h($newestBlog['title']);?></h2>
                                  <div class="flex">
                                     <p><?php echo h($newestBlog['post_at']);?></p>

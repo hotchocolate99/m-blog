@@ -172,7 +172,7 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                                     <input name="pic" type="file"/>
                                     <input type="hidden" name="MAX_FILE_SIZE" value="1048576" />
                                   <?php endif;?>
-
+                                     <?php// var_dump($_FILES['pic']);?>
                                 <br>
                                 <br>
                                 <textarea

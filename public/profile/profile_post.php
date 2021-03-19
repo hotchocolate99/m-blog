@@ -52,7 +52,6 @@ $UnreadCommentCount = getCommentCount($users_id, 0);
                  <div class="typein">
 
                       <h2 class="form_title">プロフィール入力フォーム</h2>
-                      
 
         　　　　　　　　　　　
                         <form action="./profile_posted.php" method="POST">

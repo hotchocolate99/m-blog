@@ -28,8 +28,7 @@ function getAllFiles(){
 
 function getFilesCount(){
   $dbh = dbConnect();
-
-      $result;
+  //$results;
       $sql = "SELECT COUNT(*) FROM files";
 
       $stmt = $dbh->query($sql);

@@ -379,5 +379,9 @@ padding: 0.5rem 1rem;
     
 }
 
+.menu ul{
+    justify-content: space-between;
+}
+
 
 
